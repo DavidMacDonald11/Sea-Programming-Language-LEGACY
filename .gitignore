@@ -1,0 +1,8 @@
+# Ignore ide files
+.vscode
+
+# Ignore venv
+venv
+
+# Ignore temporary files
+__pycache__
