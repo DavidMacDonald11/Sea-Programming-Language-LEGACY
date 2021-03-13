@@ -6,3 +6,7 @@ venv
 
 # Ignore temporary files
 __pycache__
+
+# Ignore compiled files
+bin
+!bin/.keep
