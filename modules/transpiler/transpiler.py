@@ -13,9 +13,23 @@ def transpile(filename, src_dir, bin_dir):
             try:
                 for i, line in enumerate(seafile):
                     if line.isspace():
+                        if scope.in_c_scope:
+                            cfile.write("\n")
+
                         continue
 
-                    scope.validate(line)
+                    c_scope_declaration = scope.validate(line)
+
+                    if scope.in_c_scope:
+                        if c_scope_declaration:
+                            cfile.write(f"{scope.get_indent(True)}// C Scope:\n")
+                            continue
+
+                        line = line[4:] if line[0] == " " else line[1:]
+                        cfile.write(f"{line.rstrip()}\n")
+
+                        continue
+
                     line = line.strip()
 
             except TranspilerError as e:

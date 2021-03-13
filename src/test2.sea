@@ -1,0 +1,14 @@
+c scope:
+    #include <stdio.h>
+
+    int j = 5 + 5;
+
+    printf("Hello World! 5 + 5 = %d", j);
+
+scope:
+    c scope:
+        int i = 5 * 5;
+
+        printf("%d", i);
+
+    pass

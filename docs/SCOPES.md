@@ -16,3 +16,35 @@ In C, you have the ability to create a scope in order to separate variables, org
 scope:
     pass
 ```
+
+# C Scope
+There will be times when you'd rather right something directly in C. Just use a C Scope. If you want to use C inline, see [Inline C](TO_BE_ADDED).
+
+### C
+```c
+// C Scope:
+#include <stdio.h>
+
+int main()
+{
+    printf("Hello World!");
+    return 0;
+}
+```
+
+### Sea
+```sea
+c scope:
+    #include <stdio.h>
+
+    int main()
+    {
+        printf("Hello World!");
+        return 0;
+    }
+```
+
+Notes:
+- Relative leading spaces are preserved.
+- Empty lines are preserved.
+- A c scope does not create a new scope in the final c code.
