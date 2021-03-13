@@ -18,7 +18,7 @@ scope:
 ```
 
 # C Scope
-There will be times when you'd rather right something directly in C. Just use a C Scope. If you want to use C inline, see [Inline C](TO_BE_ADDED).
+There will be times when you'd rather right something directly in C. Just use a C Scope. If you want to use C inline, see [Inline C](./TO_BE_ADDED).
 
 ### C
 ```c
