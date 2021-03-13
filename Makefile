@@ -37,7 +37,7 @@ init: activate .git
 
 .PHONY: run
 run: $(VENV) activate
-	$(PYTHON) main.py
+	$(PYTHON) main.py src bin
 
 .PHONY: lint
 lint: $(VENV) activate
