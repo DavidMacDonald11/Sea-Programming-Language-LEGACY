@@ -25,5 +25,8 @@ Run `./sea-to-c.bash`
 
 The `BIN` directory will be `./bin` by default.
 
+## The "Linux" Method
+Write your own program to interact with the files in modules. Good luck!
+
 # Docs
 Read through the [documentation](docs/ROOT) to learn the Sea syntax.
