@@ -1,15 +1,20 @@
 import os
+import sys
 from modules.transpiler import transpiler
 
-# for root, dirs, filenames in os.walk("src"):
-#     print(root, dirs, filenames)
+def find_files(directory = "src"):
+    for root, dirs, filenames in os.walk(directory):
+        for filename in filenames:
+            yield os.path.join(root, filename)
 
+        for new_dir in dirs:
+            yield from find_files(new_dir)
 
-#     for dir1 in dirs:
-#         print(dir1)
+if __name__ == "__main__":
+    src_dir = sys.argv[1]
+    bin_dir = sys.argv[2]
 
-#     for filename in filenames:
-#         if filename.endswith(".sea") or filename.endswith(".hea"):
-#             transpiler.transpile(f"filename")
-
-transpiler.transpile("src/test1.sea")
+    for file in find_files(src_dir):
+        if file.endswith(".sea") or file.endswith(".hea"):
+            print(f"Transpiling {file}...")
+            transpiler.transpile(file, src_dir, bin_dir)
