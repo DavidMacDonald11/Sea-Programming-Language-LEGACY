@@ -29,4 +29,4 @@ The `BIN` directory will be `./bin` by default.
 Write your own program to interact with the files in modules. Good luck!
 
 # Docs
-Read through the [documentation](./docs/ROOT) to learn the Sea syntax.
+Read through the [documentation](./docs/ROOT.md) to learn the Sea syntax.
