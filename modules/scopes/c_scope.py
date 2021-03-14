@@ -8,7 +8,7 @@ class CScope(Scope):
     _sea_declaration = "c scope:"
     _c_declaration = "// C Scope"
     _sea_ending = None
-    _c_ending = ""
+    _c_ending = None
 
     def close(self, cfile):
         try:

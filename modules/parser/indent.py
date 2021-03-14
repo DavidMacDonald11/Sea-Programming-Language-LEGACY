@@ -27,7 +27,7 @@ def count_in_line(line):
     return count
 
 def remove(line, amount):
-    if amount < 1:
+    if amount < 1 or len(line) == 0:
         return line
 
     if line[0] == "\t":

@@ -9,7 +9,7 @@ class Scope(metaclass = MetaScope):
     _sea_declaration = "scope:"
     _c_declaration = "{"
     _sea_ending = None
-    _c_ending = "}"
+    _c_ending = "}\n"
 
     def __init__(self, indentation, declaration):
         self.indent = indentation
@@ -32,8 +32,9 @@ class Scope(metaclass = MetaScope):
         return " " * 4 * (self.indent - int(outside))
 
     def _write_outside(self, cfile, line = ""):
-        cfile.write(f"{self.get_indent(True)}")
-        cfile.write(line + "\n")
+        if line is not None:
+            cfile.write(f"{self.get_indent(True)}")
+            cfile.write(line + "\n")
 
     def write_line(self, cfile, line = ""):
         cls = type(self)
@@ -48,7 +49,7 @@ class Scope(metaclass = MetaScope):
 
         # TODO transpile line to C
 
-        cfile.write(f"{self.get_indent()}\n")
+        cfile.write(f"{self.get_indent()}/*{line}*/\n")
 
     @classmethod
     def check_match(cls, line):

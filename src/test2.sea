@@ -12,3 +12,11 @@ scope:
         printf("%d", i);
 
     pass
+
+    scope:
+        scope:
+            pass
+
+        pass
+
+    pass
