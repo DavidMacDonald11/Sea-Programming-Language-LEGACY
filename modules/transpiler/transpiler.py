@@ -1,11 +1,7 @@
 from ..transpiler.scopes import ScopeManager
 from .error import TranspilerError
 
-def transpile(filename, src_dir, bin_dir):
-    new_filename = filename.replace(src_dir, bin_dir, 1)
-    new_filename = new_filename.replace(".hea", ".h")
-    new_filename = new_filename.replace(".sea", ".c")
-
+def transpile(filename, new_filename):
     with open(filename) as seafile, open(new_filename, "w") as cfile:
         i = -1
 

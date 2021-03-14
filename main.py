@@ -16,5 +16,9 @@ if __name__ == "__main__":
 
     for file in find_files(src_dir):
         if file.endswith(".sea") or file.endswith(".hea"):
-            print(f"Transpiling {file}...")
-            transpiler.transpile(file, src_dir, bin_dir)
+            new_file = file.replace(src_dir, bin_dir, 1)
+            new_file = new_file.replace(".hea", ".h")
+            new_file = new_file.replace(".sea", ".c")
+
+            print(f"Transpiling {file} into {new_file}...")
+            transpiler.transpile(file, new_file)
