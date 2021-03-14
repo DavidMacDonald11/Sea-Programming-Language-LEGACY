@@ -1,7 +1,9 @@
 import re
 from modules.scopes.scopes import match_and_get
 from ..transpiler import indent
-from .error import TranspilerError
+from .errors import IncorrectScopeError
+from .errors import EmptyScopeError
+from .errors import EmptyCScopeError
 
 class ScopeManager:
     def __init__(self, cfile):
@@ -70,18 +72,3 @@ class ScopeManager:
 
     def get_indent(self, ending = False):
         return " " * 4 * (self.scope - int(ending))
-
-class IncorrectScopeError(TranspilerError):
-    def __init__(self, correct_scope, scope, message = ""):
-        if message == "":
-            message = f"Current scope is {correct_scope} indents deep not {scope}."
-
-        super().__init__(message)
-
-class EmptyScopeError(TranspilerError):
-    def __init__(self, message = "Scope cannot be empty. Use pass to declare empty scope."):
-        super().__init__(message)
-
-class EmptyCScopeError(EmptyScopeError):
-    def __init__(self, message = "C Scope cannot be empty."):
-        super().__init__(message)

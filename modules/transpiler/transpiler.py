@@ -1,5 +1,5 @@
 from ..transpiler.scopes import ScopeManager
-from .error import TranspilerError
+from .errors import TranspilerError
 
 def transpile(filename, new_filename):
     with open(filename) as seafile, open(new_filename, "w") as cfile:

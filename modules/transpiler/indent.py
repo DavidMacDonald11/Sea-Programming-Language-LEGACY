@@ -1,4 +1,4 @@
-from .error import TranspilerError
+from .errors import IndentError
 
 def get_from_line(line):
     count = spaces = 0
@@ -25,7 +25,3 @@ def get_from_line(line):
         raise IndentError()
 
     return count
-
-class IndentError(TranspilerError):
-    def __init__(self, message = "Indents must be 4 spaces or 1 tab."):
-        super().__init__(message)
