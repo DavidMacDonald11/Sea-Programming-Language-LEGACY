@@ -25,3 +25,4 @@ def get_from_line(line):
         raise IndentError()
 
     return count
+
