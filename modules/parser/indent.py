@@ -1,42 +1,36 @@
 from modules.transpiler.errors import TranspilerError
 
 def count_in_line(line):
-    count = spaces = 0
+    count = 0
 
-    for c in line:
-        if not c.isspace():
-            break
-
-        if c not in (" ", "\t"):
-            spaces = 1
-            break
-
-        spaces += int(c == " ")
-
-        if c == "\t":
+    while line[0].isspace():
+        if line[0] == "\t":
             count += 1
+            line = line[1:]
             continue
 
-        if spaces == 4:
-            spaces = 0
+        if line[0] == " " and line[0:4] == " " * 4:
             count += 1
+            line = line[4:]
+            continue
 
-    if spaces > 0:
         raise IndentError()
 
     return count
 
 def remove(line, amount):
-    if amount < 1 or len(line) == 0:
-        return line
+    for _ in range(amount):
+        if len(line) == 0:
+            break
 
-    if line[0] == "\t":
-        return remove(line[1:], amount - 1)
+        if line[0] == "\t":
+            line = line[1:]
+            break
 
-    if len(line) < 4 or line[0:4] != " " * 4:
-        return line
+        if len(line) >= 4 and line[0:4] == " " * 4:
+            line = line[4:]
 
-    return remove(line[4:], amount - 1)
+    return line
 
 class IndentError(TranspilerError):
     def __init__(self, message = "Indents must be 4 spaces or 1 tab."):
