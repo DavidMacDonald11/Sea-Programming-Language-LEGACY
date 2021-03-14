@@ -5,6 +5,11 @@ The Sea programming language is a variant of the C language, with python-like sy
 
 Sea - It's C, just written differently.
 
+# Pronunciation
+While this play-on-words thing is fun, I don't want to create a "gif" situation. The `.sea` file extension is pronounced like the english word "sea". The `.hea` file extension is pronounced like the english word "he".
+
+I chose the name Sea because it is pronounced identically to C, but written differently. I then chose `.hea` because it is `.sea` with an 'h', it contains the first three letters in "header", and I made it rhyme because it's more fun than "hey", "hey-ah", "he-ah", or any other arbitrary pronuncation. Say what you will about "he", but it isn't arbitrary.
+
 # Instructions
 ## In Place
 Run `./sea-to-c.bash SRC BIN` where:
