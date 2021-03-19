@@ -14,16 +14,18 @@ class ScopeManager:
         return self
 
     def __exit__(self, e_type, e_value, e_traceback):
-        if e_type is not None:
-            print(f"Line #{self.line_count}: {e_traceback}")
+        def error(message):
+            print(f"Line #{self.line_count}: {message}")
             self.cfile.write("// Transpilation stopped due to error")
+
+        if e_type is not None:
+            error(e_traceback)
 
         try:
             for scope in self.scopes:
                 scope.close(self.cfile)
         except TranspilerError as e:
-            print(f"Line #{self.line_count}: {e.message}")
-            self.cfile.write("// Transpilation stopped due to error")
+            error(e.message)
 
     def has_scopes(self):
         return len(self.scopes) > 0
