@@ -6,3 +6,10 @@ c scope:
         printf("Hello World!");
         return 0;
     }
+
+    /*
+            This is a comment in a C scope
+    */
+
+    /* This
+            is another comment in a C Scope */

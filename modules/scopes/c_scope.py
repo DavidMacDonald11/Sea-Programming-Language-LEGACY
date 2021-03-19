@@ -1,9 +1,8 @@
-from .scope import EmptyScope
 from .scope import VerbatumScope
 from .scope import UnindentedScope
 from .scope import EmptyScopeError
 
-class CScope(EmptyScope, VerbatumScope, UnindentedScope):
+class CScope(VerbatumScope, UnindentedScope):
     sea_declaration = "c scope:"
     c_declaration = "// C Scope"
     sea_ending = None
