@@ -33,7 +33,16 @@ class Scope:
 
     @classmethod
     def transpile_line(cls, line):
-        # TODO transpile line to C
+        untranspiled = line.strip()
+
+        if untranspiled == "pass":
+            return "// pass"
+
+        comment = re.compile(r"//.*")
+
+        if comment.fullmatch(untranspiled) is not None:
+            return line + "\n"
+
         return line
 
     def get_declaration(self):

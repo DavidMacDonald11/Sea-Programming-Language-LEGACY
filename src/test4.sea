@@ -4,8 +4,12 @@ scope:
             scope:
                 pass
 
+// This is a comment
+
 scope:
     scope:
+        // This is a comment in a scope
+
         scope:
             /* This
                     is
