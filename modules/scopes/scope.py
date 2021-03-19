@@ -13,37 +13,43 @@ class Scope:
         self.is_empty = True
 
     def open(self, cfile):
-        self._write_outside(cfile, type(self).c_declaration)
+        self.write_line(cfile, type(self).c_declaration, True)
 
     def close(self, cfile):
-        self.check_empty()
-        self._write_outside(cfile, type(self).c_ending)
+        cls = type(self)
 
-    def check_empty(self):
         if self.is_empty:
-            raise EmptyScopeError(type(self))
+            raise EmptyScopeError(cls)
+
+        self.write_line(cfile, cls.c_ending, True)
 
     def indent_line(self, line = "", outside = False):
         return " " * 4 * (self.indent - int(outside)) + line
 
-    def _write_outside(self, cfile, line):
+    def write_line(self, cfile, line = "", outside = False):
         if line is not None:
-            cfile.write(f"{self.indent_line(line, True)}\n")
+            line = self.transpile_line(line)
+            cfile.write(f"{self.indent_line(line, outside)}\n")
 
-    def write_line(self, cfile, line = ""):
-        # TODO transpile line to C
-        cfile.write(f"{self.indent_line(line)}\n")
+    # TODO transpile line to C
+    def transpile_line(self, line):
+        return line
 
     @classmethod
     def check_match(cls, line):
         return line == cls.sea_declaration
 
 class EmptyScope(Scope):
-    def check_empty(self):
-        pass
+    def close(self, cfile):
+        self.is_empty = False
+        super().close(cfile)
 
 class VerbatumScope(Scope):
-    def write_line(self, cfile, line = ""):
+    def write_line(self, cfile, line = "", outside = False):
+        if outside:
+            super().write_line(cfile, line, outside)
+            return
+
         line = line.rstrip()
         cfile.write(f"{self.indent_line(line)}\n")
 
@@ -53,7 +59,6 @@ class UnindentedScope(Scope):
             return super().indent_line(line, outside)
 
         return indent.remove(line, 1)
-
 
 class ScopeError(TranspilerError):
     pass
