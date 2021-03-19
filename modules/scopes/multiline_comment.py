@@ -7,6 +7,7 @@ from .scope import InlineScope
 class MultilineComment(EmptyScope, VerbatumScope, EndableScope, InlineScope):
     # TODO make declaration able to follow a statement
     # TODO make multiline comment able to be 1 line
+    # TODO update documentation
     sea_declaration = r"/\*.*"
     sea_ending = r".*\*/"
     c_declaration = "/*"
