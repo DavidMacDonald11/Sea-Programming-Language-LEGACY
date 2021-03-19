@@ -1,14 +1,13 @@
-from .scope import Scope
+from .scope import EmptyScope
+from .scope import VerbatumScope
+from .scope import UnindentedScope
 from .scope import EmptyScopeError
 
-class CScope(Scope):
-    _allows_empty = False
-    _allows_verbatum = True
-    _lines_are_indented = True
-    _sea_declaration = "c scope:"
-    _c_declaration = "// C Scope"
-    _sea_ending = None
-    _c_ending = None
+class CScope(EmptyScope, VerbatumScope, UnindentedScope):
+    sea_declaration = "c scope:"
+    c_declaration = "// C Scope"
+    sea_ending = None
+    c_ending = None
 
     def close(self, cfile):
         try:

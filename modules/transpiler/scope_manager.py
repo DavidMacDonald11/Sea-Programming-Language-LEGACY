@@ -1,5 +1,6 @@
 from modules.parser import indent
 from modules.scopes import scopes
+from modules.scopes.scope import VerbatumScope
 from modules.scopes.scope import UndeclaredScopeError
 from .errors import TranspilerError
 
@@ -34,7 +35,7 @@ class ScopeManager:
         return self.scopes[-1].indent if self.has_scopes() else 0
 
     def scope_allows_verbatum(self):
-        return type(self.scopes[-1]).allows_verbatum
+        return isinstance(self.scopes[-1], VerbatumScope)
 
     def interpret_line(self, line):
         self.line_count += 1
