@@ -1,7 +1,9 @@
 from modules.parser import indent
 from modules.scopes import scopes
 from modules.scopes.scope import VerbatumScope
+from modules.scopes.scope import EndableScope
 from modules.scopes.scope import UndeclaredScopeError
+from modules.scopes.scope import UndeclaredEndOfScopeError
 from modules.scopes.global_scope import GlobalScope
 from .errors import TranspilerError
 
@@ -48,7 +50,12 @@ class ScopeManager:
         level = scope.indent
         new_level = indent.count_in_line(line)
 
-        # TODO check for end of scope if Scope.c_ending is not None
+        if isinstance(scope, EndableScope) and scope.check_ending(line):
+            if new_level < level - 1:
+                raise UndeclaredEndOfScopeError()
+
+            scope = self.end_scopes(1)
+            return
 
         if self.scope_allows_verbatum() and new_level >= level:
             scope.is_empty = False

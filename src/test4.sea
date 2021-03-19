@@ -3,3 +3,16 @@ scope:
         scope:
             scope:
                 pass
+
+scope:
+    scope:
+        scope:
+            /* This
+                    is
+                a
+                    comment
+                in a
+                    scope */
+
+    /* comment
+    */

@@ -13,3 +13,8 @@ c scope:
 
     /* This
             is another comment in a C Scope */
+
+/*
+    This is a comment outside of a C
+    scope.
+*/
