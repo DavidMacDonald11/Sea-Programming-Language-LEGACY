@@ -22,3 +22,8 @@ scope:
 
         for thing in theseChars:
             pass
+
+        for stuff in theseChars:
+            // I don't know Sea so let's use C:
+            c scope:
+                printf("%c ", *stuff)
