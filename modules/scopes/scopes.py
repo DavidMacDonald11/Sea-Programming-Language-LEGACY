@@ -4,8 +4,11 @@ from .multiline_comment import MultilineComment
 from .for_loop import ForLoop
 from .while_loop import WhileLoop
 from .do_while_loop import DoWhileLoop
+from .function import FunctionScope
 
-ALL_SCOPES = {Scope, CScope, MultilineComment, ForLoop, WhileLoop, DoWhileLoop}
+SCOPES = {Scope, CScope}
+LOOPS = {ForLoop, WhileLoop, DoWhileLoop}
+ALL_SCOPES = {MultilineComment, FunctionScope} | SCOPES | LOOPS
 
 def check_match_all(line):
     for scope_type in ALL_SCOPES:

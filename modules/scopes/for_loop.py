@@ -1,3 +1,4 @@
+from modules.transpiler import conditionals
 from .scope import Scope
 from .scope import ScopeDeclarationError
 
@@ -27,6 +28,7 @@ class ForLoop(Scope):
             parts += [f"++{name}"]
         else:
             parts = ready_parts(line, ";", 3)
+            parts[1] = conditionals.transpile(parts[1])
 
         return f"for({parts[0]}; {parts[1]}; {parts[2]}) {{"
 
