@@ -1,3 +1,5 @@
+#bin/bash
+
 src_dir="src"
 bin_dir="bin"
 

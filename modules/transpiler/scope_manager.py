@@ -9,7 +9,8 @@ from modules.scopes.global_scope import GlobalScope
 from .errors import TranspilerError
 
 class ScopeManager:
-    def __init__(self, cfile):
+    def __init__(self, seafile, cfile):
+        self.seafile = seafile
         self.cfile = cfile
         self.scopes = [GlobalScope()]
         self.line_was_space = False
@@ -20,7 +21,7 @@ class ScopeManager:
 
     def __exit__(self, e_type, e_value, e_traceback):
         def error(message):
-            to_print = f"Line #{self.line_count}: {message}"
+            to_print = f"Line #{self.line_count} of {self.seafile}:\n{message}"
 
             print(to_print)
             self.cfile.write("// Transpilation stopped due to error\n")

@@ -22,7 +22,10 @@ if __name__ == "__main__":
             new_file = new_file.replace(".sea", ".c")
 
             try:
-                os.makedirs(new_file[:new_file.rfind("/")])
+                file_dir = new_file[:new_file.rfind("/")]
+
+                os.makedirs(f"bin/{file_dir}")
+                os.makedirs(file_dir)
             except OSError as e:
                 if e.errno != errno.EEXIST:
                     raise e

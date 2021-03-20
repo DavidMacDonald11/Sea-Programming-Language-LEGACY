@@ -10,3 +10,5 @@ __pycache__
 # Ignore compiled files
 bin
 !bin/.keep
+!bin/compile-c.bash
+!bin/bin/.keep
