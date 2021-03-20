@@ -1,3 +1,4 @@
+import traceback
 from modules.parser import indent
 from modules.scopes import scopes
 from modules.scopes.scope import VerbatumScope
@@ -19,11 +20,14 @@ class ScopeManager:
 
     def __exit__(self, e_type, e_value, e_traceback):
         def error(message):
-            print(f"Line #{self.line_count}: {message}")
-            self.cfile.write("// Transpilation stopped due to error")
+            to_print = f"Line #{self.line_count}: {message}"
+
+            print(to_print)
+            self.cfile.write("// Transpilation stopped due to error\n")
+            self.cfile.write(f"/* {to_print} */\n")
 
         if e_type is not None:
-            error(e_traceback)
+            error("".join(traceback.format_tb(e_traceback)))
 
         try:
             for scope in self.scopes[::-1]:

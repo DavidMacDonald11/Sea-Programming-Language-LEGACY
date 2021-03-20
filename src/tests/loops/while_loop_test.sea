@@ -1,0 +1,19 @@
+while true:
+    pass
+
+int i = 5
+
+while i == 5:
+    for i; i < 10; ++i:
+        pass
+
+
+do:
+    pass
+while true
+
+scope:
+    do:
+        pass
+        // Stuff
+    while i == 5

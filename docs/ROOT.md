@@ -2,3 +2,4 @@
 1. [Scopes and Indentation](./SCOPES.md)
 2. [Comments](./COMMENTS.md)
 3. [For Loops](./loops/FOR_LOOP.md)
+4. [While Loops](./loops/WHILE_LOOP.md)

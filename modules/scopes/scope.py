@@ -89,7 +89,7 @@ class EndableScope(Scope):
         if ending == "Override Ending":
             raise UnoverridenMethodError(cls)
 
-        if re.fullmatch(ending, line):
+        if re.fullmatch(ending, line) is not None:
             self.ending = line
             return True
 
