@@ -21,7 +21,7 @@ class ScopeManager:
 
     def __exit__(self, e_type, e_value, e_traceback):
         def error(message):
-            to_print = f"Line #{self.line_count} of {self.seafile}:\n{message}"
+            to_print = f"Line #{self.line_count} of {self.seafile.name}:\n{message}"
 
             print(to_print)
             self.cfile.write("// Transpilation stopped due to error\n")
@@ -71,10 +71,19 @@ class ScopeManager:
             raise UndeclaredScopeError()
 
         if new_level < level:
+            for i in range(level - new_level):
+                scope = self.scopes[-1 - i]
+
+                if isinstance(scope, EndableScope) and scope.check_ending(line):
+                    line = scope.remove_ending(line)
+
             scope = self.end_scopes(level - new_level)
             level = scope.indent
 
         line = line.strip()
+
+        if line == "":
+            return
 
         if new_level == level:
             scope.is_empty = False

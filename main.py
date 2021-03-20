@@ -30,6 +30,5 @@ if __name__ == "__main__":
                 if e.errno != errno.EEXIST:
                     raise e
 
-
             print(f"Transpiling {file} into {new_file}...")
             transpiler.transpile(file, new_file)

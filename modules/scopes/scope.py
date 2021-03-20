@@ -95,6 +95,9 @@ class EndableScope(Scope):
 
         return False
 
+    def remove_ending(self, line):
+        return re.sub(type(self).sea_ending, "", line)
+
     def get_ending(self):
         if self.ending is None:
             raise UndeclaredEndOfScopeError()
