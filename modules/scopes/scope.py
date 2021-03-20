@@ -1,5 +1,6 @@
 import re
 from modules.parser import indent
+from modules.transpiler import statements
 from modules.transpiler.errors import TranspilerError
 
 class Scope:
@@ -28,22 +29,10 @@ class Scope:
 
     def write_line(self, cfile, line = "", outside = False):
         if line is not None:
-            line = self.transpile_line(line)
+            if not outside:
+                line = statements.transpile(line)
+
             cfile.write(f"{self.indent_line(line, outside)}\n")
-
-    @classmethod
-    def transpile_line(cls, line):
-        untranspiled = line.strip()
-
-        if untranspiled == "pass":
-            return "// pass"
-
-        comment = re.compile(r"//.*")
-
-        if comment.fullmatch(untranspiled) is not None:
-            return line + "\n"
-
-        return line
 
     def get_declaration(self):
         return type(self).c_declaration
@@ -133,7 +122,14 @@ class InlineScope(Scope):
 class ScopeError(TranspilerError):
     pass
 
-class UndeclaredScopeError(ScopeError):
+class ScopeDeclarationError(ScopeError):
+    def __init__(self, message = None):
+        if message is None:
+            message = "Scope was declared incorrectly."
+
+        super().__init__(message)
+
+class UndeclaredScopeError(ScopeDeclarationError):
     def __init__(self, message = None):
         if message is None:
             message = "Too many indents for the current scope."

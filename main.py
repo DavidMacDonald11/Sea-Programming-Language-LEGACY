@@ -1,5 +1,6 @@
 import os
 import sys
+import errno
 from modules.transpiler import transpiler
 
 def find_files(directory = "src"):
@@ -19,6 +20,13 @@ if __name__ == "__main__":
             new_file = file.replace(src_dir, bin_dir, 1)
             new_file = new_file.replace(".hea", ".h")
             new_file = new_file.replace(".sea", ".c")
+
+            try:
+                os.makedirs(new_file[:new_file.rfind("/")])
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise e
+
 
             print(f"Transpiling {file} into {new_file}...")
             transpiler.transpile(file, new_file)

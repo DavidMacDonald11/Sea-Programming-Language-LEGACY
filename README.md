@@ -24,7 +24,7 @@ Run `./sea-to-c.bash SRC`
 This will behave like the In Place command except `BIN` is automatically chosen as `./bin`
 
 ## Nonstationary
-Move the files you wish to transpile into `./src`.
+Delete any pre-existing files in `./src` and move the files you wish to transpile into there.
 
 Run `./sea-to-c.bash`
 

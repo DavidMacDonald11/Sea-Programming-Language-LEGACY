@@ -1,0 +1,24 @@
+for int i = 5; i < 55; i++:
+    pass
+
+int i = 0
+
+for i; i < 10; i += 2:
+    pass
+
+for ; true; :
+    pass
+
+int* c = {1, 2, 3}
+
+for i in c:
+    pass
+
+scope:
+    // This is a scope
+
+    scope:
+        char* theseChars = {'a', 'b', 'c'}
+
+        for thing in theseChars:
+            pass
