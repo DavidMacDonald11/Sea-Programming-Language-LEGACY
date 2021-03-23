@@ -40,6 +40,9 @@ class Scope:
     def get_ending(self):
         return type(self).c_ending
 
+    def is_type(self, scope_type):
+        return isinstance(self, scope_type)
+
     @classmethod
     def check_match(cls, line):
         return re.fullmatch(cls.sea_declaration, line) is not None
