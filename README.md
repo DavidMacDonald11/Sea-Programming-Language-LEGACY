@@ -39,6 +39,12 @@ Lastly, the script will enter the `BIN/bin` directory where it wil run the gener
 ## Components
 Notice that each stage is split into separate scripts. This allows you to transpile, compile, and run at different times under different circumstances.
 
+- You can run `./transpile-sea.bash SRC BIN FILES` to just transpile.
+- You can run `cd BIN && ./compile-c.bash FILES` to just compile.
+- You can run `./compile-sea.bash SRC BIN FILES` to transpile and compile.
+- You can run `cd BIN/bin && ./program` to just run the program.
+- You can run `./run-sea.bash SRC BIN FILES` to transpile, compile, and run.
+
 # Docs
 Read through the [documentation](./docs/ROOT.md) to learn the Sea syntax.
 
@@ -46,7 +52,7 @@ It is a mixture of Python and C. I personally think indent-based scopes are bett
 
 I am not going to make Sea higher level than C. There will be syntactical sugar, but I don't want to create a performance cost to using Sea. All of the cost should be paid at transpile-time and compile-time, not at run-time. In the future, I plan on making a compiler from the ground up for Sea.
 
-I also plan on making a Sea library for Python-like datastuctures and functions such as `range`.
+I also plan on making a Sea library for Python-like data stuctures and functions such as `range`, `enumerate`, tuples, lists, etc.
 
 # Legal
 Feel free to write your own program to interact with this code and absolutely feel free to use the Sea language. It is my intention for this language and code to be useful. If you think my current license is too strict, let me know. See [LICENSE](./LICENSE) for details.
