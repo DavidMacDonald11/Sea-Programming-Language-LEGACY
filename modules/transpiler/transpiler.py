@@ -19,8 +19,10 @@ def transpile(filename, new_filename):
                     continue
 
             scope.close_all()
+            return True
         except TranspilerError as e:
             print_error(line_number, seafile, cfile, e)
+            return False
 
 def write_header(cfile):
     cfile.write("#define true 1\n")

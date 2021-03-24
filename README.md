@@ -11,38 +11,42 @@ While this play-on-words thing is fun, I don't want to create a "gif" situation.
 I chose the name Sea because it is pronounced identically to C, but written differently. I then chose `.hea` because it is `.sea` with an 'h', it contains the first three letters in "header", and I made it rhyme because it's more fun than "hey", "hey-ah", "he-ah", or any other arbitrary pronuncation. Say what you will about "he", but it isn't arbitrary.
 
 # Transpilation Instructions
-## In Place
-Run `./transpile-sea.bash SRC BIN` where:
+Run `./transpile-sea.bash SRC BIN FILES` where:
 
-`SRC` is the folder containing `.sea` and `.hea` files. Subdirectories will be automatically discovered.
+`FILES` are the files or directories you wish to transpile. This is relative to the current directory, not to the `SRC` directory. Leaving this blank will transpile the entire `SRC` directory.
 
-`BIN` is the folder you wish to contain `.c` and `.h` files. Subdirectories in `SRC` will be matched.
+- If you do a directory and a subdirectory, the subdirectory will be redundant.
 
-## Hybrid
-Run `./transpile-sea.bash SRC`
+`BIN` is the folder you wish to contain `.c` and `.h` files. Subdirectories in `SRC` will be matched. Leaving this blank will use the project's `bin` folder by default.
 
-This will behave like the In Place command except `BIN` is automatically chosen as `./bin`
+`SRC` is the folder containing `.sea` and `.hea` files. Subdirectories will be automatically discovered. Leaving this blank will use the project's `src` folder by default.
 
-## Nonstationary
-Delete any pre-existing files in `./src` and move the files you wish to transpile into there.
+- If you wish to use the project's `src` folder, delete anything in the `src` folder and place in the files you wish to transpile.
 
-Run `./transpile-sea.bash`
+# Transpilation, Compilation, and Run Instructions
+Run `./run-sea.bash SRC BIN FILES`.
 
-The `BIN` directory will be `./bin` by default.
+This will first run `./transpile-sea.bash SRC BIN FILES`.
 
-## The "Linux" Method
-Write your own program to interact with the files in modules. Good luck!
+- When the files are transpiled, the program creates a temporary file called `BIN/files.tmp` which keeps a list of just-transpiled files. Feel free to delete it afterwards.
 
-# Compilation and Run Instructions
-This only applies if you transpiled in place. Otherwise, you'll unfortunately have to figure this out for yourself.
+The command will transpile the files as per usual, and then it will enter the `BIN` directory and it will try to run `compile-c.bash $(cat files.tmp | tr "\n" " ")`.
 
-Run `cd bin` followed by `./compile-c.bash FILES`.
+- The `compile-c.bash` script is provided in the project's `bin` directory. Feel free to write your own of the same name or to copy paste this one. It takes in file paths relative to `BIN` and compiles them to `BIN/bin`. It then uses those object files to create an executable `BIN/bin/program` file.
 
-`FILES` are all of the files, newly compiled into `bin`, that need to be included in the program.
+Lastly, the script will enter the `BIN/bin` directory where it wil run the generated `./program` file. As of right now, if you wish to pass arguments to the program, you'll have to edit this scipt and add them in.
 
-Then, run `bin/program` to run the code.
-
-This isn't that much more convenient than just compiling by hand, but I'll probably have a better solution eventually. Until then, you can always compile the transpiled files yourself.
+## Components
+Notice that each stage is split into separate scripts. This allows you to transpile, compile, and run at different times under different circumstances.
 
 # Docs
 Read through the [documentation](./docs/ROOT.md) to learn the Sea syntax.
+
+It is a mixture of Python and C. I personally think indent-based scopes are better than brackets in general. You should be indenting anyway for your code to be readalbe, and at that point the brackets are redundant. There are times when it isn't convenient, but it is what it is.
+
+I am not going to make Sea higher level than C. There will be syntactical sugar, but I don't want to create a performance cost to using Sea. All of the cost should be paid at transpile-time and compile-time, not at run-time. In the future, I plan on making a compiler from the ground up for Sea.
+
+I also plan on making a Sea library for Python-like datastuctures and functions such as `range`.
+
+# Legal
+Feel free to write your own program to interact with this code and absolutely feel free to use the Sea language. It is my intention for this language and code to be useful. If you think my current license is too strict, let me know. See [LICENSE](./LICENSE) for details.
