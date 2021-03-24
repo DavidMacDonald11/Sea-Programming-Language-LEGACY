@@ -1,8 +1,6 @@
 c scope:
     #include <stdio.h>
 
-    #define false 0
-
     int main() {
         printf("This is the beginning of a real Sea test!\n");
 

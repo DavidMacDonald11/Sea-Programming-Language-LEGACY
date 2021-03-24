@@ -11,7 +11,14 @@ def find_files(directory = "src"):
         for new_dir in dirs:
             yield from find_files(new_dir)
 
-if __name__ == "__main__":
+def make_dirs(path):
+    try:
+        os.makedirs(path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise e
+
+def main():
     src_dir = sys.argv[1]
     bin_dir = sys.argv[2]
 
@@ -21,14 +28,13 @@ if __name__ == "__main__":
             new_file = new_file.replace(".hea", ".h")
             new_file = new_file.replace(".sea", ".c")
 
-            try:
-                file_dir = new_file[:new_file.rfind("/")]
+            file_dir = new_file[:new_file.rfind("/")]
 
-                os.makedirs(f"bin/{file_dir}")
-                os.makedirs(file_dir)
-            except OSError as e:
-                if e.errno != errno.EEXIST:
-                    raise e
+            make_dirs(file_dir)
+            make_dirs(f"bin/{file_dir}")
 
             print(f"Transpiling {file} into {new_file}...")
             transpiler.transpile(file, new_file)
+
+if __name__ == "__main__":
+    main()
