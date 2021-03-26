@@ -1,4 +1,4 @@
-c scope:
+c block:
     #include <stdio.h>
 
     int main() {
@@ -7,11 +7,11 @@ c scope:
         int i = 0;
         int j = 4;
 
-/* Be sure to declare all vars in a c scope, since
+/* Be sure to declare all vars in a c block, since
     Sea does not understand vars yet */
 
 for i; i < 20; ++i:
-    c scope:
+    c block:
         printf("%d ", i);
 
 while &i != &i:
@@ -19,26 +19,26 @@ while &i != &i:
     // This is never true
 
 do:
-    c scope:
+    c block:
         printf("%c ", 'a' + j);
 while j > 10
 
 do:
     do:
         do:
-            c scope:
+            c block:
                 printf("1");
         while false
-        c scope:
+        c block:
             printf("2");
     while false
-    c scope:
+    c block:
         printf("3");
 while false
-c scope:
+c block:
     printf("4");
 
-c scope:
+c block:
         printf("\n");
 
         return 0;

@@ -1,22 +1,22 @@
-scope:
-    scope:
-        scope:
-            scope:
+block:
+    block:
+        block:
+            block:
                 pass
 
 // This is a comment
 
-scope:
-    scope:
-        // This is a comment in a scope
+block:
+    block:
+        // This is a comment in a block
 
-        scope:
+        block:
             /* This
                     is
                 a
                     comment
                 in a
-                    scope */
+                    block */
 
     /* comment
     */

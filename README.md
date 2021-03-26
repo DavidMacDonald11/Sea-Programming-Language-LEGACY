@@ -48,7 +48,7 @@ Notice that each stage is split into separate scripts. This allows you to transp
 # Docs
 Read through the [documentation](./docs/ROOT.md) to learn the Sea syntax.
 
-It is a mixture of Python and C. I personally think indent-based scopes are better than brackets in general. You should be indenting anyway for your code to be readalbe, and at that point the brackets are redundant. There are times when it isn't convenient, but it is what it is.
+It is a mixture of Python and C. I personally think indent-based blocks are better than brackets in general. You should be indenting anyway for your code to be readalbe, and at that point the brackets are redundant. There are times when it isn't convenient, but it is what it is.
 
 I am not going to make Sea higher level than C. There will be syntactical sugar, but I don't want to create a performance cost to using Sea. All of the cost should be paid at transpile-time and compile-time, not at run-time. In the future, I plan on making a compiler from the ground up for Sea.
 

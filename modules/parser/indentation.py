@@ -1,6 +1,6 @@
 from modules.transpiler.errors import TranspilerError
 
-def count_in_line(line):
+def count_indent(line):
     count = 0
 
     while line[0].isspace():
@@ -18,7 +18,7 @@ def count_in_line(line):
 
     return count
 
-def remove(line, amount):
+def remove_indent(line, amount):
     for _ in range(amount):
         if len(line) == 0:
             break
@@ -33,5 +33,5 @@ def remove(line, amount):
     return line
 
 class IndentError(TranspilerError):
-    def __init__(self, message = "Indents must be 4 spaces or 1 tab."):
-        super().__init__(message)
+    def get_message(self):
+        return "Indents must be 4 spaces or 1 tab."

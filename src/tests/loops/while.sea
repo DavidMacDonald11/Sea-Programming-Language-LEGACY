@@ -12,7 +12,7 @@ do:
     pass
 while true
 
-scope:
+block:
     do:
         pass
         // Stuff

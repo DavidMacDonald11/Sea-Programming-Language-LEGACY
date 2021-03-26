@@ -14,10 +14,10 @@ int* c = {1, 2, 3}
 for i in c:
     pass
 
-scope:
-    // This is a scope
+block:
+    // This is a block
 
-    scope:
+    block:
         char* theseChars = {'a', 'b', 'c'}
 
         for thing in theseChars:
@@ -25,5 +25,5 @@ scope:
 
         for stuff in theseChars:
             // I don't know Sea so let's use C:
-            c scope:
+            c block:
                 printf("%c ", *stuff)

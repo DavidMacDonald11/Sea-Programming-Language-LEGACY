@@ -1,4 +1,4 @@
-c scope:
+c block:
     #include <stdio.h>
 
 int main():
