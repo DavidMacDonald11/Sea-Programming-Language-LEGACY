@@ -9,5 +9,7 @@ __pycache__
 
 # Ignore compiled files
 bin
-!**/.keep
 !bin/**/*.bash
+
+# Don't Ignore
+!**/.keep
