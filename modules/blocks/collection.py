@@ -6,6 +6,8 @@ from .loops.do_while_loop import DoWhileLoop
 from .loops.while_loop import WhileLoop
 from .loops.for_loop import ForLoop
 
+# TODO add collection to each module like in statements
+
 BLOCKS = {NamelessBlock, CBlock, FunctionBlock, MultilineComment}
 LOOPS = {DoWhileLoop, WhileLoop, ForLoop}
 ALL_BLOCKS = BLOCKS | LOOPS

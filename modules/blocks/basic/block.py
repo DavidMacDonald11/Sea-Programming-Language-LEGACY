@@ -1,6 +1,6 @@
 import re
 from abc import ABCMeta, abstractmethod
-from modules.transpiler import statements
+from modules.transpiler import old_statements
 from modules.transpiler.errors import TranspilerError
 
 class MetaBlock(ABCMeta):
@@ -41,7 +41,7 @@ class Block(metaclass = MetaBlock):
     def write_line(self, cfile, line = "", outside = False):
         if line is not None:
             if not outside:
-                line = statements.transpile(line)
+                line = old_statements.transpile(line)
 
             cfile.write(f"{self.indent_line(line, outside)}\n")
 

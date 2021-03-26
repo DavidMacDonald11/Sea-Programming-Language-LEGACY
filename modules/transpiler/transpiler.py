@@ -31,6 +31,6 @@ def write_header(cfile):
 def print_error(line_number, seafile, cfile, error):
     to_print = f"Line #{line_number + 1} of {seafile.name}: {error.get_message()}"
 
-    print(to_print)
+    print(f"\t{to_print}")
     cfile.write("// Transpilation stopped due to error\n")
     cfile.write(f"/* {to_print} */\n")
