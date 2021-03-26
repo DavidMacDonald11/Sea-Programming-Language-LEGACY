@@ -22,6 +22,7 @@ Run `./transpile-sea.bash SRC BIN FILES` where:
 `SRC` is the folder containing `.sea` and `.hea` files. Subdirectories will be automatically discovered. Leaving this blank will use the project's `src` folder by default.
 
 - If you wish to use the project's `src` folder, delete anything in the `src` folder and place in the files you wish to transpile.
+- When you run `./transpile-sea.bash`, the previously transpiled files in `BIN` and `BIN/bin` will be erased.
 
 # Transpilation, Compilation, and Run Instructions
 Run `./run-sea.bash SRC BIN FILES`.
