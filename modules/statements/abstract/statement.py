@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from functools import cache
 from modules.transpiler.errors import TranspilerError
 
 class MetaStatement(ABCMeta):
@@ -10,19 +11,16 @@ class MetaStatement(ABCMeta):
         return max(nested.complexity for nested in nested_set for nested_set in cls.allowed_nested)
 
     @property
+    @cache
     def pattern(cls):
-        if cls._pattern is None:
-            defined = cls.get_pattern()
+        defined = cls.get_pattern()
 
-            if defined is None:
-                raise UndefinedStatementPropertyError("Pattern", cls)
+        if defined is None:
+            raise UndefinedStatementPropertyError("Pattern", cls)
 
-            cls._pattern = defined
-
-        return cls._pattern
+        return defined
 
 class Statement(metaclass = MetaStatement):
-    _pattern = None
     allowed_nested = []
 
     def __init__(self, line):

@@ -1,21 +1,18 @@
 import re
 from abc import abstractmethod
+from functools import cache
 from .block import Block
 from .block import MetaBlock
 from .block import UndeclaredBlockError
 
 class MetaEndableBlock(MetaBlock):
     @property
+    @cache
     def ending_pattern(cls):
-        if cls._ending_pattern is None:
-            cls._ending_pattern = re.compile(cls.get_ending_pattern())
-
-        return cls._ending_pattern
+        return re.compile(cls.get_ending_pattern())
 
 class EndableBlock(Block, metaclass = MetaEndableBlock):
     """A block that has a defined Sea ending."""
-    _ending_pattern = None
-
     def __init__(self, indent, declaration):
         self.ending = None
         super().__init__(indent, declaration)

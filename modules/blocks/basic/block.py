@@ -1,24 +1,21 @@
 import re
 from abc import ABCMeta, abstractmethod
+from functools import cache
 from modules.transpiler import old_statements
 from modules.transpiler.errors import TranspilerError
 
 class MetaBlock(ABCMeta):
     @property
+    @cache
     def declaration_pattern(cls):
-        if cls._declaration_pattern is None:
-            defined = cls.get_declaration_pattern()
+        defined = cls.get_declaration_pattern()
 
-            if defined is None:
-                raise UndefinedBlockPropertyError("Declaration Pattern", cls)
+        if defined is None:
+            raise UndefinedBlockPropertyError("Declaration Pattern", cls)
 
-            cls._declaration_pattern = re.compile(defined)
-
-        return cls._declaration_pattern
+        return re.compile(defined)
 
 class Block(metaclass = MetaBlock):
-    _declaration_pattern = None
-
     def __init__(self, indent, declaration):
         self.indent = indent
         self.declaration = declaration
