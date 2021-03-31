@@ -36,12 +36,12 @@ class Statement(metaclass = MetaStatement):
 
         lines = (statement.get_line() for statement in self.statements)
 
-        return "".join(next(lines) if part is None else part for part in structure )
+        return "".join(next(lines) if part is None else part for part in structure)
 
     @classmethod
     @abstractmethod
     def get_structure(cls):
-        pass
+        """Returns a list of C syntax components with None representing self.statements"""
 
     def strip_structure(self):
         return type(self).pattern.sub(" ", self.line, 1)
@@ -52,6 +52,7 @@ class Statement(metaclass = MetaStatement):
 
     @classmethod
     def get_pattern(cls):
+        """Returns an re pattern to match Sea syntax."""
         return None
 
     @classmethod
