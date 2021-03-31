@@ -54,3 +54,5 @@ deep:
 .PHONY: clean
 clean:
 	-$(RM) -r $(CACHE)
+	cd bin; ./clean.bash
+	cd output; ./clean.bash

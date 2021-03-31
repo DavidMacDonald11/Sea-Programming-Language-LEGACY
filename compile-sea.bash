@@ -2,13 +2,27 @@
 
 ./transpile-sea.bash "$@"
 
-if [[ "$2" == "" ]]
-then
-    cd bin
-else
-    cd "$2"
-fi
+bin_dir="bin"
+output_dir="output"
 
-./compile-c.bash $(cat files.tmp | tr "\n" " ")
+for (( i=1; i <= "$#"; i++ ))
+do
+    if [[ "${!i}" == "-b" ]]
+    then
+        (( i++ ))
+        bin_dir="${!i}"
+        continue
+    fi
+
+    if [[ "${!i}" == "-c" ]]
+    then
+        (( i++ ))
+        output_dir="${!i}"
+        continue
+    fi
+done
+
+cd "$output_dir"
+./compile-c.bash -b "../$bin_dir" $(cat files.tmp | tr "\n" " ")
 
 exit 0

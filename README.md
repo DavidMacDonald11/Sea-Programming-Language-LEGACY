@@ -11,40 +11,39 @@ While this play-on-words thing is fun, I don't want to create a "gif" situation.
 I chose the name Sea because it is pronounced identically to C, but written differently. I then chose `.hea` because it is `.sea` with an 'h', it contains the first three letters in "header", and I made it rhyme because it's more fun than "hey", "hey-ah", "he-ah", or any other arbitrary pronuncation. Say what you will about "he", but it isn't arbitrary.
 
 # Transpilation Instructions
-Run `./transpile-sea.bash SRC BIN FILES` where:
+Run `./transpile-sea.bash -s IN -c OUT -b BIN FILES` where:
+- All of the following arguments are relative to the current working directory unless otherwise stated.
 
-`FILES` are the files or directories you wish to transpile. This is relative to the current directory, not to the `SRC` directory. Leaving this blank will transpile the entire `SRC` directory.
+`FILES` are the files or directories you wish to transpile. This is relative to the `IN` directory. Leaving this blank will transpile the entire `IN` directory.
+- If you transpile a directory and a subdirectory, the subdirectory will be redundant.
 
-- If you do a directory and a subdirectory, the subdirectory will be redundant.
+`IN` is the folder containing `.sea` and `.hea` files. Subdirectories will be automatically discovered. Leaving this blank will use the project's `input` folder by default.
 
-`BIN` is the folder you wish to contain `.c` and `.h` files. Subdirectories in `SRC` will be matched. Leaving this blank will use the project's `bin` folder by default.
+`OUT` is the folder you wish to contain `.c` and `.h` files. Subdirectories in `IN` will be matched. Leaving this blank will use the project's `output` folder by default.
 
-`SRC` is the folder containing `.sea` and `.hea` files. Subdirectories will be automatically discovered. Leaving this blank will use the project's `src` folder by default.
-
-- If you wish to use the project's `src` folder, delete anything in the `src` folder and place in the files you wish to transpile.
-- When you run `./transpile-sea.bash`, the previously transpiled files in `BIN` and `BIN/bin` will be erased.
+`BIN` is the folder you wish to contain `.o` and executable files. Subdirectories in `IN` will be matched. Leaving this blank will use the project's `bin` folder by default.
+- If you wish to use the project's `input` folder, delete anything in the `input` folder and place in the files you wish to transpile.
+- When you run `./transpile-sea.bash`, the previously transpiled files in `OUT` and `BIN` will be erased.
 
 # Transpilation, Compilation, and Run Instructions
-Run `./run-sea.bash SRC BIN FILES`.
+Run `./run-sea.bash -s IN -c OUT -b BIN -a arg FILES`.
 
-This will first run `./transpile-sea.bash SRC BIN FILES`.
+This will first run `./transpile-sea.bash -s IN -c OUT -b BIN FILES`.
+- When the files are transpiled, the program creates a temporary file called `OUT/files.tmp` which keeps a list of just-transpiled files. Feel free to delete it afterwards.
 
-- When the files are transpiled, the program creates a temporary file called `BIN/files.tmp` which keeps a list of just-transpiled files. Feel free to delete it afterwards.
+The command will transpile the files as per usual, and then it will enter the `OUT` directory and it will try to run `./compile-c.bash -b BIN $(cat files.tmp | tr "\n" " ")`.
+- The `compile-c.bash` script is provided in the project's `bin` directory. Feel free to write your own of the same name or to copy paste this one. It takes in file paths relative to `OUT` and compiles them to `BIN`. It then uses those object files to create an executable `BIN/program` file.
 
-The command will transpile the files as per usual, and then it will enter the `BIN` directory and it will try to run `compile-c.bash $(cat files.tmp | tr "\n" " ")`.
-
-- The `compile-c.bash` script is provided in the project's `bin` directory. Feel free to write your own of the same name or to copy paste this one. It takes in file paths relative to `BIN` and compiles them to `BIN/bin`. It then uses those object files to create an executable `BIN/bin/program` file.
-
-Lastly, the script will enter the `BIN/bin` directory where it wil run the generated `./program` file. As of right now, if you wish to pass arguments to the program, you'll have to edit this scipt and add them in.
+Lastly, the script will enter the `BIN` directory where it wil run the generated `./program` file. If you want to pass arguments to this program, include them with `-a arg` in the `./run-sea.bash` command.
+- For instance, `./run-sea.bash -a 15 -a hello -a 5` will run as `./program 15 hello 5`.
 
 ## Components
 Notice that each stage is split into separate scripts. This allows you to transpile, compile, and run at different times under different circumstances.
-
-- You can run `./transpile-sea.bash SRC BIN FILES` to just transpile.
-- You can run `cd BIN && ./compile-c.bash FILES` to just compile.
-- You can run `./compile-sea.bash SRC BIN FILES` to transpile and compile.
-- You can run `cd BIN/bin && ./program` to just run the program.
-- You can run `./run-sea.bash SRC BIN FILES` to transpile, compile, and run.
+- You can run `./transpile-sea.bash -s IN -c OUT FILES` to just transpile.
+- You can run `cd OUT && ./compile-c.bash FILES` to just compile.
+- You can run `./compile-sea.bash -s IN -c OUT FILES` to transpile and compile.
+- You can run `cd BIN && ./program` to just run the program.
+- You can run `./run-sea.bash -s IN -c OUT FILES` to transpile, compile, and run.
 
 # Docs
 Read through the [documentation](./docs/ROOT.md) to learn the Sea syntax.
