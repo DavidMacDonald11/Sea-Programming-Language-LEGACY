@@ -55,4 +55,8 @@ I am not going to make Sea higher level than C. There will be syntactical sugar,
 I also plan on making a Sea library for Python-like data stuctures and functions such as `range`, `enumerate`, tuples, lists, etc.
 
 # Legal
+I am basing much of this code based on [David Callanan's BASIC interpreter written in Python](https://github.com/davidcallanan/py-myopl-code) which is licensed under [MIT](https://github.com/davidcallanan/py-myopl-code/blob/master/LICENSE).
+
 Feel free to write your own program to interact with this code and absolutely feel free to use the Sea language. It is my intention for this language and code to be useful. If you think my current license is too strict, let me know. See [LICENSE](./LICENSE) for details.
+
+Feel free to use my code as a basis for your own lexer, programming language, etc!
