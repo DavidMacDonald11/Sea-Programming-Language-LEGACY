@@ -15,7 +15,8 @@ def transpile(seafile_path, cfile_path):
             return False
 
 def print_error(lexer, seafile, cfile, error):
-    to_print = f"Line #{lexer.line_count} of {seafile.name}: {error.get_message()}"
+    position = f"Line {lexer.line_count}, Col {lexer.column_count}"
+    to_print = f"{position} of {seafile.name}: {error.get_message()}"
 
     print(to_print)
     cfile.write("// Transpilation stopped due to error\n")

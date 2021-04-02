@@ -15,6 +15,7 @@ class Lexer:
         self.file = file
         self.position = -1
         self.line_count = 1
+        self.column_count = -1
 
         self.symbol = None
         self.took_symbol = True
@@ -30,6 +31,7 @@ class Lexer:
         if self.took_symbol:
             self.position += 1
             self.symbol = self.file.read(1) or None
+            self.column_count += 1
             self.took_symbol = False
 
     def take_symbol(self):
@@ -44,12 +46,17 @@ class Lexer:
             if self.symbol == "\n":
                 at_line_start = True
                 self.line_count += 1
-                self.take_symbol_and_advance()
+                self.column_count = -1
 
+                self.take_symbol_and_advance()
                 continue
+
+            matched_token = False
 
             for symbols, token_type in Token.TYPES.items():
                 if self.symbol in symbols:
+                    matched_token = True
+
                     if at_line_start and token_type != "INDENT":
                         at_line_start = False
                     elif not at_line_start and token_type == "INDENT":
@@ -57,9 +64,12 @@ class Lexer:
                         continue
 
                     tokens += [self.make(token_type)]
-                    self.advance()
 
+                    self.advance()
                     break
+
+            if not matched_token:
+                raise errors.UnknownTokenError(self.take_symbol_and_advance())
 
         return tokens
 
