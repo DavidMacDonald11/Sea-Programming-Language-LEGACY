@@ -1,7 +1,19 @@
-class TranspilerError(Exception):
+class MessageException(Exception):
     def __init__(self, message = ""):
         self.message = message
         super().__init__(message)
 
     def get_message(self):
         return self.message
+
+class TranspilerError(MessageException):
+    pass
+
+class HandledTranspilerError(MessageException):
+    def __init__(self, position, error):
+        self.position = position
+        self.error = error
+        super().__init__(error.message)
+
+    def get_message(self):
+        return self.error.get_message()

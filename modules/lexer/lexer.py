@@ -1,5 +1,6 @@
 from functools import cached_property
 from .tokens import Token
+from .position import Position, FilePosition
 from ..lexer import errors
 
 class Lexer:
@@ -13,9 +14,8 @@ class Lexer:
 
     def __init__(self, file):
         self.file = file
-        self.position = -1
-        self.line_count = 1
-        self.column_count = -1
+        self.file_position = FilePosition(file)
+        self.end_position = None
 
         self.symbol = None
         self.took_symbol = True
@@ -29,9 +29,8 @@ class Lexer:
 
     def advance(self):
         if self.took_symbol:
-            self.position += 1
             self.symbol = self.file.read(1) or None
-            self.column_count += 1
+            self.file_position.next()
             self.took_symbol = False
 
     def take_symbol(self):
@@ -43,14 +42,7 @@ class Lexer:
         tokens = []
 
         while self.symbol is not None:
-            if self.symbol == "\n":
-                at_line_start = True
-                self.line_count += 1
-                self.column_count = -1
-
-                self.take_symbol_and_advance()
-                continue
-
+            position = Position(self.file_position.copy())
             matched_token = False
 
             for symbols, token_type in Token.TYPES.items():
@@ -63,7 +55,16 @@ class Lexer:
                         self.take_symbol_and_advance()
                         continue
 
-                    tokens += [self.make(token_type)]
+                    position.end = self.file_position.copy()
+                    new_token = self.make(token_type)
+                    new_token.position = position
+
+                    tokens += [new_token]
+
+                    if token_type == "LINEEND":
+                        at_line_start = True
+                        self.file_position.next_line()
+                        self.take_symbol_and_advance()
 
                     self.advance()
                     break
@@ -71,7 +72,7 @@ class Lexer:
             if not matched_token:
                 raise errors.UnknownTokenError(self.take_symbol_and_advance())
 
-        return tokens
+        return tokens + [Token("EOF")]
 
     def make(self, token_type):
         try:
@@ -100,10 +101,11 @@ class Lexer:
         while self.symbol is not None and self.symbol in Token.SYMBOLS["FLOAT"]:
             if self.symbol == ".":
                 if dot_count == 1:
+                    self.take_symbol_and_advance()
                     raise errors.FloatError()
 
                 dot_count += 1
 
             num_str += self.take_symbol_and_advance()
 
-        return Token("INT", int(num_str)) if dot_count == 0 else Token("FLOAT", float(num_str))
+        return Token("INT" if dot_count == 0 else "FLOAT", num_str)
