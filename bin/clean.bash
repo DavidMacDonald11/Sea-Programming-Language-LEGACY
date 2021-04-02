@@ -1,12 +1,18 @@
 #!/bin/bash
 
+if [[ "$0" != "./clean.bash" ]]
+then
+    echo "Must run clean.bash from inside of the folder for safety."
+    exit 1
+fi
+
 shopt -s extglob
 
-ls !(bin|.keep|*.bash) >/dev/null 2>&1
+ls !(.keep|*.bash) >/dev/null 2>&1
 
 if [[ $? -eq 0 ]]
 then
-    rm -r !(bin|.keep|*.bash)
+    rm -r !(.keep|*.bash)
 fi
 
 exit 0

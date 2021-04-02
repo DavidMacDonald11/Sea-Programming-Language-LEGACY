@@ -5,11 +5,15 @@
 venv
 
 # Ignore temporary files
-__pycache__
+**/__pycache__
+
+# Ignore transpiled files
+output/**
+!output/**/*.bash
 
 # Ignore compiled files
-bin
+bin/**
 !bin/**/*.bash
 
-# Don't Ignore
-!**/.keep
+# Do not ignore
+**/*.keep

@@ -1,35 +1,21 @@
+from modules.lexer.lexer import Lexer
 from .errors import TranspilerError
-from .block import interpret_line
-from .block import Continue
-from .block_state import BlockState
 
-def transpile(filename, new_filename):
-    with open(filename) as seafile, open(new_filename, "w") as cfile:
-        write_header(cfile)
-
-        line_number = -1
-        BlockState.restart(cfile)
+def transpile(seafile_path, cfile_path):
+    with open(seafile_path) as seafile, open(cfile_path, "w") as cfile:
+        lexer = Lexer(seafile)
 
         try:
-            for line_number, line in enumerate(seafile):
-                try:
-                    interpret_line(line)
-                except Continue:
-                    continue
+            tokens = lexer.make_tokens()
+            print(tokens)
 
-            BlockState.close_all()
             return True
-        except TranspilerError as e:
-            print_error(line_number, seafile, cfile, e)
+        except TranspilerError as error:
+            print_error(lexer, seafile, cfile, error)
             return False
 
-def write_header(cfile):
-    cfile.write("#define true 1\n")
-    cfile.write("#define false 0\n")
-    cfile.write("\n")
-
-def print_error(line_number, seafile, cfile, error):
-    to_print = f"Line #{line_number + 1} of {seafile.name}: {error.get_message()}"
+def print_error(lexer, seafile, cfile, error):
+    to_print = f"Line #{lexer.line_count} of {seafile.name}: {error.get_message()}"
 
     print(to_print)
     cfile.write("// Transpilation stopped due to error\n")
