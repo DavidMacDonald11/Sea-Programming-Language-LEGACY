@@ -1,6 +1,4 @@
-# Sea to C Transpiler - Python Based
-A Sea to C transpiler written in Python.
-
+# The Sea Programming Language
 The Sea programming language is a variant of the C language, with python-like syntax. The goal is to make C as enjoyable to write as Python. This should allow for faster programming, faster debugging, fewer lines of code, and all the features of C.
 
 Sea - It's C, just written differently.
@@ -9,6 +7,22 @@ Sea - It's C, just written differently.
 While this play-on-words thing is fun, I don't want to create a "gif" situation. The `.sea` file extension is pronounced like the english word "sea". The `.hea` file extension is pronounced like the english word "he".
 
 I chose the name Sea because it is pronounced identically to C, but written differently. I then chose `.hea` because it is `.sea` with an 'h', it contains the first three letters in "header", and I made it rhyme because it's more fun than "hey", "hey-ah", "he-ah", or any other arbitrary pronuncation. Say what you will about "he", but it isn't arbitrary.
+
+# Functionality
+Currently, this project is in its early stages and most of the Sea langauge has not been fully designed. Please keep watch as I develop this over time.
+
+This project contains a few key features:
+1. A Sea to C transpiler.
+2. A Sea interpreter.
+3. A Sea compiler.
+4. A Sea terminal interface.
+5. Sea language documentation.
+
+# Future Development
+- I'm currently writing all of this code in Python. Once I create everything, I want to rewrite it in Sea.
+- I plan on creating syntax highling and a linter for Code OSS as well as icons and logos.
+- I plan on creating a unified bash command for all functionality as well as a more formal package for the code with aliases, etc.
+- I also plan on making Sea useable on other operating systems besides Unix-based ones.
 
 # Transpilation Instructions
 Run `./transpile-sea.bash -s IN -c OUT -b BIN FILES` where:
@@ -55,8 +69,8 @@ I am not going to make Sea higher level than C. There will be syntactical sugar,
 I also plan on making a Sea library for Python-like data stuctures and functions such as `range`, `enumerate`, tuples, lists, etc.
 
 # Legal
-I am basing much of this code based on [David Callanan's BASIC interpreter written in Python](https://github.com/davidcallanan/py-myopl-code) which is licensed under [MIT](https://github.com/davidcallanan/py-myopl-code/blob/master/LICENSE).
+I am basing much of this code on [David Callanan's BASIC interpreter written in Python](https://github.com/davidcallanan/py-myopl-code) which is licensed under [MIT](https://github.com/davidcallanan/py-myopl-code/blob/master/LICENSE).
 
 Feel free to write your own program to interact with this code and absolutely feel free to use the Sea language. It is my intention for this language and code to be useful. If you think my current license is too strict, let me know. See [LICENSE](./LICENSE) for details.
 
-Feel free to use my code as a basis for your own lexer, programming language, etc!
+Feel free to use my code as a basis for your own compiler, programming language, etc!
