@@ -13,9 +13,9 @@ class Lexer:
             TT.FLOAT: self.make_number
         }
 
-    def __init__(self, file):
-        self.file = file
-        self.position = Position(FilePosition(file))
+    def __init__(self, input_stream):
+        self.input_stream = input_stream
+        self.position = Position(FilePosition(input_stream))
 
         self.at_line_start = True
         self.token_type = None
@@ -73,7 +73,7 @@ class Lexer:
 
     def advance(self):
         if self.took_symbol:
-            self.symbol = self.file.read(1) or None
+            self.symbol = self.input_stream.read() or None
             self.position.start.next()
             self.took_symbol = False
 

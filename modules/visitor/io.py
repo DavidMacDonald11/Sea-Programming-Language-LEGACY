@@ -14,7 +14,7 @@ class Input(ABC):
         pass
 
     @abstractmethod
-    def read(self, chars):
+    def read(self):
         pass
 
 class Output(ABC):
@@ -31,8 +31,8 @@ class FileInput(File, Input):
     def name(self):
         return self.file.name
 
-    def read(self, chars):
-        return self.file.read(chars)
+    def read(self):
+        return self.file.read(1)
 
 class FileOutput(File, Output):
     def write(self, string):

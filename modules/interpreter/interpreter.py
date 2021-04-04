@@ -1,6 +1,7 @@
 from functools import cached_property
 from modules.lexer.tokens import TT
 from modules.visitor.visitor import Visitor
+from ..interpreter import errors
 
 class Interpreter(Visitor):
     @cached_property
@@ -54,4 +55,9 @@ class Interpreter(Visitor):
         return left * right
 
     def div_nums(self, left, right):
+        if right == 0:
+            raise errors.DivideByZeroError(right)
+
+        # TODO debug
+
         return left / right

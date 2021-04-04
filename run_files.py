@@ -103,7 +103,7 @@ def get_io(*files):
         output_stream = FileOutput(files[1])
         error_stream = FileOutput(files[2])
     else:
-        output_stream = TerminalOutput("TERMINAL")
+        output_stream = TerminalOutput()
         error_stream = NullOutput()
 
     return IO(input_stream, output_stream, error_stream)

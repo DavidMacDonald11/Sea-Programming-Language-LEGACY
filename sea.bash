@@ -1,6 +1,10 @@
 #!/bin/bash
 
-echo "Sea Programming Language"
-echo "Sea >"
+if [[ ! -d venv ]]
+then
+    make venv
+fi
+
+./venv/bin/python3 run_terminal.py
 
 exit 0
