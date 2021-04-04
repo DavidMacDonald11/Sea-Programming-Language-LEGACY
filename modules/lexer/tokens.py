@@ -1,26 +1,24 @@
+from enum import Enum
 from .position import Position
 
+class TT(Enum):
+    INDENT = " \t"
+    NEWLINE = "\n"
+    INT = "0123456789"
+    FLOAT = INT + "."
+    PLUS = "+"
+    MINUS = "-"
+    STAR = "*"
+    SLASH = "/"
+    LPAREN = "("
+    RPAREN = ")"
+    EOF = ""
+
 class Token:
-    TYPES = {
-        " \t": "INDENT",
-        "\n": "LINEEND",
-        "0123456789": "INT",
-        "0123456789.": "FLOAT",
-        "+": "PLUS",
-        "-": "MINUS",
-        "*": "MUL",
-        "/": "DIV",
-        "(": "LPAREN",
-        ")": "RPAREN",
-        "": "EOF"
-    }
-
-    SYMBOLS = {value:key for key, value in TYPES.items()}
-
-    def __init__(self, token_type, value = None, position = Position()):
+    def __init__(self, token_type, value = None, position = None):
         self.type = token_type
         self.value = value
-        self.position = position
+        self.position = Position() if position is None else position
 
     def __repr__(self):
         return f"{self.type}" + ("" if self.value is None else f":{self.value}")

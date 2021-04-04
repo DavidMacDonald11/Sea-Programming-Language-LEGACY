@@ -1,22 +1,34 @@
 class Position:
     def __init__(self, start = None, end = None):
         self.start = start
-        self.end = end
+        self.end = start if end is None else end
 
     def __repr__(self):
         if self.start is None:
             return "Unkown Position"
 
-        if self.end is None or self.end == self.start:
+        if self.end == self.start:
             return f"{self.start}"
 
-        start = f"Line {self.start.line}"
-        ending = f"Col {self.start.column} to {self.end.column} of {self.end.filename}"
+        line = f"Line {self.start.line}"
+        column = f"Col {self.start.column}"
+        file = f"of {self.start.filename}"
 
         if self.end.line == self.start.line:
-            return f"{start}, {ending}"
+            return f"{line}, {column} {file}"
 
-        return f"{start} to {self.end.line}, {ending}"
+        line = f"{line} to {self.end.line}"
+
+        if self.end.column == self.start.column:
+            return f"{line}, {column} {file}"
+
+        return f"{line}, {column} to {self.end.column} {file}"
+
+    def copy(self):
+        position = (self.start, self.end)
+        position = tuple(map(lambda x: x if x is None else x.copy(), position))
+
+        return Position(*position)
 
 class FilePosition:
     def __init__(self, file, line = 1, column = -1):
