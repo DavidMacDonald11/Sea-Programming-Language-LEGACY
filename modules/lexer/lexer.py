@@ -10,7 +10,6 @@ class Lexer:
     def make_map(self):
         return {
             TT.INDENT: self.make_indent,
-            TT.INT: self.make_number,
             TT.FLOAT: self.make_number
         }
 
@@ -44,6 +43,9 @@ class Lexer:
                 raise errors.UnknownTokenError(self.take_symbol_and_advance())
 
     def make_token(self):
+        if self.token_type is TT.INT:
+            self.token_type = TT.FLOAT
+
         position = self.position.copy()
 
         if self.at_line_start and self.token_type is not TT.INDENT:
