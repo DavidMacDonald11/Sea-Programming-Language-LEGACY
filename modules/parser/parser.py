@@ -1,6 +1,7 @@
-from .ast.nodes import NumberNode
-from .ast.nodes import BinaryOperationNode
-from .ast.nodes import UnaryOperationNode
+from modules.lexer.tokens import TT
+from .nodes import NumberNode
+from .nodes import BinaryOperationNode
+from .nodes import UnaryOperationNode
 from ..parser import errors
 
 class Parser:
@@ -27,16 +28,16 @@ class Parser:
         return self.expression()
 
     def factor(self):
-        if self.token.type in ("PLUS", "MINUS"):
+        if self.token.type in (TT.PLUS, TT.MINUS):
             operation_token = self.take_token()
             return UnaryOperationNode(operation_token, self.factor())
-        elif self.token.type in ("INT", "FLOAT"):
+        elif self.token.type in (TT.INT, TT.FLOAT):
             return NumberNode(self.take_token())
-        elif self.token.type == "LPAREN":
+        elif self.token.type == TT.LPAREN:
             self.advance()
             node = self.expression()
 
-            if self.token.type == "RPAREN":
+            if self.token.type == TT.RPAREN:
                 self.advance()
                 return node
 
@@ -45,10 +46,10 @@ class Parser:
         raise errors.FactorError(self.token)
 
     def term(self):
-        return self.binary_operation(self.factor, ("MUL", "DIV"))
+        return self.binary_operation(self.factor, (TT.STAR, TT.SLASH))
 
     def expression(self):
-        return self.binary_operation(self.term, ("PLUS", "MINUS"))
+        return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))
 
     def binary_operation(self, func, operations):
         left = func()
