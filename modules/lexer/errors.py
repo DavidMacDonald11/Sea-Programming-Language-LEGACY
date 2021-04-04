@@ -1,6 +1,6 @@
-from modules.transpiler.errors import TranspilerError
+from modules.errors.errors import SeaError
 
-class LexerError(TranspilerError):
+class LexerError(SeaError):
     pass
 
 class UnknownTokenError(LexerError):

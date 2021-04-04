@@ -1,6 +1,6 @@
-from modules.transpiler.errors import TranspilerError
+from modules.errors.errors import SeaError
 
-class ParserError(TranspilerError):
+class ParserError(SeaError):
     def __init__(self, token, message = ""):
         self.token = token
         super().__init__(message)

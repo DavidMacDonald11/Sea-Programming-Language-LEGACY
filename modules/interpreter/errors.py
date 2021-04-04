@@ -1,4 +1,4 @@
 from modules.visitor.errors import VisitorError
 
-class CompilerError(VisitorError):
+class InterpreterError(VisitorError):
     pass

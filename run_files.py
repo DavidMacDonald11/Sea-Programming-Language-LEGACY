@@ -6,8 +6,10 @@ from modules.visitor.io import FileInput
 from modules.visitor.io import FileOutput
 from modules.visitor.io import NullOutput
 from modules.visitor.main import visit
-from modules.transpiler.transpiler import Transpiler
 from modules.interpreter.io import TerminalOutput
+from modules.interpreter.interpreter import Interpreter
+from modules.compiler.compiler import Compiler
+from modules.transpiler.transpiler import Transpiler
 
 class Files:
     def __init__(self, *file_paths):
@@ -15,8 +17,10 @@ class Files:
         self.file_paths = file_paths
 
     def __enter__(self):
-        self.files = tuple(self.generate_files())
-        return self.files
+        files = tuple(self.generate_files())
+        self.files = tuple(file for file in files if file is not None)
+
+        return files if len(files) == 3 else files + (None,)
 
     def __exit__(self, e_type, e_value, e_traceback):
         for file in self.files:
@@ -24,6 +28,10 @@ class Files:
 
     def generate_files(self):
         for i, file_path in enumerate(self.file_paths):
+            if file_path is None:
+                yield None
+                continue
+
             yield open(file_path, "r" if i == 0 else "w")
 
 def main():
@@ -32,9 +40,9 @@ def main():
     if visitor_type == "transpile":
         visit_files((Transpiler, "Transpiling"), 3)
     elif visitor_type == "compile":
-        visit_files((None, "Compiling"), 2)
+        visit_files((Compiler, "Compiling"), 2)
     else:
-        visit_files((None, "Interpreting"), 1)
+        visit_files((Interpreter, "Interpreting"), 1)
 
 def visit_files(visitor, number_of_dirs):
     dirs = get_dirs(sys.argv[2:2 + number_of_dirs])

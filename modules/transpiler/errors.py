@@ -1,4 +1,4 @@
-from modules.visitor import errors
+from modules.visitor.errors import VisitorError
 
-class TranspilerError(errors.VisitorError):
+class TranspilerError(VisitorError):
     pass
