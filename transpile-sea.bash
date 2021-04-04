@@ -53,6 +53,6 @@ fi
 
 source venv/bin/activate
 
-./venv/bin/python3 main.py "$input_dir" "$output_dir" "$bin_dir" "${paths[@]}"
+./venv/bin/python3 run_files.py "transpile" "$input_dir" "$output_dir" "$bin_dir" "${paths[@]}"
 
 exit 0

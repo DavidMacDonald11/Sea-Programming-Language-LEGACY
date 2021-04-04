@@ -1,0 +1,32 @@
+from abc import ABC
+from abc import abstractmethod
+from .helpers import convert_to_camel_case
+from ..visitor import errors
+
+class Visitor(ABC):
+    def __init__(self, output_stream):
+        self.output_stream = output_stream
+
+    def traverse(self, root):
+        self.output_stream.write(self.visit(root))
+
+    def visit(self, node):
+        method_name = f"visit{convert_to_camel_case(type(node).__name__)}"
+        method = getattr(self, method_name, self.no_visit_method)
+
+        return method(node)
+
+    def no_visit_method(self, node):
+        raise errors.UndefinedVisitMethod(node)
+
+    @abstractmethod
+    def visit_number_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_binary_operation_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_unary_operation_node(self, node):
+        pass

@@ -1,19 +1,4 @@
-class MessageException(Exception):
-    def __init__(self, message = ""):
-        self.message = message
-        super().__init__(message)
+from modules.visitor import errors
 
-    def get_message(self):
-        return self.message
-
-class TranspilerError(MessageException):
+class TranspilerError(errors.VisitorError):
     pass
-
-class HandledTranspilerError(MessageException):
-    def __init__(self, position, error):
-        self.position = position
-        self.error = error
-        super().__init__(error.message)
-
-    def get_message(self):
-        return self.error.get_message()
