@@ -1,7 +1,7 @@
 SHELL 		:= /bin/bash
 
 LINT_ARGS	:= --disable=C0111
-LINT_ARGS   += --include-naming-hint=y
+LINT_ARGS	+= --include-naming-hint=y
 LINT_ARGS	+= --variable-rgx=^[a-z][a-z0-9]*\(\(_[a-z0-9]+\)*\)?$$
 LINT_ARGS	+= --argument-rgx=^[a-z][a-z0-9]*\(\(_[a-z0-9]+\)*\)?$$
 
@@ -12,7 +12,7 @@ INITS		:= $(wildcard $(patsubst %, %/modules/*/__init__.py, .))
 MODULES 	:= $(patsubst %/__init__.py, %, $(INITS))
 
 VENV 		:= venv
-PY 			:= python3
+PY			:= python3
 PYTHON 		:= ./$(VENV)/bin/$(PY)
 MAIN 		:= main.py
 
@@ -37,7 +37,7 @@ init: activate .git
 
 .PHONY: run
 run: $(VENV) activate
-	$(PYTHON) main.py src bin
+	./sea.bash
 
 .PHONY: lint
 lint: $(VENV) activate

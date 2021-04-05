@@ -22,42 +22,70 @@ This project contains a few key features:
 - I'm currently writing all of this code in Python. Once I create everything, I want to rewrite it in Sea.
 - I plan on creating syntax highling and a linter for Code OSS as well as icons and logos.
 - I plan on creating a unified bash command for all functionality as well as a more formal package for the code with aliases, etc.
-- I also plan on making Sea useable on other operating systems besides Unix-based ones.
+- I also plan on making Sea usable on other operating systems besides Unix-based ones.
 
-# Transpilation Instructions
-Run `./transpile-sea.bash -s IN -c OUT -b BIN FILES` where:
-- All of the following arguments are relative to the current working directory unless otherwise stated.
+# Set-up Instructions
+First thing's first, download the latest version from this [GitHub page](https://github.com/DavidMacDonald11/Sea-Programming-Language) and place it somewhere reasonable on your system.
 
-`FILES` are the files or directories you wish to transpile. This is relative to the `IN` directory. Leaving this blank will transpile the entire `IN` directory.
-- If you transpile a directory and a subdirectory, the subdirectory will be redundant.
+It is possible to run Sea from inside of this folder without doing anything else. However, it'll be more convenient to perform the following steps:
+1. [Create an alias](https://www.cyberciti.biz/faq/create-permanent-bash-alias-linux-unix/) for the ./sea.bash command as the following (note that this will override any preexisting `sea` command):
+* `alias sea='[PATH TO FOLDER]/sea.bash'`
+* In my case, `[PATH TO FOLDER]`=`~/Documents/Coding/Python/Sea\ Programming\ Language`.
+* Once your terminal reload, this will be undone. Use the link and your own research to figure out how to make this permenant.
+2. [Update your PATH variable](https://opensource.com/article/17/6/set-path-linux) to include the sea folder with the following:
+* `export PATH="$PATH:[PATH TO FOLDER]/"`
+* It is essential that all white space within `[PATH TO FOLDER]` is escaped with "\\" as seen above.
+* It is essential that the path to the folder ends with a "/".
+* If you have multiple paths with "Sea" in them you might have issues. Let me know and I can make the search more specified.
+* Once your terminal reload, this will be undone. Use the link and your own research to figure out how to make this permenant.
 
-`IN` is the folder containing `.sea` and `.hea` files. Subdirectories will be automatically discovered. Leaving this blank will use the project's `input` folder by default.
+# Run Instructions
+This will provide you with a `sea` command. Run `sea --help` to see the usage information.
 
-`OUT` is the folder you wish to contain `.c` and `.h` files. Subdirectories in `IN` will be matched. Leaving this blank will use the project's `output` folder by default.
+You determine which of the following modes to use with a `--mode=[MODE]` argument. Note that `-m=` is equivalent to `--mode=`. Only the first character after the `=` is checked and it is case insentive. Thus, `-m=Transpile`, `--mode=cKJFLK`, and `-` are all valid. All of the following general uses are defined:
 
-`BIN` is the folder you wish to contain `.o` and executable files. Subdirectories in `IN` will be matched. Leaving this blank will use the project's `bin` folder by default.
-- If you wish to use the project's `input` folder, delete anything in the `input` folder and place in the files you wish to transpile.
-- When you run `./transpile-sea.bash`, the previously transpiled files in `OUT` and `BIN` will be erased.
+## Interpreting Terminal Input
+Run `sea` and you'll enter the interpreter's terminal interface. This provides you with the `sea` interpreter to mess around with, similar to running `python`.
 
-# Transpilation, Compilation, and Run Instructions
-Run `./run-sea.bash -s IN -c OUT -b BIN -a arg FILES`.
+## Interpreting Files
+Run `sea -m=i -s IN FILES` to interpret Sea files
 
-This will first run `./transpile-sea.bash -s IN -c OUT -b BIN FILES`.
-- When the files are transpiled, the program creates a temporary file called `OUT/files.tmp` which keeps a list of just-transpiled files. Feel free to delete it afterwards.
+`FILES` are the directories and or files you want to interpet. This is relative to the `IN` directory. Leaving this blank will result in a visit to the entire `IN` directory.
+* If you enter a directory and a subdirectory, the subdirectory will be redundant.
 
-The command will transpile the files as per usual, and then it will enter the `OUT` directory and it will try to run `./compile-c.bash -b BIN $(cat files.tmp | tr "\n" " ")`.
-- The `compile-c.bash` script is provided in the project's `bin` directory. Feel free to write your own of the same name or to copy paste this one. It takes in file paths relative to `OUT` and compiles them to `BIN`. It then uses those object files to create an executable `BIN/program` file.
+`-s IN` is an optional argument to specify the folder containing Sea files. If you do not include this argument, the program will assume there exists a folder in the directory you ran the command from called "input" that contains Sea files.
+* The program will only read `.hea` and `.sea` files from this folder
 
-Lastly, the script will enter the `BIN` directory where it wil run the generated `./program` file. If you want to pass arguments to this program, include them with `-a arg` in the `./run-sea.bash` command.
-- For instance, `./run-sea.bash -a 15 -a hello -a 5` will run as `./program 15 hello 5`.
+## Compiling Files
+Run `sea -m=c -s IN -b BIN FILES` to compile Sea files into assembly.
 
-## Components
-Notice that each stage is split into separate scripts. This allows you to transpile, compile, and run at different times under different circumstances.
-- You can run `./transpile-sea.bash -s IN -c OUT FILES` to just transpile.
-- You can run `cd OUT && ./compile-c.bash FILES` to just compile.
-- You can run `./compile-sea.bash -s IN -c OUT FILES` to transpile and compile.
-- You can run `cd BIN && ./program` to just run the program.
-- You can run `./run-sea.bash -s IN -c OUT FILES` to transpile, compile, and run.
+`FILES` are the directories and or files you want to compile. This is relative to the `IN` directory. Leaving this blank will result in a visit to the entire `IN` directory.
+* If you enter a directory and a subdirectory, the subdirectory will be redundant.
+
+`-s IN` is an optional argument to specify the folder containing Sea files. If you do not include this argument, the program will assume there exists a folder in the directory you ran the command from called "input" that contains Sea files.
+* The program will only read `.hea` and `.sea` files from this folder
+
+`-b BIN` is an optional argument to specify the folder you wish to contain binary files. If you do not include this argument, the program will use a "bin" folder in the directory you ran the command from.
+* If the directory does not exist, the program will create it.
+* It will mimick the folder structure in the `IN` folder and create an executable called "program" at the root level of `BIN`.
+
+## Transpiling Files
+Run `sea -m=t -s IN -c OUT -b BIN FILES` to transpile Sea files into C.
+
+`FILES` are the directories and or files you want to transpile. This is relative to the `IN` directory. Leaving this blank will result in a visit to the entire `IN` directory.
+* If you enter a directory and a subdirectory, the subdirectory will be redundant.
+
+`-s IN` is an optional argument to specify the folder containing Sea files. If you do not include this argument, the program will assume there exists a folder in the directory you ran the command from called "input" that contains Sea files.
+* The program will only read `.hea` and `.sea` files from this folder
+
+`-c OUT` is an optional argument to specify the folder you wish to contain C files. If you do not include this argument, the program will use an "output" folder in the directory you ran the command from.
+* If the directory does not exist, the program will create it.
+* It will mimick the folder structure in the `IN` folder and create a temporary list of C files created at the root level of `OUT` which can be useful for manually compiling the C files.
+* There are useful bash scripts in this project's output directory for manual compilation.
+
+`-b BIN` is an optional argument to specify the folder you wish to contain binary files. If you do not include this argument, the program will use a "bin" folder in the directory you ran the command from.
+* If the directory does not exist, the program will create it.
+* It will mimick the folder structure in the `IN` folder and create an executable called "program" at the root level of `BIN`.
 
 # Docs
 Read through the [documentation](./docs/ROOT.md) to learn the Sea syntax.
