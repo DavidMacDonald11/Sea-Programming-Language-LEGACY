@@ -1,6 +1,8 @@
 from modules.visitor.visitor import Visitor
 
 class Compiler(Visitor):
+    vocab_base = "Compil"
+
     def visit_number_node(self, node):
         pass
 

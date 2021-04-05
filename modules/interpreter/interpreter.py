@@ -4,6 +4,8 @@ from modules.visitor.visitor import Visitor
 from ..interpreter import errors
 
 class Interpreter(Visitor):
+    vocab_base = "Interpret"
+
     @cached_property
     def unary_operator_func(self):
         return {
@@ -31,7 +33,11 @@ class Interpreter(Visitor):
         right = self.visit(node.right_node)
         operator = node.operation_token.type
 
-        return self.binary_operator_func[operator](left, right)
+        try:
+            return self.binary_operator_func[operator](left, right)
+        except errors.DivideByZeroError as error:
+            error.node = node.right_node
+            raise error
 
     def visit_unary_operation_node(self, node):
         operator = node.operation_token.type
@@ -56,8 +62,6 @@ class Interpreter(Visitor):
 
     def div_nums(self, left, right):
         if right == 0:
-            raise errors.DivideByZeroError(right)
-
-        # TODO debug
+            raise errors.DivideByZeroError(None)
 
         return left / right

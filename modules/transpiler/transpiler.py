@@ -1,6 +1,8 @@
 from modules.visitor.visitor import Visitor
 
 class Transpiler(Visitor):
+    vocab_base = "Transpil"
+
     def visit_number_node(self, node):
         return node.token.value
 

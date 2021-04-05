@@ -4,6 +4,8 @@ from .helpers import convert_to_camel_case
 from ..visitor import errors
 
 class Visitor(ABC):
+    vocab_base = None
+
     def __init__(self, output_stream):
         self.output_stream = output_stream
 
