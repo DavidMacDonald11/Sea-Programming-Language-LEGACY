@@ -32,7 +32,7 @@ def visit_files(args, visitor, dir_count):
 
     files = list(visit_each_file(visitor, dirs, paths))
 
-    if len(dirs) > 1:
+    if len(dirs) > 2:
         write_tmp_output(dirs[1], files)
 
 def visit_each_file(visitor, dirs, paths):
