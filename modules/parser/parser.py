@@ -1,7 +1,7 @@
 from modules.lexer.tokens import TT
-from .nodes import NumberNode
-from .nodes import BinaryOperationNode
-from .nodes import UnaryOperationNode
+from .nodes import new_number_node
+from .nodes import new_binary_operation_node
+from .nodes import new_unary_operation_node
 from ..parser import errors
 
 class Parser:
@@ -30,10 +30,10 @@ class Parser:
     def factor(self):
         if self.token.type in (TT.PLUS, TT.MINUS):
             operation_token = self.take_token()
-            return UnaryOperationNode(operation_token, self.factor())
+            return new_unary_operation_node(operation_token, self.factor())
 
         if self.token.type in (TT.INT, TT.FLOAT):
-            return NumberNode(self.take_token())
+            return new_number_node(self.take_token())
 
         if self.token.type == TT.LPAREN:
             self.advance()
@@ -59,6 +59,6 @@ class Parser:
         while self.token.type in operations:
             operation_token = self.take_token()
             right = func()
-            left = BinaryOperationNode(left, operation_token, right)
+            left = new_binary_operation_node(left, operation_token, right)
 
         return left

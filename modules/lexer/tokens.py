@@ -1,4 +1,5 @@
 from enum import Enum
+from types import SimpleNamespace
 from .position import Position
 
 class TT(Enum):
@@ -14,11 +15,16 @@ class TT(Enum):
     RPAREN = ")"
     EOF = ""
 
-class Token:
-    def __init__(self, token_type, value = None, position = None):
-        self.type = token_type
-        self.value = value
-        self.position = Position() if position is None else position
+def new_token(token_type, value = None, position = None):
+    token = SimpleNamespace()
 
-    def __repr__(self):
-        return f"{self.type}" + ("" if self.value is None else f":{self.value}")
+    token.type = token_type
+    token.value = value
+    token.position = Position() if position is None else position
+
+    def token_repr():
+        return f"{token.type}" + ("" if token.value is None else f":{token.value}")
+
+    token.__repr__ = token_repr
+
+    return token

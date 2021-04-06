@@ -1,6 +1,6 @@
 from functools import cached_property
 from .tokens import TT
-from .tokens import Token
+from .tokens import new_token
 from .position import Position
 from .position import FilePosition
 from ..lexer import errors
@@ -25,7 +25,7 @@ class Lexer:
         self.advance()
 
     def make_tokens(self):
-        return list(self.generate_tokens()) + [Token(TT.EOF)]
+        return list(self.generate_tokens()) + [new_token(TT.EOF)]
 
     def generate_tokens(self):
         while self.symbol is not None:
@@ -33,10 +33,10 @@ class Lexer:
                 if self.symbol in token_type.value:
                     self.token_type = token_type
 
-                    new_token = self.make_token()
+                    token = self.make_token()
 
-                    if new_token is not None:
-                        yield new_token
+                    if token is not None:
+                        yield token
 
                     break
             else:
@@ -55,8 +55,8 @@ class Lexer:
             return None
 
         position.end = self.position.copy().start
-        new_token = self.make()
-        new_token.position = position
+        token = self.make()
+        token.position = position
 
         if self.token_type is TT.NEWLINE:
             self.at_line_start = True
@@ -64,7 +64,7 @@ class Lexer:
             self.take_symbol_and_advance()
 
         self.advance()
-        return new_token
+        return token
 
     def take_symbol_and_advance(self):
         symbol = self.take_symbol()
@@ -86,7 +86,7 @@ class Lexer:
             return self.make_map[self.token_type]()
         except KeyError:
             self.take_symbol_and_advance()
-            return Token(self.token_type)
+            return new_token(self.token_type)
 
     def make_indent(self):
         indent_str = ""
@@ -95,7 +95,7 @@ class Lexer:
             indent_str += self.take_symbol()
 
             if "\t" in indent_str or " " * 4 in indent_str:
-                return Token(TT.INDENT)
+                return new_token(TT.INDENT)
 
             self.advance()
 
@@ -114,7 +114,7 @@ class Lexer:
                 if dot_count == 2:
                     raise errors.FloatError()
 
-        return Token(TT.INT if dot_count == 0 else TT.FLOAT, num_str)
+        return new_token(TT.INT if dot_count == 0 else TT.FLOAT, num_str)
 
     def symbol_is_valid(self):
         return self.symbol is not None and self.symbol in self.token_type.value
