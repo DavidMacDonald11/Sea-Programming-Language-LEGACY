@@ -1,7 +1,7 @@
-from modules.visitor.io import IO
-from modules.visitor.io import FileInput
-from modules.visitor.io import FileOutput
-from modules.interpreter.io import TerminalOutput
+from modules.visitor.io import new_io
+from modules.visitor.io import new_file_input
+from modules.visitor.io import new_file_output
+from modules.interpreter.io import new_terminal_output
 from modules.visitor.main import visit
 from .navigate_dirs import get_new, find_files, make_dirs
 
@@ -87,16 +87,16 @@ def get_file(file, dirs):
     return file, outfile
 
 def get_io(files):
-    input_stream = FileInput(files[0])
+    input_stream = new_file_input(files[0])
 
     if len(files) > 1:
-        output_stream = FileOutput(files[1])
-        debug_stream = FileOutput(files[2])
+        output_stream = new_file_output(files[1])
+        debug_stream = new_file_output(files[2])
     else:
-        output_stream = TerminalOutput()
-        debug_stream = output_stream
+        output_stream = new_terminal_output()
+        debug_stream = None
 
-    return IO(input_stream, output_stream, debug_stream)
+    return new_io(input_stream, output_stream, debug_stream)
 
 def write_tmp_output(output_dir, files):
     with open(f"{output_dir}/files.tmp", "w") as outfile:

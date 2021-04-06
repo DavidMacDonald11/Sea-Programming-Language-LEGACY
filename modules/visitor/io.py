@@ -1,43 +1,32 @@
-from abc import ABC
-from abc import abstractmethod
+from types import SimpleNamespace
 
-class IO:
-    def __init__(self, input_stream, output_stream, debug_stream):
-        self.input_stream = input_stream
-        self.output_stream = output_stream
-        self.debug_stream = debug_stream
+def new_io(input_stream, output_stream, debug_stream = None):
+    io = SimpleNamespace()
 
-class Input(ABC):
-    @property
-    @abstractmethod
-    def name(self):
-        pass
+    io.input_stream = input_stream
+    io.output_stream = output_stream
+    io.debug_stream = debug_stream if debug_stream is not None else output_stream
 
-    @abstractmethod
-    def read(self):
-        pass
+    return io
 
-class Output(ABC):
-    @abstractmethod
-    def write(self, string):
-        pass
+def new_input(name, read):
+    input_stream = SimpleNamespace()
+    input_stream.name = name
+    input_stream.read = read
 
-class File:
-    def __init__(self, file):
-        self.file = file
+    return input_stream
 
-class FileInput(File, Input):
-    @property
-    def name(self):
-        return self.file.name
+def new_output(write):
+    output_stream = SimpleNamespace()
+    output_stream.write = write
 
-    def read(self):
-        return self.file.read(1)
+    return output_stream
 
-class FileOutput(File, Output):
-    def write(self, string):
-        self.file.write(string)
+def new_file_input(file):
+    return new_input(file.name, lambda: file.read(1))
 
-class NullOutput(Output):
-    def write(self, string):
-        pass
+def new_file_output(file):
+    return new_output(file.write)
+
+def new_null_output():
+    return new_output(lambda: None)

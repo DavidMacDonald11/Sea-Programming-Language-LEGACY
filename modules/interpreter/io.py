@@ -1,23 +1,21 @@
-from modules.visitor.io import Input
-from modules.visitor.io import Output
+from types import SimpleNamespace
+from modules.visitor.io import new_input
+from modules.visitor.io import new_output
 
-class Terminal:
-    def __init__(self):
-        self.line = ""
+TERMINAL = SimpleNamespace()
+TERMINAL.line = ""
 
-class TerminalInput(Terminal, Input):
-    @property
-    def name(self):
-        return "stdin"
-
-    def read(self):
-        if self.line == "":
+def new_terminal_input():
+    def read():
+        if TERMINAL.line == "":
             return None
 
-        c = self.line[0]
-        self.line = self.line[1:]
+        c = TERMINAL.line[0]
+        TERMINAL.line = TERMINAL.line[1:]
+
         return c
 
-class TerminalOutput(Terminal, Output):
-    def write(self, string):
-        print(string)
+    return new_input("stdin", read)
+
+def new_terminal_output():
+    return new_output(print)

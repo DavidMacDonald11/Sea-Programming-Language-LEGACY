@@ -31,9 +31,11 @@ class Parser:
         if self.token.type in (TT.PLUS, TT.MINUS):
             operation_token = self.take_token()
             return UnaryOperationNode(operation_token, self.factor())
-        elif self.token.type in (TT.INT, TT.FLOAT):
+
+        if self.token.type in (TT.INT, TT.FLOAT):
             return NumberNode(self.take_token())
-        elif self.token.type == TT.LPAREN:
+
+        if self.token.type == TT.LPAREN:
             self.advance()
             node = self.expression()
 

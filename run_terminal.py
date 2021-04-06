@@ -1,20 +1,20 @@
 import sys
-from modules.visitor.io import IO
+from modules.visitor.io import new_io
 from modules.visitor.main import visit
-from modules.interpreter.io import TerminalInput
-from modules.interpreter.io import TerminalOutput
+from modules.interpreter.io import TERMINAL
+from modules.interpreter.io import new_terminal_input
+from modules.interpreter.io import new_terminal_output
 from modules.interpreter.interpreter import Interpreter
 
 def main():
     debug = sys.argv[1] == "True"
-
-    io = IO(TerminalInput(), TerminalOutput(), TerminalOutput())
+    io = new_io(new_terminal_input(), new_terminal_output())
 
     print("Sea Programming Language")
 
     try:
         while True:
-            io.input_stream.line = input("sea > ")
+            TERMINAL.line = input("sea > ")
             visit(io, Interpreter, debug)
     except KeyboardInterrupt:
         print()

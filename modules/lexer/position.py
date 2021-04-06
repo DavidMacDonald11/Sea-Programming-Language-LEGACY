@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 class Position:
     def __init__(self, start = None, end = None):
         self.start = start
@@ -43,7 +45,9 @@ class FilePosition:
         return f"Line {self.line}, Col {self.column} of {self.filename}"
 
     def copy(self):
-        file = FilePosition.FakeFile(self.filename)
+        file = SimpleNamespace()
+        file.name = self.filename
+
         return FilePosition(file, self.line, self.column)
 
     def next(self):
@@ -52,7 +56,3 @@ class FilePosition:
     def next_line(self):
         self.line += 1
         self.column = -1
-
-    class FakeFile:
-        def __init__(self, filename):
-            self.name = filename
