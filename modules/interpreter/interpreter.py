@@ -23,10 +23,8 @@ class Interpreter(Visitor):
         }
 
     def visit_number_node(self, node):
-        if node.token.type is TT.INT:
-            return int(node.token.value)
-
-        return float(node.token.value)
+        value = node.token.value
+        return int(value) if node.token.type is TT.INT else float(value)
 
     def visit_binary_operation_node(self, node):
         left = self.visit(node.left_node)

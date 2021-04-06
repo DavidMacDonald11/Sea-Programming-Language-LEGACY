@@ -48,6 +48,11 @@ print_help() {
     printf "\tprints the sea command's usage information.\n\n"
 }
 
+print_debug() {
+    printf "\t--debug or -d             "
+    printf "\tprints the generated tokens and AST for debugging.\n\n"
+}
+
 print_mode() {
     printf "\t--mode=[MODE] or -m=[MODE]"
     printf "\tallows for file transpilation, compilation,\n"
@@ -91,6 +96,7 @@ usage() {
     printf "Options:\n"
 
     print_help
+    print_debug
     print_mode
     print_sea_dir
     print_c_src_dir
@@ -98,6 +104,7 @@ usage() {
 }
 
 mode="None"
+debug="False"
 input_dir="input"
 output_dir="output"
 bin_dir="bin"
@@ -109,6 +116,12 @@ do
     then
         usage
         exit 1
+    fi
+
+    if [[ "${!i}" == "--debug" ||  "${!i}" == "-d" ]]
+    then
+        debug="True"
+        continue
     fi
 
     if [[ "${!i}" == --mode=* ||  "${!i}" == -m=* ]]
@@ -146,6 +159,12 @@ do
         continue
     fi
 
+    if [[ "${!i}" == -* || "${!i}" == --* ]]
+    then
+        usage
+        exit 1
+    fi
+
     paths+=("${!i}")
 done
 
@@ -159,19 +178,19 @@ run_files=$(printf "$sea_lang"; printf "run_files.py")
 
 if [[ "$mode" == "None" ]]
 then
-    eval "$python" "$run_terminal"
+    eval "$python" "$run_terminal" "$debug"
 elif [[ "$mode" == "t" ]]
 then
-    eval "$python" "$run_files" "transpile" "$input_dir" "$output_dir" "$bin_dir" "${paths[@]}"
+    eval "$python" "$run_files" "transpile" "$debug" "$input_dir" "$output_dir" "$bin_dir" "${paths[@]}"
 elif [[ "$mode" == "c" ]]
 then
-    # eval "$python" "$run_files" "compile" "$input_dir" "$bin_dir" "${paths[@]}"
+    # eval "$python" "$run_files" "compile" "$debug" "$input_dir" "$bin_dir" "${paths[@]}"
     printf "Compiler is not currently functional. \n"
     printf "Please transpile to C and then manually compile. \n"
     exit 404
 elif [[ "$mode" == "i" ]]
 then
-    eval "$python" "$run_files" "interpret" "$input_dir" "${paths[@]}"
+    eval "$python" "$run_files" "interpret" "$debug" "$input_dir" "${paths[@]}"
 else
     usage
     exit 1

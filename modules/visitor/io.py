@@ -2,10 +2,10 @@ from abc import ABC
 from abc import abstractmethod
 
 class IO:
-    def __init__(self, input_stream, output_stream, error_stream):
+    def __init__(self, input_stream, output_stream, debug_stream):
         self.input_stream = input_stream
         self.output_stream = output_stream
-        self.error_stream = error_stream
+        self.debug_stream = debug_stream
 
 class Input(ABC):
     @property

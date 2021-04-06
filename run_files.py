@@ -11,7 +11,7 @@ def main():
         "interpret": (Interpreter, 1)
     }
 
-    visit_files(sys.argv[2:], *visitors[sys.argv[1].lower()])
+    visit_files(sys.argv[3:], *visitors[sys.argv[1].lower()], sys.argv[2] == "True")
 
 if __name__ == "__main__":
     main()

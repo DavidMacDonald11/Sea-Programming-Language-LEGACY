@@ -108,7 +108,7 @@ class Lexer:
         while self.symbol_is_valid():
             num_str += self.take_symbol_and_advance()
 
-            if self.symbol == ".":
+            if num_str[-1] == ".":
                 dot_count += 1
 
                 if dot_count == 2:

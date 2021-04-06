@@ -1,7 +1,6 @@
 from modules.visitor.io import IO
 from modules.visitor.io import FileInput
 from modules.visitor.io import FileOutput
-from modules.visitor.io import NullOutput
 from modules.interpreter.io import TerminalOutput
 from modules.visitor.main import visit
 from .navigate_dirs import get_new, find_files, make_dirs
@@ -26,16 +25,16 @@ class Files:
 def get_dirs(args):
     return tuple(file[:-1] if file[-1] == "/" else file for file in args)
 
-def visit_files(args, visitor, dir_count):
+def visit_files(args, visitor, dir_count, debug = False):
     dirs = get_dirs(args[:dir_count])
     paths = args[dir_count:]
 
-    files = list(visit_each_file(visitor, dirs, paths))
+    files = list(visit_each_file(visitor, dirs, paths, debug))
 
     if len(dirs) > 2:
         write_tmp_output(dirs[1], files)
 
-def visit_each_file(visitor, dirs, paths):
+def visit_each_file(visitor, dirs, paths, debug):
     for file_paths in generate_files(dirs, paths):
         if isinstance(file_paths, (tuple, list)):
             file_paths = (*file_paths, f"{file_paths[1]}.tmp")
@@ -48,7 +47,7 @@ def visit_each_file(visitor, dirs, paths):
             print(" ...")
 
             io = get_io(files)
-            success = visit(io, visitor)
+            success = visit(io, visitor, debug)
 
             if success and len(dirs) > 1:
                 yield file_paths[1].replace(f"{dirs[1]}/", "", 1)
@@ -92,12 +91,12 @@ def get_io(files):
 
     if len(files) > 1:
         output_stream = FileOutput(files[1])
-        error_stream = FileOutput(files[2])
+        debug_stream = FileOutput(files[2])
     else:
         output_stream = TerminalOutput()
-        error_stream = NullOutput()
+        debug_stream = output_stream
 
-    return IO(input_stream, output_stream, error_stream)
+    return IO(input_stream, output_stream, debug_stream)
 
 def write_tmp_output(output_dir, files):
     with open(f"{output_dir}/files.tmp", "w") as outfile:

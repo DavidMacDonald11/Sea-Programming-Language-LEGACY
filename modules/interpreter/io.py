@@ -18,7 +18,6 @@ class TerminalInput(Terminal, Input):
         self.line = self.line[1:]
         return c
 
-
 class TerminalOutput(Terminal, Output):
     def write(self, string):
         print(string)
