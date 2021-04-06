@@ -42,7 +42,11 @@ It is possible to run Sea from inside of this folder without doing anything else
 # Run Instructions
 This will provide you with a `sea` command. Run `sea --help` to see the usage information.
 
-You determine which of the following modes to use with a `--mode=[MODE]` argument. Note that `-m=` is equivalent to `--mode=`. Only the first character after the `=` is checked and it is case insentive. Thus, `-m=Transpile`, `--mode=cKJFLK`, and `-` are all valid. All of the following general uses are defined:
+If you want to see the generated tokens and AST, add the `--debug` (or `-d`) argument to your command.
+* If you're interpreting, it will print out info to the terminal.
+* If you're compiling or transpiling, it will create a `.tmp` file in your `BIN` or `OUT` directory respectively.
+
+You determine which of the following modes to use with a `--mode=[MODE]` argument. Note that `-m=` is equivalent to `--mode=`. Only the first character after the `=` is checked and it is case insentive. Thus, `-m=Transpile`, `--mode=cKJFLK`, and `-m=i` are all valid. All of the following general uses are defined:
 
 ## Interpreting Terminal Input
 Run `sea` and you'll enter the interpreter's terminal interface. This provides you with the `sea` interpreter to mess around with, similar to running `python`.
