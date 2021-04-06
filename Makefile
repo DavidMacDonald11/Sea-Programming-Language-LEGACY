@@ -4,17 +4,18 @@ LINT_ARGS	:= --disable=C0111
 LINT_ARGS	+= --include-naming-hint=y
 LINT_ARGS	+= --variable-rgx=^[a-z][a-z0-9]*\(\(_[a-z0-9]+\)*\)?$$
 LINT_ARGS	+= --argument-rgx=^[a-z][a-z0-9]*\(\(_[a-z0-9]+\)*\)?$$
+LINT_ARGS	+= --max-parents=15
 
 PIP_MODULES	:= pylint pydocstyle pycodestyle mypy rope
 
-CACHE 		:= $(wildcard $(patsubst %, %/modules/*/__pycache__, .))
-INITS		:= $(wildcard $(patsubst %, %/modules/*/__init__.py, .))
-MODULES 	:= $(patsubst %/__init__.py, %, $(INITS))
+CACHE 		:= $(wildcard $(patsubst %, %/**/__pycache__, .))
+CACHE 		+= $(wildcard $(patsubst %, %/modules/**/__pycache__, .))
+MODULES 	:= modules
 
 VENV 		:= venv
 PY			:= python3
 PYTHON 		:= ./$(VENV)/bin/$(PY)
-MAIN 		:= main.py
+MAIN 		:= run_files.py run_terminal.py
 
 .DEFAULT_GOAL := run
 

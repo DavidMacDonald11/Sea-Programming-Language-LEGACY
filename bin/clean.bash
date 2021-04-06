@@ -8,9 +8,7 @@ fi
 
 shopt -s extglob
 
-ls !(.keep|*.bash) >/dev/null 2>&1
-
-if [[ $? -eq 0 ]]
+if ls !(.keep|*.bash) >/dev/null 2>&1
 then
     rm -r !(.keep|*.bash)
 fi
