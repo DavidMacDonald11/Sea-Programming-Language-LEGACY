@@ -24,7 +24,7 @@ done
 if [[ ${#files[@]} -ne 0 ]]
 then
     echo "Building program..."
-    cc ${files[@]} -o "$bin_dir"/program
+    eval cc "${files[@]}" -o "$bin_dir"/program
 fi
 
 exit 0

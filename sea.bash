@@ -32,9 +32,7 @@ fi
 
 if [[ ! -d venv ]]
 then
-    make venv
-
-    if [[ "$?" -ne "0" ]]
+    if make venv
     then
         printf "Incorrect directory listed in PATH variable.\n"
         exit 3
@@ -172,9 +170,9 @@ eval cd "$sea_lang"
 source venv/bin/activate
 eval cd "$working"
 
-python=$(printf "$sea_lang"; printf "venv/bin/python3")
-run_terminal=$(printf "$sea_lang"; printf "run_terminal.py")
-run_files=$(printf "$sea_lang"; printf "run_files.py")
+python=$(printf '%s' "$sea_lang"; printf "venv/bin/python3")
+run_terminal=$(printf '%s' "$sea_lang"; printf "run_terminal.py")
+run_files=$(printf '%s' "$sea_lang"; printf "run_files.py")
 
 if [[ "$mode" == "None" ]]
 then
@@ -187,7 +185,7 @@ then
     # eval "$python" "$run_files" "compile" "$debug" "$input_dir" "$bin_dir" "${paths[@]}"
     printf "Compiler is not currently functional. \n"
     printf "Please transpile to C and then manually compile. \n"
-    exit 404
+    exit 4
 elif [[ "$mode" == "i" ]]
 then
     eval "$python" "$run_files" "interpret" "$debug" "$input_dir" "${paths[@]}"
