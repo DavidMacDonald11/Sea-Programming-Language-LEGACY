@@ -13,3 +13,12 @@ class UndefinedVisitMethod(VisitorError):
 
     def get_message(self):
         return f"No visit{convert_to_camel_case(self.name)} method defined."
+
+class VariableError(VisitorError):
+    def __init__(self, node, message = ""):
+        self.variable_name = node.variable_token.value
+        super().__init__(node, message)
+
+class UndefinedVariableError(VariableError):
+    def get_message(self):
+        return f"{self.variable_name} is undefined."

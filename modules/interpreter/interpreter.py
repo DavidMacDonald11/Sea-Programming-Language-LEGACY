@@ -1,7 +1,7 @@
 from modules.lexer.tokens import TT
 from modules.visitor.visitor import Visitor
 from modules.lexer.keywords import cast_value_to_type
-from .symbol_table import SymbolTable
+from modules.visitor import errors as v_errors
 from ..interpreter import arithmetic
 from ..interpreter import errors
 
@@ -21,12 +21,6 @@ binary_operator_func = {
 class Interpreter(Visitor):
     vocab_base = "Interpret"
 
-    def __init__(self, output_stream):
-        self.symbol_table = SymbolTable()
-        self.symbol_table.set("int", "null", 0)
-
-        super().__init__(output_stream)
-
     def visit_number_node(self, node):
         value = node.token.value
         return int(value) if node.token.type is TT.INT else float(value)
@@ -36,7 +30,7 @@ class Interpreter(Visitor):
         value = self.symbol_table.get(var_name)
 
         if value is None:
-            raise errors.UndefinedVariableError(node)
+            raise v_errors.UndefinedVariableError(node)
 
         return value
 

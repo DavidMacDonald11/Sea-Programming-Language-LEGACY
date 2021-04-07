@@ -1,4 +1,5 @@
 from modules.lexer.tokens import TT
+from modules.visitor import errors as v_errors
 from modules.visitor.visitor import Visitor
 from modules.lexer.keywords import cast_value_to_type
 from ..transpiler import errors
@@ -35,14 +36,22 @@ class Transpiler(Visitor):
         return node.token.value
 
     def visit_variable_access_node(self, node):
-        return node.variable_token.value
+        var_name = node.variable_token.value
+        value = self.symbol_table.get(var_name)
+
+        if value is None:
+            raise v_errors.UndefinedVariableError(node)
+
+        return value
 
     def visit_variable_assign_node(self, node):
         var_type = node.keyword_token.value
         var_name = node.variable_token.value
-        value = self.visit(node.value_node)
 
-        cast_value_to_type(var_type, value)
+        value = self.visit(node.value_node)
+        value = cast_value_to_type(var_type, value)
+
+        self.symbol_table.set(var_type, var_name, value)
 
         return f"{var_type} {var_name} = {value}"
 

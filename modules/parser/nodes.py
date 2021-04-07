@@ -56,7 +56,7 @@ def new_var_assign_node(keyword_token, variable_token, value_node):
     node.value_node = value_node
 
     def node_repr():
-        return f"{node.keyword_token} {node.variable_token} = {node.value_node}"
+        return f"{node.keyword_token}, {node.variable_token}, TT.EQUALS, {node.value_node}"
 
     node.repr = node_repr
     node.__name__ = "VariableAssignNode"
