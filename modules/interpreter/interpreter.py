@@ -1,5 +1,6 @@
 from modules.lexer.tokens import TT
 from modules.visitor.visitor import Visitor
+from modules.lexer.keywords import cast_value_to_type
 from ..interpreter import arithmetic
 from ..interpreter import errors
 
@@ -22,6 +23,26 @@ class Interpreter(Visitor):
     def visit_number_node(self, node):
         value = node.token.value
         return int(value) if node.token.type is TT.INT else float(value)
+
+    def visit_variable_access_node(self, node):
+        var_name = node.variable_token.value
+        value = self.symbol_table.get(var_name)
+
+        if value is None:
+            raise errors.UndefinedVariableError(node)
+
+        return value
+
+    def visit_variable_assign_node(self, node):
+        var_type = node.keyword_token.value
+        var_name = node.variable_token.value
+
+        value = self.visit(node.value_node)
+        value = cast_value_to_type(var_type, value)
+
+        self.symbol_table.set(var_type, var_name, value)
+
+        return value
 
     def visit_binary_operation_node(self, node):
         left = self.visit(node.left_node)

@@ -18,4 +18,7 @@ def new_terminal_input():
     return new_input("stdin", read)
 
 def new_terminal_output():
-    return new_output(print)
+    def write(string):
+        print(string, end = "")
+
+    return new_output(write)

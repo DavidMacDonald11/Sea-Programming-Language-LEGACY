@@ -1,7 +1,6 @@
 from modules.lexer.tokens import TT
-from .nodes import new_number_node
-from .nodes import new_binary_operation_node
-from .nodes import new_unary_operation_node
+from modules.lexer.keywords import keyword_declared_type
+from ..parser import nodes
 from ..parser import errors
 
 class Parser:
@@ -29,7 +28,10 @@ class Parser:
 
     def atom(self):
         if self.token.type in (TT.INT, TT.FLOAT):
-            return new_number_node(self.take_token())
+            return nodes.new_number_node(self.take_token())
+
+        if self.token.type == TT.IDENTIFIER:
+            return nodes.new_var_access_node(self.take_token())
 
         if self.token.type == TT.LPAREN:
             self.advance()
@@ -49,7 +51,7 @@ class Parser:
     def factor(self):
         if self.token.type in (TT.PLUS, TT.MINUS):
             operation_token = self.take_token()
-            return new_unary_operation_node(operation_token, self.factor())
+            return nodes.new_unary_operation_node(operation_token, self.factor())
 
         return self.power()
 
@@ -57,7 +59,22 @@ class Parser:
         return self.binary_operation(self.factor, (TT.MULTIPLY, TT.DIVIDE))
 
     def expression(self):
-        return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))
+        if self.token.type is not TT.KEYWORD or not keyword_declared_type(self.token.value):
+            return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))
+
+        keyword_token = self.take_token()
+
+        if self.token.type is not TT.IDENTIFIER:
+            raise errors.NoIdentifierError(self.token)
+
+        variable_token = self.take_token()
+
+        if self.token.type is not TT.EQUALS:
+            raise errors.NoEqualsError(self.token)
+
+        self.advance()
+
+        return nodes.new_var_assign_node(keyword_token, variable_token, self.expression())
 
     def binary_operation(self, left_func, operations, right_func = None):
         if right_func is None:
@@ -68,6 +85,6 @@ class Parser:
         while self.token.type in operations:
             operation_token = self.take_token()
             right = right_func()
-            left = new_binary_operation_node(left, operation_token, right)
+            left = nodes.new_binary_operation_node(left, operation_token, right)
 
         return left

@@ -47,3 +47,30 @@ def new_unary_operation_node(operation_token, right_node):
     node.__name__ = "UnaryOperationNode"
 
     return node
+
+def new_var_assign_node(keyword_token, variable_token, value_node):
+    node = new_ast_node(variable_token.position)
+
+    node.keyword_token = keyword_token
+    node.variable_token = variable_token
+    node.value_node = value_node
+
+    def node_repr():
+        return f"{node.keyword_token} {node.variable_token} = {node.value_node}"
+
+    node.repr = node_repr
+    node.__name__ = "VariableAssignNode"
+
+    return node
+
+def new_var_access_node(variable_token):
+    node = new_ast_node(variable_token.position)
+    node.variable_token = variable_token
+
+    def node_repr():
+        return f"{node.variable_token}"
+
+    node.repr = node_repr
+    node.__name__ = "VariableAccessNode"
+
+    return node

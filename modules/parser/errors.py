@@ -16,3 +16,11 @@ class AtomError(InvalidSyntaxError):
 class NoClosingParenthesisError(InvalidSyntaxError):
     def get_message(self):
         return "Missing closing parenthesis."
+
+class NoIdentifierError(InvalidSyntaxError):
+    def get_message(self):
+        return "Expected an identifier."
+
+class NoEqualsError(InvalidSyntaxError):
+    def get_message(self):
+        return "Expected '='."

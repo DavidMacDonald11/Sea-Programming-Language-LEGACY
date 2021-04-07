@@ -1,5 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
+from .symbol_table import SymbolTable
 from .helpers import convert_to_camel_case
 from ..visitor import errors
 
@@ -8,9 +9,11 @@ class Visitor(ABC):
 
     def __init__(self, output_stream):
         self.output_stream = output_stream
+        self.symbol_table = SymbolTable()
+        self.symbol_table.set("int", "null", 0)
 
     def traverse(self, root):
-        self.output_stream.write(self.visit(root))
+        self.output_stream.write(f"{self.visit(root)}\n")
 
     def visit(self, node):
         method_name = f"visit{convert_to_camel_case(node.__name__)}"
@@ -24,6 +27,14 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_number_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_variable_access_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_variable_assign_node(self, node):
         pass
 
     @abstractmethod

@@ -17,3 +17,6 @@ class HandledSeaError(MessageException):
 
     def get_message(self):
         return self.error.get_message()
+
+    def get_name(self):
+        return type(self.error).__name__

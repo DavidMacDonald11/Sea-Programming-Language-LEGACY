@@ -13,7 +13,8 @@ class Lexer:
         return {
             BaseTT.SPACE: self.make_indent,
             BaseTT.NUMBER: self.make_number,
-            BaseTT.STAR: self.make_star_operation
+            BaseTT.STAR: self.make_star_operation,
+            BaseTT.IDENTIFIER: self.make_identifier
         }
 
     def __init__(self, input_stream):
@@ -81,6 +82,9 @@ class Lexer:
         self.took_symbol = True
         return self.symbol
 
+    def symbol_is_valid(self):
+        return self.symbol is not None and self.symbol in self.base_type.value
+
     def make(self):
         try:
             return self.make_map[self.base_type]()
@@ -124,5 +128,10 @@ class Lexer:
 
         return new_token(match_type(string))
 
-    def symbol_is_valid(self):
-        return self.symbol is not None and self.symbol in self.base_type.value
+    def make_identifier(self):
+        string = ""
+
+        while self.symbol_is_valid():
+            string += self.take_symbol_and_advance()
+
+        return new_token(match_type(string), string)
