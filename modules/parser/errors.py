@@ -9,7 +9,7 @@ class InvalidSyntaxError(ParserError):
     def get_message(self):
         return "Syntax is invalid."
 
-class FactorError(InvalidSyntaxError):
+class AtomError(InvalidSyntaxError):
     def get_message(self):
         return "Token must be an int or a float."
 

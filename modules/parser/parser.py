@@ -27,11 +27,7 @@ class Parser:
     def parse(self):
         return self.expression()
 
-    def factor(self):
-        if self.token.type in (TT.PLUS, TT.MINUS):
-            operation_token = self.take_token()
-            return new_unary_operation_node(operation_token, self.factor())
-
+    def atom(self):
         if self.token.type in (TT.INT, TT.FLOAT):
             return new_number_node(self.take_token())
 
@@ -45,23 +41,33 @@ class Parser:
 
             raise errors.NoClosingParenthesisError(self.token)
 
-        raise errors.FactorError(self.token)
+        raise errors.AtomError(self.token)
 
     def power(self):
-        return self.binary_operation(self.factor, (TT.POWER,))
+        return self.binary_operation(self.atom, (TT.POWER,), self.factor)
+
+    def factor(self):
+        if self.token.type in (TT.PLUS, TT.MINUS):
+            operation_token = self.take_token()
+            return new_unary_operation_node(operation_token, self.factor())
+
+        return self.power()
 
     def term(self):
-        return self.binary_operation(self.power, (TT.MULTIPLY, TT.DIVIDE))
+        return self.binary_operation(self.factor, (TT.MULTIPLY, TT.DIVIDE))
 
     def expression(self):
         return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))
 
-    def binary_operation(self, func, operations):
-        left = func()
+    def binary_operation(self, left_func, operations, right_func = None):
+        if right_func is None:
+            right_func = left_func
+
+        left = left_func()
 
         while self.token.type in operations:
             operation_token = self.take_token()
-            right = func()
+            right = right_func()
             left = new_binary_operation_node(left, operation_token, right)
 
         return left
