@@ -9,12 +9,38 @@ from ..lexer import errors
 
 class Lexer:
     @cached_property
-    def make_map(self):
+    def make_map_size_limit_1(self):
         return {
-            BaseTT.SPACE: self.make_indent,
-            BaseTT.NUMBER: self.make_number,
-            BaseTT.STAR: self.make_star_operation,
-            BaseTT.IDENTIFIER: self.make_identifier
+            BaseTT.PLUS,
+            BaseTT.MINUS,
+            BaseTT.SLASH,
+            BaseTT.PAREN
+        }
+
+    @cached_property
+    def make_map_get_value(self):
+        return {
+            BaseTT.IDENTIFIER: (lambda x: x),
+            BaseTT.NUMBER: (lambda x: x)
+        }
+
+    @cached_property
+    def make_map_also_valid(self):
+        return {
+            BaseTT.EXCLAMATION: "=",
+            BaseTT.CHEVRON: "="
+        }
+
+    @cached_property
+    def make_map_stop_if(self):
+        size_of_one = lambda x: len(x) == 1
+
+        return {
+            BaseTT.SPACE: (lambda x: "\t" in x or " " * 4 in x),
+            BaseTT.PLUS: size_of_one,
+            BaseTT.MINUS: size_of_one,
+            BaseTT.SLASH: size_of_one,
+            BaseTT.PAREN: size_of_one
         }
 
     def __init__(self, input_stream):
@@ -82,56 +108,38 @@ class Lexer:
         self.took_symbol = True
         return self.symbol
 
-    def symbol_is_valid(self):
-        return self.symbol is not None and self.symbol in self.base_type.value
+    def symbol_is_valid(self, also_valid = None):
+        valid = self.base_type.value
+
+        if also_valid is not None:
+            valid = (*valid, *also_valid)
+
+        return self.symbol is not None and self.symbol in valid
 
     def make(self):
-        try:
-            return self.make_map[self.base_type]()
-        except KeyError:
-            symbol = self.take_symbol_and_advance()
-            return new_token(match_type(symbol))
+        get_value = self.make_map_get_value.get(self.base_type, None)
+        also_valid = self.make_map_also_valid.get(self.base_type, None)
+        stop_if = self.make_map_stop_if.get(self.base_type, None)
 
-    def make_indent(self):
-        indent_str = ""
+        args = {
+            "also_valid": also_valid,
+            "get_value": get_value,
+            "stop_if": stop_if
+        }
 
-        while self.symbol_is_valid():
-            indent_str += self.take_symbol()
+        return self.make_generic(**args)
 
-            if "\t" in indent_str or " " * 4 in indent_str:
-                return new_token(TT.INDENT)
-
-            self.advance()
-
-        raise errors.IndentError()
-
-    def make_number(self):
-        string = ""
-        dot_count = 0
-
-        while self.symbol_is_valid():
-            string += self.take_symbol_and_advance()
-
-            if string[-1] == ".":
-                dot_count += 1
-
-                if dot_count == 2:
-                    raise errors.FloatError()
-
-        return new_token(TT.INT if dot_count == 0 else TT.FLOAT, string)
-
-    def make_star_operation(self):
+    def make_generic(self, also_valid, get_value, stop_if):
         string = ""
 
-        while self.symbol_is_valid():
+        if stop_if is None:
+            stop_if = lambda x: False
+
+        while self.symbol_is_valid(also_valid):
             string += self.take_symbol_and_advance()
 
-        return new_token(match_type(string))
+            if stop_if(string):
+                break
 
-    def make_identifier(self):
-        string = ""
-
-        while self.symbol_is_valid():
-            string += self.take_symbol_and_advance()
-
-        return new_token(match_type(string), string)
+        value = None if get_value is None else get_value(string)
+        return new_token(match_type(string), value)

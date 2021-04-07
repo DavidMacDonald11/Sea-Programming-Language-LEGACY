@@ -21,6 +21,12 @@ class TT(Enum):
     POWER = re.compile(r"\*{2}")
     DIVIDE = re.compile(r"\/")
     EQUALS = re.compile(r"\=")
+    NE = re.compile(r"\!\=")
+    EQ = re.compile(r"\={2}")
+    LT = re.compile(r"\<")
+    GT = re.compile(r"\>")
+    LTE = re.compile(r"\<=")
+    GTE = re.compile(r"\>=")
     LPAREN = re.compile(r"\(")
     RPAREN = re.compile(r"\)")
     EOF = re.compile("")
@@ -36,8 +42,14 @@ class BaseTT(Enum):
     STAR = "*"
     SLASH = "/"
     EQUALS = "="
-    LPAREN = "("
-    RPAREN = ")"
+    PAREN = "()"
+    CHEVRON = "<>"
+    EXCLAMATION = "!"
+
+@unique
+class BadTT(Enum):
+    FLOAT = (re.compile(r"[0-9.]+"), errors.FloatError)
+    INDENT = (re.compile(r"\s+"), errors.IndentError)
 
 def match_type(token_string):
     for token_type in TT:
@@ -46,6 +58,10 @@ def match_type(token_string):
                 return token_type
 
             return TT.KEYWORD if is_keyword(token_string) else TT.IDENTIFIER
+
+    for bad_type in BadTT:
+        if bad_type.value[0].fullmatch(token_string) is not None:
+            raise bad_type.value[1]()
 
     raise errors.UnknownTokenError(token_string)
 

@@ -5,7 +5,13 @@ TYPE_KEYWORDS = {
     "float"
 }
 
-KEYWORDS = TYPE_KEYWORDS
+BOOL_KEYWORDS = {
+    "not",
+    "and",
+    "or"
+}
+
+KEYWORDS = TYPE_KEYWORDS | BOOL_KEYWORDS
 
 def is_keyword(token_value):
     return token_value in KEYWORDS
