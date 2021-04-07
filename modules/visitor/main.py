@@ -45,7 +45,7 @@ def visit(io, visitor_type, debug = False, retain = False, retain_info = None):
 def print_error(visitor_type, position, io, error):
     to_print = f"{error.get_name()} at {position}: {error.get_message()}"
 
-    io.error_stream.write(to_print)
+    io.error_stream.write(f"{to_print}\n")
 
     if visitor_type is Transpiler:
         io.output_stream.write("// Transpilation stopped due to error\n")

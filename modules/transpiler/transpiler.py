@@ -1,5 +1,6 @@
 from modules.lexer.tokens import TT
 from modules.visitor.visitor import Visitor
+from modules.lexer.keywords import cast_value_to_type
 from ..transpiler import errors
 
 C_OPERATORS = {
@@ -32,6 +33,18 @@ class Transpiler(Visitor):
 
     def visit_number_node(self, node):
         return node.token.value
+
+    def visit_variable_access_node(self, node):
+        return node.variable_token.value
+
+    def visit_variable_assign_node(self, node):
+        var_type = node.keyword_token.value
+        var_name = node.variable_token.value
+        value = self.visit(node.value_node)
+
+        cast_value_to_type(var_type, value)
+
+        return f"{var_type} {var_name} = {value}"
 
     def visit_binary_operation_node(self, node):
         if node.operation_token.type is TT.POWER:
