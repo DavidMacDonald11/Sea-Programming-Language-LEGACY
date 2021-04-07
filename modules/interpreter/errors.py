@@ -6,6 +6,10 @@ class InterpreterError(VisitorError):
 class NumericalError(InterpreterError):
     pass
 
-class DivideByZeroError(NumericalError):
+class UndefinedOperationError(NumericalError):
+    def get_message(self):
+        return f"{self.message} is undefined."
+
+class DivideByZeroError(UndefinedOperationError):
     def get_message(self):
         return "Cannot divide by 0."

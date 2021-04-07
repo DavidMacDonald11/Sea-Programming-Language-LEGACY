@@ -47,8 +47,11 @@ class Parser:
 
         raise errors.FactorError(self.token)
 
+    def power(self):
+        return self.binary_operation(self.factor, (TT.POWER,))
+
     def term(self):
-        return self.binary_operation(self.factor, (TT.STAR, TT.SLASH))
+        return self.binary_operation(self.power, (TT.MULTIPLY, TT.DIVIDE))
 
     def expression(self):
         return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))

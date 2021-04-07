@@ -1,5 +1,7 @@
 from functools import cached_property
 from .tokens import TT
+from .tokens import BaseTT
+from .tokens import match_type
 from .tokens import new_token
 from .position import Position
 from .position import FilePosition
@@ -9,8 +11,9 @@ class Lexer:
     @cached_property
     def make_map(self):
         return {
-            TT.INDENT: self.make_indent,
-            TT.FLOAT: self.make_number
+            BaseTT.SPACE: self.make_indent,
+            BaseTT.NUMBER: self.make_number,
+            BaseTT.STAR: self.make_star_operation
         }
 
     def __init__(self, input_stream):
@@ -18,7 +21,7 @@ class Lexer:
         self.position = Position(FilePosition(input_stream))
 
         self.at_line_start = True
-        self.token_type = None
+        self.base_type = None
         self.symbol = None
         self.took_symbol = True
 
@@ -29,9 +32,9 @@ class Lexer:
 
     def generate_tokens(self):
         while self.symbol is not None:
-            for token_type in TT:
-                if self.symbol in token_type.value:
-                    self.token_type = token_type
+            for base_type in BaseTT:
+                if self.symbol in base_type.value:
+                    self.base_type = base_type
 
                     token = self.make_token()
 
@@ -43,14 +46,11 @@ class Lexer:
                 raise errors.UnknownTokenError(self.take_symbol_and_advance())
 
     def make_token(self):
-        if self.token_type is TT.INT:
-            self.token_type = TT.FLOAT
-
         position = self.position.copy()
 
-        if self.at_line_start and self.token_type is not TT.INDENT:
+        if self.at_line_start and self.base_type is not BaseTT.SPACE:
             self.at_line_start = False
-        elif not self.at_line_start and self.token_type is TT.INDENT:
+        elif not self.at_line_start and self.base_type is BaseTT.SPACE:
             self.take_symbol_and_advance()
             return None
 
@@ -58,7 +58,7 @@ class Lexer:
         token = self.make()
         token.position = position
 
-        if self.token_type is TT.NEWLINE:
+        if self.base_type is BaseTT.NEWLINE:
             self.at_line_start = True
             self.position.start.next_line()
             self.take_symbol_and_advance()
@@ -83,10 +83,10 @@ class Lexer:
 
     def make(self):
         try:
-            return self.make_map[self.token_type]()
+            return self.make_map[self.base_type]()
         except KeyError:
-            self.take_symbol_and_advance()
-            return new_token(self.token_type)
+            symbol = self.take_symbol_and_advance()
+            return new_token(match_type(symbol))
 
     def make_indent(self):
         indent_str = ""
@@ -102,19 +102,27 @@ class Lexer:
         raise errors.IndentError()
 
     def make_number(self):
-        num_str = ""
+        string = ""
         dot_count = 0
 
         while self.symbol_is_valid():
-            num_str += self.take_symbol_and_advance()
+            string += self.take_symbol_and_advance()
 
-            if num_str[-1] == ".":
+            if string[-1] == ".":
                 dot_count += 1
 
                 if dot_count == 2:
                     raise errors.FloatError()
 
-        return new_token(TT.INT if dot_count == 0 else TT.FLOAT, num_str)
+        return new_token(TT.INT if dot_count == 0 else TT.FLOAT, string)
+
+    def make_star_operation(self):
+        string = ""
+
+        while self.symbol_is_valid():
+            string += self.take_symbol_and_advance()
+
+        return new_token(match_type(string))
 
     def symbol_is_valid(self):
-        return self.symbol is not None and self.symbol in self.token_type.value
+        return self.symbol is not None and self.symbol in self.base_type.value

@@ -15,6 +15,12 @@ def sub_nums(left, right):
 def mul_nums(left, right):
     return left * right
 
+def pow_nums(left, right):
+    if right == left == 0:
+        raise errors.UndefinedOperationError("0 ** 0")
+
+    return left ** right
+
 def div_nums(left, right):
     if right == 0:
         raise errors.DivideByZeroError(None)

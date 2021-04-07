@@ -36,17 +36,17 @@ def visit_files(args, visitor, dir_count, debug = False):
 
 def visit_each_file(visitor, dirs, paths, debug):
     for file_paths in generate_files(dirs, paths):
-        if isinstance(file_paths, (tuple, list)):
-            file_paths = (*file_paths, f"{file_paths[1]}.tmp")
-        else:
+        if not isinstance(file_paths, (tuple, list)):
             file_paths = (file_paths,)
+        elif debug:
+            file_paths = (*file_paths, f"{file_paths[1]}.tmp")
 
         with Files(file_paths) as files:
             print(f"{visitor.vocab_base}ing {files[0].name}", end = "")
             print("" if len(files) < 2 else f" into {files[1].name}", end = "")
             print(" ...")
 
-            io = get_io(files)
+            io = get_io(files, debug)
             success = visit(io, visitor, debug)
 
             if success and len(dirs) > 1:
@@ -86,12 +86,12 @@ def get_file(file, dirs):
 
     return file, outfile
 
-def get_io(files):
+def get_io(files, debug):
     input_stream = new_file_input(files[0])
 
     if len(files) > 1:
         output_stream = new_file_output(files[1])
-        debug_stream = new_file_output(files[2])
+        debug_stream = new_file_output(files[2]) if debug else None
     else:
         output_stream = new_terminal_output()
         debug_stream = None

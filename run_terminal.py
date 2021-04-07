@@ -16,7 +16,7 @@ def main():
         while True:
             TERMINAL.line = input("sea > ")
             visit(io, Interpreter, debug)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, EOFError):
         print()
 
 if __name__ == "__main__":

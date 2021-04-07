@@ -11,8 +11,9 @@ unary_operator_func = {
 binary_operator_func = {
     TT.PLUS: arithmetic.add_nums,
     TT.MINUS: arithmetic.sub_nums,
-    TT.STAR: arithmetic.mul_nums,
-    TT.SLASH: arithmetic.div_nums
+    TT.MULTIPLY: arithmetic.mul_nums,
+    TT.POWER: arithmetic.pow_nums,
+    TT.DIVIDE: arithmetic.div_nums
 }
 
 class Interpreter(Visitor):
@@ -29,7 +30,7 @@ class Interpreter(Visitor):
 
         try:
             return binary_operator_func[operator](left, right)
-        except errors.DivideByZeroError as error:
+        except errors.NumericalError as error:
             error.node = node.right_node
             raise error
 
