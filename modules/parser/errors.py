@@ -5,6 +5,9 @@ class ParserError(SeaError):
         self.token = token
         super().__init__(message)
 
+    def get_position(self):
+        return self.token.position
+
 class InvalidSyntaxError(ParserError):
     def get_message(self):
         return "Syntax is invalid."

@@ -1,3 +1,4 @@
+from modules.helpers.warnings import init_global_warning
 from modules.visitor.io import new_io
 from modules.visitor.io import new_file_input
 from modules.visitor.io import new_file_output
@@ -48,6 +49,8 @@ def visit_each_file(visitor, dirs, paths, debug):
             print(" ...")
 
             io = get_io(files, debug)
+            init_global_warning(io.error_stream)
+
             success = visit(io, visitor, debug)
 
             if success and len(dirs) > 1:

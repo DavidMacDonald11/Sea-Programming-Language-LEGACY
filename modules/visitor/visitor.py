@@ -10,7 +10,7 @@ class Visitor(ABC):
     def __init__(self, output_stream):
         self.output_stream = output_stream
         self.symbol_table = SymbolTable()
-        self.symbol_table.set("int", "null", 0)
+        self.add_global_vars()
 
     def traverse(self, root):
         self.output_stream.write(f"{self.visit(root)}\n")
@@ -24,6 +24,11 @@ class Visitor(ABC):
     @classmethod
     def no_visit_method(cls, node):
         raise errors.UndefinedVisitMethod(node)
+
+    def add_global_vars(self):
+        self.symbol_table.set("int", "null", 0)
+        self.symbol_table.set("int", "true", 1)
+        self.symbol_table.set("int", "false", 0)
 
     @abstractmethod
     def visit_number_node(self, node):

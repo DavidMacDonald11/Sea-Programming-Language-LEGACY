@@ -6,6 +6,9 @@ class VisitorError(errors.SeaError):
         self.node = node
         super().__init__(message)
 
+    def get_position(self):
+        return self.node.position
+
 class UndefinedVisitMethod(VisitorError):
     def __init__(self, node, message = ""):
         self.name = type(node).__name__

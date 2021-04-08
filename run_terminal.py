@@ -1,4 +1,5 @@
 import sys
+from modules.helpers.warnings import init_global_warning
 from modules.visitor.io import new_io
 from modules.visitor.io import new_null_output
 from modules.visitor.main import visit
@@ -10,6 +11,8 @@ from modules.interpreter.interpreter import Interpreter
 def main():
     debug = sys.argv[1] == "True"
     io = new_io(new_terminal_input(), new_terminal_output(), new_null_output())
+
+    init_global_warning(io.output_stream)
 
     retain_info = None
     print("Sea Programming Language")
