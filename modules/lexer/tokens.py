@@ -2,9 +2,9 @@ import re
 import string
 from enum import Enum
 from enum import unique
-from modules.helpers.repr_namespace import ReprNamespace
 from .position import Position
 from .keywords import is_keyword
+from .keywords import keyword_declared_type
 from ..lexer import errors
 
 @unique
@@ -25,8 +25,8 @@ class TT(Enum):
     EQ = re.compile(r"\={2}")
     LT = re.compile(r"\<")
     GT = re.compile(r"\>")
-    LTE = re.compile(r"\<=")
-    GTE = re.compile(r"\>=")
+    LTE = re.compile(r"\<\=")
+    GTE = re.compile(r"\>\=")
     LPAREN = re.compile(r"\(")
     RPAREN = re.compile(r"\)")
     EOF = re.compile("")
@@ -65,16 +65,17 @@ def match_type(token_string):
 
     raise errors.UnknownTokenError(token_string)
 
-def new_token(token_type, value = None, position = None):
-    token = ReprNamespace()
+class Token:
+    def __init__(self, token_type, value = None, position = None):
+        self.type = token_type
+        self.value = value
+        self.position = Position() if position is None else position
 
-    token.type = token_type
-    token.value = value
-    token.position = Position() if position is None else position
+    def __repr__(self):
+        return f"{self.type}" + ("" if self.value is None else f":{self.value}")
 
-    def token_repr():
-        return f"{token.type}" + ("" if token.value is None else f":{token.value}")
+    def matches(self, token_type, value):
+        return self.type is token_type and self.value == value
 
-    token.repr = token_repr
-
-    return token
+    def matches_type_keyword(self):
+        return self.type is TT.KEYWORD and keyword_declared_type(self.value)

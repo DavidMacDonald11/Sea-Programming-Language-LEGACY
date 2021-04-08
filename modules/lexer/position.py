@@ -7,7 +7,7 @@ class Position:
 
     def __repr__(self):
         if self.start is None:
-            return "Unkown Position"
+            return "Unknown Position"
 
         if self.end == self.start:
             return f"{self.start}"

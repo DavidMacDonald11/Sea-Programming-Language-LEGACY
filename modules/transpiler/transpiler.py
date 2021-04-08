@@ -4,16 +4,33 @@ from modules.visitor.visitor import Visitor
 from modules.lexer.keywords import cast_value_to_type
 from ..transpiler import errors
 
+C_KEYWORD_OPERATORS = {
+    "not": "!",
+    "and": "&&",
+    "or": "||"
+}
+
 C_OPERATORS = {
     TT.PLUS: "+",
     TT.MINUS: "-",
     TT.MULTIPLY: "*",
-    TT.DIVIDE: "/"
+    TT.DIVIDE: "/",
+    TT.EQ: "==",
+    TT.NE: "!=",
+    TT.LT: "<",
+    TT.GT: ">",
+    TT.LTE: "<=",
+    TT.GTE: ">="
 }
 
 def get_c_operator(node):
     try:
-        return C_OPERATORS[node.operation_token.type]
+        operation_token = node.operation_token
+
+        if operation_token.type is TT.KEYWORD:
+            return C_KEYWORD_OPERATORS[operation_token.value]
+
+        return C_OPERATORS[operation_token.type]
     except KeyError as e:
         raise errors.UnimplementedOperationError(node) from e
 
@@ -53,6 +70,9 @@ class Transpiler(Visitor):
 
         self.symbol_table.set(var_type, var_name, value)
 
+        if var_type == "bool":
+            var_type = "int"
+
         return f"{var_type} {var_name} = {value}"
 
     def visit_binary_operation_node(self, node):
@@ -66,9 +86,7 @@ class Transpiler(Visitor):
         right = self.visit(node.right_node)
         operator = get_c_operator(node)
 
-        parens = operator in "+-"
-
-        return f"{'(' if parens else ''}{left} {operator} {right}{')' if parens else ''}"
+        return f"({left} {operator} {right})"
 
     def visit_unary_operation_node(self, node):
         operator = get_c_operator(node)

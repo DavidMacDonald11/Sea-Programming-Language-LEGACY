@@ -27,8 +27,8 @@ class Visitor(ABC):
 
     def add_global_vars(self):
         self.symbol_table.set("int", "null", 0)
-        self.symbol_table.set("int", "true", 1)
-        self.symbol_table.set("int", "false", 0)
+        self.symbol_table.set("bool", "true", 1)
+        self.symbol_table.set("bool", "false", 0)
 
     @abstractmethod
     def visit_number_node(self, node):

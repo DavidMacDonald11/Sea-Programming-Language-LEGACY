@@ -36,12 +36,12 @@ def cast_value_to_type(var_type, var_value, explicit = False):
 def cast_value_to_bool(value, explicit):
     is_str = isinstance(value, str)
     is_non_bool_str = is_str and (len(value) > 1 or value not in "01")
-    is_non_bool_num = (value != 0 or value != 1)
+    is_non_bool_num = (value not in (0, 1))
 
     if not explicit and (is_non_bool_num or is_non_bool_str):
         raise_warning(errors.ImplicitCastWarning("bool", "non-boolean type"))
 
-    return bool(value)
+    return 1 if value else 0
 
 def cast_value_to_int(value, explicit):
     is_float_str = isinstance(value, str) and "." in value

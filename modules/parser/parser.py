@@ -1,5 +1,4 @@
 from modules.lexer.tokens import TT
-from modules.lexer.keywords import keyword_declared_type
 from ..parser import nodes
 from ..parser import errors
 
@@ -58,9 +57,24 @@ class Parser:
     def term(self):
         return self.binary_operation(self.factor, (TT.MULTIPLY, TT.DIVIDE))
 
+    def arithmetic_expression(self):
+        return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))
+
+    def comparison_expression(self):
+        if self.token.matches(TT.KEYWORD, "not"):
+            operation_token = self.take_token()
+            node = self.comparison_expression()
+
+            return nodes.new_unary_operation_node(operation_token, node)
+
+        operations = (TT.EQ, TT.NE, TT.LT, TT.GT, TT.LTE, TT.GTE)
+
+        return self.binary_operation(self.arithmetic_expression, operations)
+
     def expression(self):
-        if self.token.type is not TT.KEYWORD or not keyword_declared_type(self.token.value):
-            return self.binary_operation(self.term, (TT.PLUS, TT.MINUS))
+        if not self.token.matches_type_keyword():
+            operations = ((TT.KEYWORD, "and"), (TT.KEYWORD, "or"))
+            return self.binary_operation(self.comparison_expression, operations)
 
         keyword_token = self.take_token()
 
@@ -81,10 +95,13 @@ class Parser:
             right_func = left_func
 
         left = left_func()
+        token_type_value = (self.token.type, self.token.value)
 
-        while self.token.type in operations:
+        while self.token.type in operations or token_type_value in operations:
             operation_token = self.take_token()
             right = right_func()
             left = nodes.new_binary_operation_node(left, operation_token, right)
+
+            token_type_value = (self.token.type, self.token.value)
 
         return left

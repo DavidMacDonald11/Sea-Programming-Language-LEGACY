@@ -6,16 +6,31 @@ from ..interpreter import arithmetic
 from ..interpreter import errors
 
 unary_operator_func = {
-    TT.PLUS: arithmetic.pos_num,
-    TT.MINUS: arithmetic.neg_num
+    TT.PLUS: (lambda x: +x),
+    TT.MINUS: (lambda x: -x)
+}
+
+unary_operator_keyword_func = {
+    "not": (lambda x: not x)
 }
 
 binary_operator_func = {
-    TT.PLUS: arithmetic.add_nums,
-    TT.MINUS: arithmetic.sub_nums,
-    TT.MULTIPLY: arithmetic.mul_nums,
+    TT.PLUS: (lambda x, y: x + y),
+    TT.MINUS: (lambda x, y: x - y),
+    TT.MULTIPLY: (lambda x, y: x * y),
     TT.POWER: arithmetic.pow_nums,
-    TT.DIVIDE: arithmetic.div_nums
+    TT.DIVIDE: arithmetic.div_nums,
+    TT.EQ: (lambda x, y: x == y),
+    TT.NE: (lambda x, y: x != y),
+    TT.LT: (lambda x, y: x < y),
+    TT.GT: (lambda x, y: x > y),
+    TT.LTE: (lambda x, y: x <= y),
+    TT.GTE: (lambda x, y: x >= y)
+}
+
+binary_operator_keyword_func = {
+    "and": (lambda x, y: x and y),
+    "or": (lambda x, y: x or y)
 }
 
 class Interpreter(Visitor):
@@ -48,16 +63,24 @@ class Interpreter(Visitor):
     def visit_binary_operation_node(self, node):
         left = self.visit(node.left_node)
         right = self.visit(node.right_node)
-        operator = node.operation_token.type
+        operation_token = node.operation_token
+        operator = operation_token.type
 
         try:
+            if operator is TT.KEYWORD:
+                return binary_operator_keyword_func[operation_token.value](left, right)
+
             return binary_operator_func[operator](left, right)
         except errors.NumericalError as error:
             error.node = node.right_node
             raise error
 
     def visit_unary_operation_node(self, node):
-        operator = node.operation_token.type
+        operation_token = node.operation_token
+        operator = operation_token.type
         right = self.visit(node.node)
+
+        if operator is TT.KEYWORD:
+            return unary_operator_keyword_func[operation_token.value](right)
 
         return unary_operator_func[operator](right)

@@ -1,7 +1,7 @@
 from .tokens import TT
 from .tokens import BaseTT
 from .tokens import match_type
-from .tokens import new_token
+from .tokens import Token
 from .position import Position
 from .position import FilePosition
 from ..lexer import errors
@@ -19,7 +19,7 @@ class Lexer:
         self.advance()
 
     def make_tokens(self):
-        return list(self.generate_tokens()) + [new_token(TT.EOF)]
+        return list(self.generate_tokens()) + [Token(TT.EOF)]
 
     def generate_tokens(self):
         while self.symbol is not None:
@@ -37,16 +37,15 @@ class Lexer:
                 raise errors.UnknownTokenError(self.take_symbol_and_advance())
 
     def construct_token(self):
-        position = self.position.copy()
-
         if self.at_line_start and self.base_type is not BaseTT.SPACE:
             self.at_line_start = False
         elif not self.at_line_start and self.base_type is BaseTT.SPACE:
             self.take_symbol_and_advance()
             return None
 
-        position.end = self.position.copy().start
+        position = self.position.copy()
         token = self.make_token()
+        position.end = self.position.start.copy()
         token.position = position
 
         if self.base_type is BaseTT.NEWLINE:
@@ -97,7 +96,7 @@ class Lexer:
                 break
 
         value = None if get_value is None else get_value(string)
-        return new_token(match_type(string), value)
+        return Token(match_type(string), value)
 
 make_map_get_value = {
     BaseTT.IDENTIFIER: (lambda x: x),
