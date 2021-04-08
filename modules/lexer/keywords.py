@@ -23,25 +23,31 @@ def keyword_declared_type(keyword):
 
 def cast_value_to_type(var_type, var_value, explicit = False):
     if var_type == "bool":
-        is_str = isinstance(var_value, str)
-        is_non_bool_str = is_str and (len(var_value) > 1 or var_value not in "01")
-        is_non_bool_num = (var_value != 0 or var_value != 1)
-
-        if not explicit and (is_non_bool_num or is_non_bool_str):
-            raise_warning(errors.ImplicitCastWarning(var_type, "non-boolean type"))
-
-        return bool(var_type)
+        return cast_value_to_bool(var_value, explicit)
 
     if var_type == "int":
-        is_float_str = isinstance(var_value, str) and "." in var_value
-        is_float = isinstance(var_value, float) or is_float_str
-
-        if not explicit and is_float:
-            raise_warning(errors.ImplicitCastWarning(var_type, "float"))
-
-        return int(var_value)
+        return cast_value_to_int(var_value, explicit)
 
     if var_type == "float":
         return float(var_value)
 
     return var_value
+
+def cast_value_to_bool(value, explicit):
+    is_str = isinstance(value, str)
+    is_non_bool_str = is_str and (len(value) > 1 or value not in "01")
+    is_non_bool_num = (value != 0 or value != 1)
+
+    if not explicit and (is_non_bool_num or is_non_bool_str):
+        raise_warning(errors.ImplicitCastWarning("bool", "non-boolean type"))
+
+    return bool(value)
+
+def cast_value_to_int(value, explicit):
+    is_float_str = isinstance(value, str) and "." in value
+    is_float = isinstance(value, float) or is_float_str
+
+    if not explicit and is_float:
+        raise_warning(errors.ImplicitCastWarning("int", "float"))
+
+    return int(value)
