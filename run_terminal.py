@@ -17,6 +17,17 @@ def main():
     try:
         while True:
             TERMINAL.line = input("sea > ")
+
+            if TERMINAL.line == "exit":
+                raise EOFError()
+
+            if TERMINAL.line == "debug":
+                debug = True
+                continue
+            elif TERMINAL.line == "nodebug":
+                debug = False
+                continue
+
             retain_info = visit(io, Interpreter, debug, True, retain_info)
     except (KeyboardInterrupt, EOFError):
         print()

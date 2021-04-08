@@ -63,7 +63,7 @@ class Lexer:
                 if self.symbol in base_type.value:
                     self.base_type = base_type
 
-                    token = self.make_token()
+                    token = self.construct_token()
 
                     if token is not None:
                         yield token
@@ -72,7 +72,7 @@ class Lexer:
             else:
                 raise errors.UnknownTokenError(self.take_symbol_and_advance())
 
-    def make_token(self):
+    def construct_token(self):
         position = self.position.copy()
 
         if self.at_line_start and self.base_type is not BaseTT.SPACE:
@@ -82,7 +82,7 @@ class Lexer:
             return None
 
         position.end = self.position.copy().start
-        token = self.make()
+        token = self.make_token()
         token.position = position
 
         if self.base_type is BaseTT.NEWLINE:
@@ -116,20 +116,11 @@ class Lexer:
 
         return self.symbol is not None and self.symbol in valid
 
-    def make(self):
+    def make_token(self):
         get_value = self.make_map_get_value.get(self.base_type, None)
         also_valid = self.make_map_also_valid.get(self.base_type, None)
         stop_if = self.make_map_stop_if.get(self.base_type, None)
 
-        args = {
-            "also_valid": also_valid,
-            "get_value": get_value,
-            "stop_if": stop_if
-        }
-
-        return self.make_generic(**args)
-
-    def make_generic(self, also_valid, get_value, stop_if):
         string = ""
 
         if stop_if is None:

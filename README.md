@@ -51,6 +51,11 @@ You determine which of the following modes to use with a `--mode=[MODE]` argumen
 ## Interpreting Terminal Input
 Run `sea` and you'll enter the interpreter's terminal interface. This provides you with the `sea` interpreter to mess around with, similar to running `python`.
 
+The terminal interpreter has special commands:
+* `debug` - to enable debugging.
+* `nodebug` - to disable debugging.
+* `exit` - to exit. (Ctrl+C and Ctrl+D also work)
+
 ## Interpreting Files
 Run `sea -m=i -s IN FILES` to interpret Sea files
 
