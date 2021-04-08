@@ -1,4 +1,3 @@
-from functools import cached_property
 from .tokens import TT
 from .tokens import BaseTT
 from .tokens import match_type
@@ -8,41 +7,6 @@ from .position import FilePosition
 from ..lexer import errors
 
 class Lexer:
-    @cached_property
-    def make_map_size_limit_1(self):
-        return {
-            BaseTT.PLUS,
-            BaseTT.MINUS,
-            BaseTT.SLASH,
-            BaseTT.PAREN
-        }
-
-    @cached_property
-    def make_map_get_value(self):
-        return {
-            BaseTT.IDENTIFIER: (lambda x: x),
-            BaseTT.NUMBER: (lambda x: x)
-        }
-
-    @cached_property
-    def make_map_also_valid(self):
-        return {
-            BaseTT.EXCLAMATION: "=",
-            BaseTT.CHEVRON: "="
-        }
-
-    @cached_property
-    def make_map_stop_if(self):
-        size_of_one = lambda x: len(x) == 1
-
-        return {
-            BaseTT.SPACE: (lambda x: "\t" in x or " " * 4 in x),
-            BaseTT.PLUS: size_of_one,
-            BaseTT.MINUS: size_of_one,
-            BaseTT.SLASH: size_of_one,
-            BaseTT.PAREN: size_of_one
-        }
-
     def __init__(self, input_stream):
         self.input_stream = input_stream
         self.position = Position(FilePosition(input_stream))
@@ -117,9 +81,9 @@ class Lexer:
         return self.symbol is not None and self.symbol in valid
 
     def make_token(self):
-        get_value = self.make_map_get_value.get(self.base_type, None)
-        also_valid = self.make_map_also_valid.get(self.base_type, None)
-        stop_if = self.make_map_stop_if.get(self.base_type, None)
+        get_value = make_map_get_value.get(self.base_type, None)
+        also_valid = make_map_also_valid.get(self.base_type, None)
+        stop_if = make_map_stop_if.get(self.base_type, None)
 
         string = ""
 
@@ -134,3 +98,23 @@ class Lexer:
 
         value = None if get_value is None else get_value(string)
         return new_token(match_type(string), value)
+
+make_map_get_value = {
+    BaseTT.IDENTIFIER: (lambda x: x),
+    BaseTT.NUMBER: (lambda x: x)
+}
+
+make_map_also_valid = {
+    BaseTT.EXCLAMATION: "=",
+    BaseTT.CHEVRON: "="
+}
+
+size_of_one = lambda x: len(x) == 1
+
+make_map_stop_if = {
+    BaseTT.SPACE: (lambda x: "\t" in x or " " * 4 in x),
+    BaseTT.PLUS: size_of_one,
+    BaseTT.MINUS: size_of_one,
+    BaseTT.SLASH: size_of_one,
+    BaseTT.PAREN: size_of_one
+}

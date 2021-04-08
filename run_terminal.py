@@ -24,11 +24,8 @@ def main():
             if TERMINAL.line == "exit":
                 raise EOFError()
 
-            if TERMINAL.line == "debug":
-                debug = True
-                continue
-            elif TERMINAL.line == "nodebug":
-                debug = False
+            if TERMINAL.line in ("debug", "nodebug"):
+                debug = TERMINAL.line == "debug"
                 continue
 
             retain_info = visit(io, Interpreter, debug, True, retain_info)
