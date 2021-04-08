@@ -31,13 +31,13 @@ It is possible to run Sea from inside of this folder without doing anything else
 1. [Create an alias](https://www.cyberciti.biz/faq/create-permanent-bash-alias-linux-unix/) for the ./sea.bash command as the following (note that this will override any preexisting `sea` command):
 * `alias sea='[PATH TO FOLDER]/sea.bash'`
 * In my case, `[PATH TO FOLDER]`=`~/Documents/Coding/Python/Sea\ Programming\ Language`.
-* Once your terminal reload, this will be undone. Use the link and your own research to figure out how to make this permenant.
+* Once your terminal reloads, this will be undone. Use the link and your own research to figure out how to make this permenant.
 2. [Update your PATH variable](https://opensource.com/article/17/6/set-path-linux) to include the sea folder with the following:
 * `export PATH="$PATH:[PATH TO FOLDER]/"`
 * It is essential that all white space within `[PATH TO FOLDER]` is escaped with "\\" as seen above.
 * It is essential that the path to the folder ends with a "/".
 * If you have multiple paths with "Sea" in them you might have issues. Let me know and I can make the search more specified.
-* Once your terminal reload, this will be undone. Use the link and your own research to figure out how to make this permenant.
+* Once your terminal reloads, this will be undone. Use the link and your own research to figure out how to make this permenant.
 
 # Run Instructions
 This will provide you with a `sea` command. Run `sea --help` to see the usage information.
