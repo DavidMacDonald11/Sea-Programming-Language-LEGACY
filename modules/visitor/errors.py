@@ -25,3 +25,11 @@ class VariableError(VisitorError):
 class UndefinedVariableError(VariableError):
     def get_message(self):
         return f"{self.variable_name} is undefined."
+
+class RedeclaredVariableError(VariableError):
+    def get_message(self):
+        return f"{self.variable_name} has already been declared."
+
+class ModifyingConstantVariableError(VariableError):
+    def get_message(self):
+        return f"Attempted to modify constant value {self.variable_name}."
