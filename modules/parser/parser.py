@@ -71,10 +71,12 @@ class Parser:
 
         return self.binary_operation(self.arithmetic_expression, operations)
 
+    def boolean_and_expression(self):
+        return self.binary_operation(self.comparison_expression, ((TT.KEYWORD, "and"), ))
+
     def expression(self):
         if not self.token.matches_type_keyword():
-            operations = ((TT.KEYWORD, "and"), (TT.KEYWORD, "or"))
-            return self.binary_operation(self.comparison_expression, operations)
+            return self.binary_operation(self.boolean_and_expression, ((TT.KEYWORD, "or"), ))
 
         keyword_token = self.take_token()
 
