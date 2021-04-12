@@ -15,6 +15,8 @@ class TT(Enum):
     KEYWORD = re.compile(r"[a-zA-Z_]+\w+")
     INT = re.compile(r"[0-9]+")
     FLOAT = re.compile(r"[0-9]*\.+[0-9]+")
+    LPAREN = re.compile(r"\(")
+    RPAREN = re.compile(r"\)")
     PLUS = re.compile(r"\+")
     MINUS = re.compile(r"\-")
     MULTIPLY = re.compile(r"\*")
@@ -27,14 +29,13 @@ class TT(Enum):
     GT = re.compile(r"\>")
     LTE = re.compile(r"\<\=")
     GTE = re.compile(r"\>\=")
-    LPAREN = re.compile(r"\(")
-    RPAREN = re.compile(r"\)")
+    COLON = re.compile(r"\:")
     EOF = re.compile("")
 
 @unique
 class BaseTT(Enum):
-    SPACE = " \t"
     NEWLINE = "\n"
+    SPACE = " \t"
     NUMBER = "0123456789."
     IDENTIFIER = string.ascii_letters + "0123456789_"
     PLUS = "+"
@@ -45,6 +46,7 @@ class BaseTT(Enum):
     PAREN = "()"
     CHEVRON = "<>"
     EXCLAMATION = "!"
+    COLON = ":"
 
 @unique
 class BadTT(Enum):

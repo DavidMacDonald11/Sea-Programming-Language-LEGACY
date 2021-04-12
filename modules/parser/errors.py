@@ -27,3 +27,16 @@ class NoIdentifierError(InvalidSyntaxError):
 class NoEqualsError(InvalidSyntaxError):
     def get_message(self):
         return "Expected '='."
+
+class IncorrectBlockError(InvalidSyntaxError):
+    def __init__(self, expected, found, token, message = ""):
+        self.expected = expected
+        self.found = found
+        super().__init__(token, message)
+
+    def get_message(self):
+        return f"Current block is {self.found}, but in block {self.expected}."
+
+class NoLineTerminationError(InvalidSyntaxError):
+    def get_message(self):
+        return "Expected a newline or end of file."

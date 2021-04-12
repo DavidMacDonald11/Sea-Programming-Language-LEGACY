@@ -13,7 +13,13 @@ BOOL_KEYWORDS = {
     "or"
 }
 
-KEYWORDS = TYPE_KEYWORDS | BOOL_KEYWORDS
+SYNTAX_KEYWORDS = {
+    "if",
+    "elif",
+    "else"
+}
+
+KEYWORDS = TYPE_KEYWORDS | BOOL_KEYWORDS | SYNTAX_KEYWORDS
 
 def is_keyword(token_value):
     return token_value in KEYWORDS

@@ -51,7 +51,6 @@ class Lexer:
         if self.base_type is BaseTT.NEWLINE:
             self.at_line_start = True
             self.position.start.next_line()
-            self.take_symbol_and_advance()
 
         self.advance()
         return token
@@ -61,15 +60,15 @@ class Lexer:
         self.advance()
         return symbol
 
+    def take_symbol(self):
+        self.took_symbol = True
+        return self.symbol
+
     def advance(self):
         if self.took_symbol:
             self.symbol = self.input_stream.read() or None
             self.position.start.next()
             self.took_symbol = False
-
-    def take_symbol(self):
-        self.took_symbol = True
-        return self.symbol
 
     def symbol_is_valid(self, also_valid = None):
         valid = self.base_type.value
@@ -112,8 +111,10 @@ size_of_one = lambda x: len(x) == 1
 
 make_map_stop_if = {
     BaseTT.SPACE: (lambda x: "\t" in x or " " * 4 in x),
+    BaseTT.NEWLINE: size_of_one,
     BaseTT.PLUS: size_of_one,
     BaseTT.MINUS: size_of_one,
     BaseTT.SLASH: size_of_one,
-    BaseTT.PAREN: size_of_one
+    BaseTT.PAREN: size_of_one,
+    BaseTT.COLON: size_of_one
 }

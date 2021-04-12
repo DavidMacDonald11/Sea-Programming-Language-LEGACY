@@ -31,6 +31,10 @@ class Visitor(ABC):
         self.symbol_table["false"] = ("bool", 0, True)
 
     @abstractmethod
+    def visit_eof_node(self, node):
+        pass
+
+    @abstractmethod
     def visit_number_node(self, node):
         pass
 

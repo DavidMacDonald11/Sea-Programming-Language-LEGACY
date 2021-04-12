@@ -47,6 +47,9 @@ class Transpiler(Visitor):
 
         self.output_stream.write(result)
 
+    def visit_eof_node(self, node):
+        return ""
+
     def visit_number_node(self, node):
         return node.token.value
 
@@ -72,6 +75,12 @@ class Transpiler(Visitor):
         return f"{var_type} {var_name} = {value}"
 
     def visit_binary_operation_node(self, node):
+        if node.operation_token is None:
+            left = self.visit(node.left_node)
+            right = self.visit(node.right_node)
+
+            return f"{left}\n{right}"
+
         if node.operation_token.type is TT.POWER:
             left = node.left_node.token
             right = node.right_node.token

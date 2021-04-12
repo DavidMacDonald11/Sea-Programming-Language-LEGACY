@@ -74,3 +74,15 @@ def new_var_access_node(variable_token):
     node.__name__ = "VariableAccessNode"
 
     return node
+
+def new_eof_node(eof_token):
+    node = new_ast_node(eof_token.position)
+    node.token = eof_token
+
+    def node_repr():
+        return f"{node.token}"
+
+    node.repr = node_repr
+    node.__name__ = "EofNode"
+
+    return node

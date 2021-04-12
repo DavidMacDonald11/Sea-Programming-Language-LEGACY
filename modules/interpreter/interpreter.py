@@ -38,6 +38,9 @@ class Interpreter(Visitor):
         super().__init__(output_stream)
         self.symbol_table.interpret = True
 
+    def visit_eof_node(self, node):
+        return ""
+
     def visit_number_node(self, node):
         value = node.token.value
         return int(value) if node.token.type is TT.INT else float(value)
@@ -56,6 +59,10 @@ class Interpreter(Visitor):
         left = self.visit(node.left_node)
         right = self.visit(node.right_node)
         operation_token = node.operation_token
+
+        if operation_token is None:
+            return f"{left}\n{right}"
+
         operator = operation_token.type
 
         try:

@@ -1,5 +1,7 @@
 # Sea Language Grammer
 
+- line
+    * (INDENT)* expression (NEWLINE|EOF)
 - expression
     * TYPE IDENTIFIER EQUALS expression
     * boolean_and_expression (OR boolean_and_expression)*
@@ -20,3 +22,8 @@
 - atom
     * INT|FLOAT|IDENTIFIER
     * LPAREN expression RPAREN
+    * if_expression
+- if_expression
+    * IF expression COLON ((NEWLINE block)|expression)
+    * (ELIF expression COLON ((NEWLINE block)|expression)*
+    * (ELSE ((NEWLINE block)|expression))?

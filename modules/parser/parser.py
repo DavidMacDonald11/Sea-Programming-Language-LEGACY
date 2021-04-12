@@ -4,6 +4,7 @@ from ..parser import errors
 
 class Parser:
     def __init__(self, tokens):
+        self.block = 0
         self.tokens = tokens
         self.token_i = -1
         self.token = None
@@ -23,7 +24,7 @@ class Parser:
         return self.token
 
     def parse(self):
-        return self.expression()
+        return self.line()
 
     def atom(self):
         if self.token.type in (TT.INT, TT.FLOAT):
@@ -91,6 +92,33 @@ class Parser:
         self.advance()
 
         return nodes.new_var_assign_node(keyword_token, variable_token, self.expression())
+
+    def line(self):
+        if self.token.type is TT.EOF:
+            return nodes.new_eof_node(self.take_token())
+
+        if self.token.type is TT.NEWLINE:
+            self.take_token()
+            return self.line()
+
+        block = 0
+
+        while self.token.type is TT.INDENT:
+            self.take_token()
+            block += 1
+
+        if block != self.block:
+            raise errors.IncorrectBlockError(self.block, block, self.token)
+
+        left = self.expression()
+
+        if self.token.type not in (TT.NEWLINE, TT.EOF):
+            raise errors.NoLineTerminationError(self.token)
+
+        newline = self.take_token()
+        right = nodes.new_eof_node(newline) if newline.type is TT.EOF else self.line()
+
+        return nodes.new_binary_operation_node(left, None, right)
 
     def binary_operation(self, left_func, operations, right_func = None):
         if right_func is None:

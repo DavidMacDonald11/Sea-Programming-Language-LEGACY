@@ -1,0 +1,5 @@
+int i = 5
+i + 2
+
+float j = i
+j - 1
