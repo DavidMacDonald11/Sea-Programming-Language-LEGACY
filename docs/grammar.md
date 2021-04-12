@@ -1,4 +1,4 @@
-# Sea Language Grammer
+# Sea Language Grammar
 
 - line
     * (INDENT)* expression (NEWLINE|EOF)
