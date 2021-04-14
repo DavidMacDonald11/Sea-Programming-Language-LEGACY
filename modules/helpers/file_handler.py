@@ -57,9 +57,11 @@ def visit_each_file(visitor, dirs, paths, debug):
                 yield file_paths[1].replace(f"{dirs[1]}/", "", 1)
 
 def generate_files(dirs, paths):
+    full_paths = tuple(f"{dirs[0]}/{path}" for path in paths)
+
     for file in find_files(dirs[0]):
         if file.endswith(".sea") or file.endswith(".hea"):
-            if len(paths) != 0 and all(file[:len(path)] != path for path in paths):
+            if len(paths) != 0 and all(file[:len(path)] != path for path in full_paths):
                 continue
 
             yield get_file(file, dirs)
