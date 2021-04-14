@@ -28,6 +28,8 @@ def main():
                 debug = TERMINAL.line == "debug"
                 continue
 
+            TERMINAL.line += "\n"
+
             if TERMINAL.line[-1].rstrip() == ":":
                 TERMINAL.line += "\n"
 

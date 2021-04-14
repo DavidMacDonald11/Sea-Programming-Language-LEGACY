@@ -1,6 +1,9 @@
 from modules.lexer.tokens import TT
+from modules.lexer.keywords import cast_value_to_type
 from modules.parser import nodes
 from modules.visitor.visitor import Visitor
+from modules.visitor import symbols
+from modules.visitor import errors as v_errors
 from modules.visitor.symbol_table import SymbolTable
 from ..interpreter import arithmetic
 from ..interpreter import errors
@@ -55,15 +58,40 @@ class Interpreter(Visitor):
         value = node.token.value
         return int(value) if node.token.type is TT.INT else float(value)
 
-    def visit_variable_access_node(self, node):
-        var = self.symbol_table.safe_get(node)
-        return var.casted_value
-
     def visit_variable_assign_node(self, node):
-        value = self.visit(node.value)
-        self.symbol_table.safe_set(node, value, True)
+        name = node.variable.value
+        var_type = node.type.value
+        value = cast_value_to_type(var_type, self.visit(node.value))
+
+        found = self.symbol_table[name]
+
+        if found is not None:
+            found.modify(value, node)
+        else:
+            self.symbol_table[name] = symbols.Variable(name, var_type, value)
 
         return value
+
+    def visit_constant_define_node(self, node):
+        name = node.name.value
+        value = self.visit(node.value)
+
+        found = self.symbol_table[name]
+
+        if found is not None:
+            found.modify(value, node)
+
+        self.symbol_table[name] = symbols.Constant(name, value)
+
+        return value
+
+    def visit_symbol_access_node(self, node):
+        symbol = self.symbol_table[node.symbol.value]
+
+        if symbol is None:
+            raise v_errors.UndefinedSymbolError(node, node.symbol.value)
+
+        return symbol.value
 
     def visit_unary_operation_node(self, node):
         operation = node.operation
@@ -108,7 +136,7 @@ class Interpreter(Visitor):
 
     def visit_line_node(self, node):
         if isinstance(node.expression, nodes.IfNode):
-            self.symbol_table = SymbolTable(type(self), self.symbol_table)
+            self.symbol_table = SymbolTable(self.symbol_table)
             expression = self.visit(node.expression)
             self.symbol_table = self.symbol_table.parent
 

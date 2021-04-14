@@ -2,6 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 from .symbol_table import SymbolTable
 from .helpers import convert_to_camel_case
+from ..visitor import symbols
 from ..visitor import errors
 
 class Visitor(ABC):
@@ -9,7 +10,7 @@ class Visitor(ABC):
 
     def __init__(self, output_stream):
         self.output_stream = output_stream
-        self.symbol_table = SymbolTable(type(self))
+        self.symbol_table = SymbolTable()
         self.add_global_vars()
 
     def traverse(self, root):
@@ -26,9 +27,9 @@ class Visitor(ABC):
         raise errors.UndefinedVisitMethod(node)
 
     def add_global_vars(self):
-        self.symbol_table["null"] = ("int", 0, True)
-        self.symbol_table["true"] = ("bool", 1, True)
-        self.symbol_table["false"] = ("bool", 0, True)
+        self.symbol_table["null"] = symbols.Constant("null", 0)
+        self.symbol_table["true"] = symbols.Constant("true", 1)
+        self.symbol_table["false"] = symbols.Constant("false", 0)
 
     @abstractmethod
     def visit_eof_node(self, node):
@@ -39,11 +40,15 @@ class Visitor(ABC):
         pass
 
     @abstractmethod
-    def visit_variable_access_node(self, node):
+    def visit_variable_assign_node(self, node):
         pass
 
     @abstractmethod
-    def visit_variable_assign_node(self, node):
+    def visit_constant_define_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_symbol_access_node(self, node):
         pass
 
     @abstractmethod

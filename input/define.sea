@@ -1,0 +1,2 @@
+define HELLO as 15 > 14
+define PI as 3.14

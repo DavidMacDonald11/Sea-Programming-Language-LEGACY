@@ -27,6 +27,10 @@
     * (ELIF expression COLON (block|(expression (NEWLINE|EOF)))*
     * (ELSE COLON (block|(expression (NEWLINE|EOF))))?
 - line
-    * (INDENT)* (if_expression|expression) (NEWLINE|EOF)
+    * EOF
+    * NEWLINE
+    * (INDENT)* DEFINE IDENTIFIER AS expression (NEWLINE|EOF)
+    * (INDENT)* if_expression (NEWLINE|EOF)
+    * (INDENT)* expression (NEWLINE|EOF)
 - block
     * (line)*

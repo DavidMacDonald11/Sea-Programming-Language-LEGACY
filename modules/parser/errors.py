@@ -46,6 +46,10 @@ class NoColonError(InvalidSyntaxError):
     def get_message(self):
         return "Expected ':'."
 
+class NoAsError(InvalidSyntaxError):
+    def get_message(self):
+        return "Expected 'as'."
+
 class TernaryError(InvalidSyntaxError):
     def __init__(self, missing_if, token, message = ""):
         self.missing_if = missing_if

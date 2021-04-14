@@ -38,7 +38,7 @@ class Parser:
             return nodes.NumberNode(self.take_token())
 
         if self.token.type == TT.IDENTIFIER:
-            return nodes.VariableAccessNode(self.take_token())
+            return nodes.SymbolAccessNode(self.take_token())
 
         if self.token.type == TT.LPAREN:
             self.advance()
@@ -153,6 +153,9 @@ class Parser:
         if depth < self.depth:
             return (depth, indent_position)
 
+        if self.token.value == "define":
+            return nodes.LineNode(self.define_line(), depth, True)
+
         if self.token.value == "if":
             return nodes.LineNode(self.if_expression(), depth, True)
 
@@ -223,6 +226,28 @@ class Parser:
         right = right_func()
 
         return nodes.TernaryOperationNode(left, left_operation, middle, right_operation, right)
+
+    def define_line(self):
+        define_token = self.take_token()
+
+        if self.token.type is not TT.IDENTIFIER:
+            raise errors.NoIdentifierError(self.token)
+
+        name = self.take_token()
+
+        if not self.token.matches(TT.KEYWORD, "as"):
+            raise errors.NoAsError(self.token)
+
+        self.advance()
+
+        expression = self.expression()
+
+        if self.token.type not in (TT.NEWLINE, TT.EOF):
+            raise errors.NoLineTerminationError(self.token)
+
+        self.advance()
+
+        return nodes.ConstantDefineNode(define_token, name, expression)
 
     def block_or_expression(self):
         if self.token.type is TT.NEWLINE:

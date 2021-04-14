@@ -16,7 +16,9 @@ BOOL_KEYWORDS = {
 SYNTAX_KEYWORDS = {
     "if",
     "elif",
-    "else"
+    "else",
+    "define",
+    "as"
 }
 
 KEYWORDS = TYPE_KEYWORDS | BOOL_KEYWORDS | SYNTAX_KEYWORDS

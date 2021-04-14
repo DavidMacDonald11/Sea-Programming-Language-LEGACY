@@ -62,13 +62,23 @@ class VariableAssignNode(ASTNode):
     def __repr__(self):
         return f"{self.type}, {self.variable}, TT.EQUALS, {self.value}"
 
-class VariableAccessNode(ASTNode):
-    def __init__(self, variable):
-        self.variable = variable
-        super().__init__(variable.position)
+class ConstantDefineNode(ASTNode):
+    def __init__(self, define_token, name, value):
+        self.name = name
+        self.value = value
+
+        super().__init__(Position(define_token.position.start, value.position.end))
 
     def __repr__(self):
-        return f"{self.variable}"
+        return f"DEFINE {self.name} AS {self.value}"
+
+class SymbolAccessNode(ASTNode):
+    def __init__(self, symbol):
+        self.symbol = symbol
+        super().__init__(symbol.position)
+
+    def __repr__(self):
+        return f"{self.symbol}"
 
 class EofNode(ASTNode):
     def __init__(self, eof_token):
@@ -79,10 +89,10 @@ class EofNode(ASTNode):
         return f"{self.eof_token}"
 
 class LineNode(ASTNode):
-    def __init__(self, expression, depth, is_if = False):
+    def __init__(self, expression, depth, no_end = False):
         self.expression = expression
         self.depth = depth
-        self.is_if = is_if
+        self.no_end = no_end
 
         super().__init__(expression.position)
 

@@ -1,6 +1,8 @@
 from modules.lexer.tokens import TT
 from modules.parser import nodes
 from modules.visitor.visitor import Visitor
+from modules.visitor import symbols
+from modules.visitor import errors as v_errors
 from modules.visitor.symbol_table import SymbolTable
 from ..transpiler import errors
 
@@ -55,26 +57,46 @@ class Transpiler(Visitor):
     def visit_number_node(self, node):
         return node.token.value
 
-    def visit_variable_access_node(self, node):
-        var = self.symbol_table.safe_get(node)
-
-        if var.is_constant:
-            return var.value
-
-        return var.name
-
     def visit_variable_assign_node(self, node):
+        name = node.variable.value
         var_type = node.type.value
-        var_name = node.variable.value
-
         value = self.visit(node.value)
 
         if var_type == "bool":
             var_type = "int"
 
-        self.symbol_table.safe_set(node, value, True)
+        found = self.symbol_table[name]
 
-        return f"{var_type} {var_name} = {value}"
+        if found is not None:
+            found.modify(value, node)
+        else:
+            self.symbol_table[name] = symbols.Variable(name, var_type, value)
+
+        return f"{var_type} {name} = {value}"
+
+    def visit_constant_define_node(self, node):
+        name = node.name.value
+        value = self.visit(node.value)
+
+        found = self.symbol_table[name]
+
+        if found is not None:
+            found.modify(value, node)
+
+        self.symbol_table[name] = symbols.Constant(name, value)
+
+        return f"#define {name} {value}"
+
+    def visit_symbol_access_node(self, node):
+        symbol = self.symbol_table[node.symbol.value]
+
+        if symbol is None:
+            raise v_errors.UndefinedSymbolError(node, node.symbol.value)
+
+        if isinstance(symbol, symbols.ConstantVariable):
+            return symbol.value
+
+        return symbol.name
 
     def visit_unary_operation_node(self, node):
         operator = get_c_operator(node)
@@ -117,17 +139,17 @@ class Transpiler(Visitor):
         return f"{middle} ? {left} : {right}"
 
     def visit_line_node(self, node):
-        is_if = node.is_if
+        no_end = node.no_end
         indent = "\t" * node.depth
 
         if isinstance(node.expression, nodes.IfNode):
-            self.symbol_table = SymbolTable(type(self), self.symbol_table)
+            self.symbol_table = SymbolTable(self.symbol_table)
             expression = self.visit(node.expression)
             self.symbol_table = self.symbol_table.parent
         else:
             expression = self.visit(node.expression)
 
-        return f"{indent}{expression}{'' if is_if else ';'}\n"
+        return f"{indent}{expression}{'' if no_end else ';'}\n"
 
     def visit_sequential_operation_node(self, node):
         left = self.visit(node.left)

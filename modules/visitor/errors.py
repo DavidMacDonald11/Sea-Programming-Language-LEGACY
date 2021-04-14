@@ -17,19 +17,24 @@ class UndefinedVisitMethod(VisitorError):
     def get_message(self):
         return f"No visit{convert_to_camel_case(self.name)} method defined."
 
+class SymbolError(VisitorError):
+    def __init__(self, node, symbol, message = ""):
+        self.symbol = symbol
+        super().__init__(node, message)
+
 class VariableError(VisitorError):
     def __init__(self, node, message = ""):
         self.variable_name = node.variable.value
         super().__init__(node, message)
 
-class UndefinedVariableError(VariableError):
+class UndefinedSymbolError(SymbolError):
     def get_message(self):
-        return f"{self.variable_name} is undefined."
+        return f"{self.symbol} is undefined."
 
 class RedeclaredVariableError(VariableError):
     def get_message(self):
         return f"{self.variable_name} has already been declared."
 
-class ModifyingConstantVariableError(VariableError):
+class ModifyingConstantError(SymbolError):
     def get_message(self):
-        return f"Attempted to modify constant value {self.variable_name}."
+        return f"Attempted to modify constant value {self.symbol.name}."
