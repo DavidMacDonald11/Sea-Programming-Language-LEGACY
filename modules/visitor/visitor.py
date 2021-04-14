@@ -16,7 +16,7 @@ class Visitor(ABC):
         self.output_stream.write(f"{self.visit(root)}\n")
 
     def visit(self, node):
-        method_name = f"visit{convert_to_camel_case(node.__name__)}"
+        method_name = f"visit{convert_to_camel_case(type(node).__name__)}"
         method = getattr(self, method_name, Visitor.no_visit_method)
 
         return method(node)
@@ -52,4 +52,16 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_unary_operation_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_line_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_sequential_operation_node(self, node):
+        pass
+
+    @abstractmethod
+    def visit_if_node(self, node):
         pass

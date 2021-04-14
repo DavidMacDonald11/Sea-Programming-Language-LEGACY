@@ -1,29 +1,30 @@
 # Sea Language Grammar
 
-- line
-    * (INDENT)* expression (NEWLINE|EOF)
-- expression
-    * TYPE IDENTIFIER EQUALS expression
-    * boolean_and_expression (OR boolean_and_expression)*
-- boolean_and_expression
-    * comparison_expression (AND comparison_expression)*
-- comparison_expression
-    * NOT comparison_expression
-    * arithmetic_expresion ((EE|LT|GT|LTE|GTE) arithmetic_expression)*
-- arithmetic_expression
-    * term ((PLUS|MINUS) term)*
-- term
-    * factor ((MUL|DIV) factor)*
-- factor
-    * (PLUS|MINUS) factor
-    * power
-- power
-    * atom (POW factor)*
 - atom
     * INT|FLOAT|IDENTIFIER
     * LPAREN expression RPAREN
-    * if_expression
+- power
+    * atom (POW factor)*
+- factor
+    * (PLUS|MINUS) factor
+    * power
+- term
+    * factor ((MUL|DIV) factor)*
+- arithmetic_expression
+    * term ((PLUS|MINUS) term)*
+- comparison_expression
+    * NOT comparison_expression
+    * arithmetic_expresion ((EE|NE|LT|GT|LTE|GTE) arithmetic_expression)*
+- boolean_and_expression
+    * comparison_expression (AND comparison_expression)*
+- expression
+    * TYPE IDENTIFIER EQUALS expression
+    * boolean_and_expression (OR boolean_and_expression)*
 - if_expression
-    * IF expression COLON ((NEWLINE block)|expression)
-    * (ELIF expression COLON ((NEWLINE block)|expression)*
-    * (ELSE ((NEWLINE block)|expression))?
+    * IF expression COLON (block|(expression (NEWLINE|EOF)))
+    * (ELIF expression COLON (block|(expression (NEWLINE|EOF)))*
+    * (ELSE COLON (block|(expression (NEWLINE|EOF))))?
+- line
+    * (INDENT)* (if_expression|expression) (NEWLINE|EOF)
+- block
+    * (line)*

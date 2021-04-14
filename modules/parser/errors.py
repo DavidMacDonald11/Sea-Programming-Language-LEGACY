@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from modules.errors.errors import SeaError
 
 class ParserError(SeaError):
@@ -29,10 +30,10 @@ class NoEqualsError(InvalidSyntaxError):
         return "Expected '='."
 
 class IncorrectBlockError(InvalidSyntaxError):
-    def __init__(self, expected, found, token, message = ""):
+    def __init__(self, expected, found, position, message = ""):
         self.expected = expected
         self.found = found
-        super().__init__(token, message)
+        super().__init__(SimpleNamespace(position = position), message)
 
     def get_message(self):
         return f"Current block is {self.found}, but in block {self.expected}."
@@ -40,3 +41,7 @@ class IncorrectBlockError(InvalidSyntaxError):
 class NoLineTerminationError(InvalidSyntaxError):
     def get_message(self):
         return "Expected a newline or end of file."
+
+class NoColonError(InvalidSyntaxError):
+    def get_message(self):
+        return "Expected ':'."

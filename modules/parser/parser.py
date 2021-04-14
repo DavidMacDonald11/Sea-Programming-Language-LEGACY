@@ -1,14 +1,16 @@
+from modules.lexer.position import Position
 from modules.lexer.tokens import TT
-from ..parser import nodes
 from ..parser import errors
+from ..parser import nodes
 
 class Parser:
     def __init__(self, tokens):
-        self.block = 0
         self.tokens = tokens
         self.token_i = -1
         self.token = None
         self.advance()
+
+        self.depth = 0
 
     def take_token(self):
         token = self.token
@@ -24,14 +26,19 @@ class Parser:
         return self.token
 
     def parse(self):
-        return self.line()
+        line = self.line()
+
+        if isinstance(line, nodes.EofNode):
+            return line
+
+        return nodes.SequentialOperationNode(line, self.parse())
 
     def atom(self):
         if self.token.type in (TT.INT, TT.FLOAT):
-            return nodes.new_number_node(self.take_token())
+            return nodes.NumberNode(self.take_token())
 
         if self.token.type == TT.IDENTIFIER:
-            return nodes.new_var_access_node(self.take_token())
+            return nodes.VariableAccessNode(self.take_token())
 
         if self.token.type == TT.LPAREN:
             self.advance()
@@ -51,7 +58,7 @@ class Parser:
     def factor(self):
         if self.token.type in (TT.PLUS, TT.MINUS):
             operation_token = self.take_token()
-            return nodes.new_unary_operation_node(operation_token, self.factor())
+            return nodes.UnaryOperationNode(operation_token, self.factor())
 
         return self.power()
 
@@ -66,7 +73,7 @@ class Parser:
             operation_token = self.take_token()
             node = self.comparison_expression()
 
-            return nodes.new_unary_operation_node(operation_token, node)
+            return nodes.UnaryOperationNode(operation_token, node)
 
         operations = (TT.EQ, TT.NE, TT.LT, TT.GT, TT.LTE, TT.GTE)
 
@@ -91,34 +98,88 @@ class Parser:
 
         self.advance()
 
-        return nodes.new_var_assign_node(keyword_token, variable_token, self.expression())
+        return nodes.VariableAssignNode(keyword_token, variable_token, self.expression())
+
+    def if_expression(self):
+        cases = []
+        else_case = None
+
+        if_token = self.take_token()
+        condition = self.expression()
+        self.colon()
+
+        cases += [(condition, self.block_or_expression())]
+
+        while self.token.matches(TT.KEYWORD, "elif"):
+            self.advance()
+            condition = self.expression()
+            self.colon()
+
+            cases += [(condition, self.block_or_expression())]
+
+        if self.token.matches(TT.KEYWORD, "else"):
+            self.advance()
+            self.colon()
+
+            else_case = self.block_or_expression()
+
+        return nodes.IfNode(if_token, cases, else_case)
 
     def line(self):
         if self.token.type is TT.EOF:
-            return nodes.new_eof_node(self.take_token())
+            return nodes.EofNode(self.take_token())
 
         if self.token.type is TT.NEWLINE:
-            self.take_token()
+            self.advance()
             return self.line()
 
-        block = 0
+        indent_start = self.token.position.start
+        depth = 0
 
         while self.token.type is TT.INDENT:
-            self.take_token()
-            block += 1
+            self.advance()
+            depth += 1
 
-        if block != self.block:
-            raise errors.IncorrectBlockError(self.block, block, self.token)
+        indent_position = Position(indent_start, self.token.position.end)
 
-        left = self.expression()
+        if depth > self.depth:
+            block_error_info = (self.depth, depth, indent_position)
+            raise errors.IncorrectBlockError(*block_error_info)
+
+        if depth < self.depth:
+            return (depth, indent_position)
+
+        if self.token.value == "if":
+            return nodes.LineNode(self.if_expression(), depth, True)
+
+        expression = self.expression()
 
         if self.token.type not in (TT.NEWLINE, TT.EOF):
             raise errors.NoLineTerminationError(self.token)
 
-        newline = self.take_token()
-        right = nodes.new_eof_node(newline) if newline.type is TT.EOF else self.line()
+        self.advance()
 
-        return nodes.new_binary_operation_node(left, None, right)
+        return nodes.LineNode(expression, depth)
+
+    def block(self):
+        self.depth += 1
+        left = self.line()
+
+        if not is_normal(left):
+            depth, indent_position = left
+            block_error_info = (self.depth, depth, indent_position)
+
+            raise errors.IncorrectBlockError(*block_error_info)
+
+        block = left
+        right = self.line()
+
+        while is_normal(right):
+            block = nodes.SequentialOperationNode(block, right)
+            right = self.line()
+
+        self.depth -= 1
+        return block
 
     def binary_operation(self, left_func, operations, right_func = None):
         if right_func is None:
@@ -130,8 +191,30 @@ class Parser:
         while self.token.type in operations or token_type_value in operations:
             operation_token = self.take_token()
             right = right_func()
-            left = nodes.new_binary_operation_node(left, operation_token, right)
+            left = nodes.BinaryOperationNode(left, operation_token, right)
 
             token_type_value = (self.token.type, self.token.value)
 
         return left
+
+    def block_or_expression(self):
+        if self.token.type is TT.NEWLINE:
+            return self.block()
+
+        right = self.expression()
+
+        if self.token.type not in (TT.NEWLINE, TT.EOF):
+            raise errors.NoLineTerminationError(self.token)
+
+        self.advance()
+
+        return right
+
+    def colon(self):
+        if self.token.type is not TT.COLON:
+            raise errors.NoColonError(self.token)
+
+        return self.take_token()
+
+def is_normal(node):
+    return isinstance(node, nodes.ASTNode) and not isinstance(node, nodes.EofNode)

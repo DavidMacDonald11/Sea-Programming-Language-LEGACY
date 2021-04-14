@@ -30,7 +30,7 @@ class SymbolTable:
         self.symbols[key] = var
 
     def safe_get(self, node):
-        key = node.variable_token.value
+        key = node.variable.value
         var = self[key]
 
         if var is None:
@@ -39,8 +39,8 @@ class SymbolTable:
         return var
 
     def safe_set(self, node, value, initial = True):
-        key = node.variable_token.value
-        value = (node.keyword_token.value, value)
+        key = node.variable.value
+        value = (node.type.value, value)
 
         var = self[key]
 

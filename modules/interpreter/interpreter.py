@@ -50,24 +50,20 @@ class Interpreter(Visitor):
         return var.casted_value
 
     def visit_variable_assign_node(self, node):
-        value = self.visit(node.value_node)
+        value = self.visit(node.value)
         self.symbol_table.safe_set(node, value, True)
 
         return value
 
     def visit_binary_operation_node(self, node):
-        left = self.visit(node.left_node)
-        right = self.visit(node.right_node)
-        operation_token = node.operation_token
-
-        if operation_token is None:
-            return f"{left}\n{right}"
-
-        operator = operation_token.type
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+        operation = node.operation
+        operator = operation.type
 
         try:
             if operator is TT.KEYWORD:
-                return binary_operator_keyword_func[operation_token.value](left, right)
+                return binary_operator_keyword_func[operation.value](left, right)
 
             return binary_operator_func[operator](left, right)
         except errors.NumericalError as error:
@@ -75,11 +71,35 @@ class Interpreter(Visitor):
             raise error
 
     def visit_unary_operation_node(self, node):
-        operation_token = node.operation_token
-        operator = operation_token.type
-        right = self.visit(node.node)
+        operation = node.operation
+        operator = operation.type
+        right = self.visit(node.right)
 
         if operator is TT.KEYWORD:
-            return unary_operator_keyword_func[operation_token.value](right)
+            return unary_operator_keyword_func[operation.value](right)
 
         return unary_operator_func[operator](right)
+
+    def visit_line_node(self, node):
+        return self.visit(node.expression)
+
+    def visit_sequential_operation_node(self, node):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+
+        if right == "":
+            return left
+
+        return f"{left}\n{right}"
+
+    def visit_if_node(self, node):
+        for condition, expression in node.cases:
+            condition_value = self.visit(condition)
+
+            if condition_value:
+                return self.visit(expression)
+
+        if node.else_case:
+            return self.visit(node.else_case)
+
+        return ""

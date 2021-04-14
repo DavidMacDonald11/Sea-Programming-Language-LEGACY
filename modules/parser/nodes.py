@@ -1,88 +1,100 @@
-from modules.helpers.repr_namespace import ReprNamespace
 from modules.lexer.position import Position
 
-def new_ast_node(position):
-    node = ReprNamespace()
-    node.position = position
+class ASTNode:
+    def __init__(self, position):
+        self.position = position
 
-    return node
+    def get_children(self):
+        return tuple()
 
-def new_number_node(token):
-    node = new_ast_node(token.position)
-    node.token = token
 
-    def node_repr():
-        return f"{node.token}"
+class NumberNode(ASTNode):
+    def __init__(self, token):
+        self.token = token
+        super().__init__(token.position)
 
-    node.repr = node_repr
-    node.__name__ = "NumberNode"
+    def __repr__(self):
+        return f"{self.token}"
 
-    return node
+class BinaryOperationNode(ASTNode):
+    def __init__(self, left, operation, right):
+        self.left = left
+        self.operation = operation
+        self.right = right
 
-def new_binary_operation_node(left_node, operation_token, right_node):
-    node = new_ast_node(Position(left_node.position.start, right_node.position.end))
+        super().__init__(Position(left.position.start, right.position.end))
 
-    node.left_node = left_node
-    node.operation_token = operation_token
-    node.right_node = right_node
+    def __repr__(self):
+        return f"({self.left}, {self.operation}, {self.right})"
 
-    def node_repr():
-        return f"({node.left_node}, {node.operation_token}, {node.right_node})"
+class UnaryOperationNode(ASTNode):
+    def __init__(self, operation, right):
+        self.operation = operation
+        self.right = right
 
-    node.repr = node_repr
-    node.__name__ = "BinaryOperationNode"
+        super().__init__(Position(operation.position.start, right.position.end))
 
-    return node
+    def __repr__(self):
+        return f"({self.operation}, {self.right})"
 
-def new_unary_operation_node(operation_token, right_node):
-    node = new_ast_node(Position(operation_token.position.start, right_node.position.end))
+class VariableAssignNode(ASTNode):
+    def __init__(self, variable_type, variable, value):
+        self.type = variable_type
+        self.variable = variable
+        self.value = value
 
-    node.operation_token = operation_token
-    node.node = right_node
+        super().__init__(variable.position)
 
-    def node_repr():
-        return f"({node.operation_token}, {node.node})"
+    def __repr__(self):
+        return f"{self.type}, {self.variable}, TT.EQUALS, {self.value}"
 
-    node.repr = node_repr
-    node.__name__ = "UnaryOperationNode"
+class VariableAccessNode(ASTNode):
+    def __init__(self, variable):
+        self.variable = variable
+        super().__init__(variable.position)
 
-    return node
+    def __repr__(self):
+        return f"{self.variable}"
 
-def new_var_assign_node(keyword_token, variable_token, value_node):
-    node = new_ast_node(variable_token.position)
+class EofNode(ASTNode):
+    def __init__(self, eof_token):
+        self.eof_token = eof_token
+        super().__init__(eof_token.position)
 
-    node.keyword_token = keyword_token
-    node.variable_token = variable_token
-    node.value_node = value_node
+    def __repr__(self):
+        return f"{self.eof_token}"
 
-    def node_repr():
-        return f"{node.keyword_token}, {node.variable_token}, TT.EQUALS, {node.value_node}"
+class LineNode(ASTNode):
+    def __init__(self, expression, depth, is_if = False):
+        self.expression = expression
+        self.depth = depth
+        self.is_if = is_if
 
-    node.repr = node_repr
-    node.__name__ = "VariableAssignNode"
+        super().__init__(expression.position)
 
-    return node
+    def __repr__(self):
+        return f"[{self.expression}]"
 
-def new_var_access_node(variable_token):
-    node = new_ast_node(variable_token.position)
-    node.variable_token = variable_token
+class SequentialOperationNode(ASTNode):
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
 
-    def node_repr():
-        return f"{node.variable_token}"
+        super().__init__(Position(left.position.start, right.position.end))
 
-    node.repr = node_repr
-    node.__name__ = "VariableAccessNode"
+    def __repr__(self):
+        return f"({self.left} THEN {self.right})"
 
-    return node
+class IfNode(ASTNode):
+    def __init__(self, if_token, cases, else_case):
+        self.cases = cases
+        self.else_case = else_case
 
-def new_eof_node(eof_token):
-    node = new_ast_node(eof_token.position)
-    node.token = eof_token
+        position_start = if_token.position.start
+        position_end = (else_case or cases[-1][1]).position.end
 
-    def node_repr():
-        return f"{node.token}"
+        super().__init__(Position(position_start, position_end))
 
-    node.repr = node_repr
-    node.__name__ = "EofNode"
-
-    return node
+    def __repr__(self):
+        else_str = "" if not self.else_case else f" ELSE {{{self.else_case}}}"
+        return f"IF {{{self.cases}}}" + else_str

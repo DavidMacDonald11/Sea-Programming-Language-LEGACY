@@ -23,12 +23,12 @@ C_OPERATORS = {
 
 def get_c_operator(node):
     try:
-        operation_token = node.operation_token
+        operation = node.operation
 
-        if operation_token.type is TT.KEYWORD:
-            return C_KEYWORD_OPERATORS[operation_token.value]
+        if operation.type is TT.KEYWORD:
+            return C_KEYWORD_OPERATORS[operation.value]
 
-        return C_OPERATORS[operation_token.type]
+        return C_OPERATORS[operation.type]
     except KeyError as e:
         raise errors.UnimplementedOperationError(node) from e
 
@@ -62,10 +62,10 @@ class Transpiler(Visitor):
         return var.name
 
     def visit_variable_assign_node(self, node):
-        var_type = node.keyword_token.value
-        var_name = node.variable_token.value
+        var_type = node.type.value
+        var_name = node.variable.value
 
-        value = self.visit(node.value_node)
+        value = self.visit(node.value)
 
         if var_type == "bool":
             var_type = "int"
@@ -75,29 +75,63 @@ class Transpiler(Visitor):
         return f"{var_type} {var_name} = {value}"
 
     def visit_binary_operation_node(self, node):
-        if node.operation_token is None:
-            left = self.visit(node.left_node)
-            right = self.visit(node.right_node)
+        if node.operation is None:
+            left = self.visit(node.left)
+            right = self.visit(node.right)
 
             return f"{left}\n{right}"
 
-        if node.operation_token.type is TT.POWER:
-            left = node.left_node.token
-            right = node.right_node.token
+        if node.operation.type is TT.POWER:
+            left = node.left.token
+            right = node.right.token
 
             return self.arithmetic_power(left, right)
 
-        left = self.visit(node.left_node)
-        right = self.visit(node.right_node)
+        left = self.visit(node.left)
+        right = self.visit(node.right)
         operator = get_c_operator(node)
 
         return f"({left} {operator} {right})"
 
     def visit_unary_operation_node(self, node):
         operator = get_c_operator(node)
-        right = self.visit(node.node)
+        right = self.visit(node.right)
 
         return f"{operator}{right}"
+
+    def visit_line_node(self, node):
+        is_if = node.is_if
+        indent = "\t" * node.depth
+        expression = self.visit(node.expression)
+
+        return f"{indent}{expression}{'' if is_if else ';'}\n"
+
+    def visit_sequential_operation_node(self, node):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+
+        return f"{left}\n{right}"
+
+    def visit_if_node(self, node):
+        statement = ""
+        first = True
+
+        for condition, expression in node.cases:
+            condition_value = self.visit(condition)
+
+            if first:
+                statement += f"if({condition_value})\n{{\n"
+                first = False
+            else:
+                statement += f"else if({condition_value})\n{{\n"
+
+            statement += f"{self.visit(expression)}"
+            statement += "}\n"
+
+        if node.else_case:
+            statement += f"else\n{{\n{self.visit(node.else_case)}}}\n"
+
+        return statement
 
     def arithmetic_power(self, left, right):
         self.headers.add("#include <math.h>")
