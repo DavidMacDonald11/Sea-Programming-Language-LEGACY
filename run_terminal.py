@@ -28,6 +28,16 @@ def main():
                 debug = TERMINAL.line == "debug"
                 continue
 
+            lines = []
+
+            if TERMINAL.line[-1].rstrip() == ":":
+                TERMINAL.line += "\n"
+
+                while not lines or lines[-1] != "\n":
+                    lines += [input("...   ") + "\n"]
+
+                TERMINAL.line += "".join(lines)
+
             retain_info = visit(io, Interpreter, debug, True, retain_info)
     except (KeyboardInterrupt, EOFError):
         print()
