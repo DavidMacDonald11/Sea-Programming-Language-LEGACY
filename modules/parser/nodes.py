@@ -72,6 +72,15 @@ class ConstantDefineNode(ASTNode):
     def __repr__(self):
         return f"DEFINE {self.name} AS {self.value}"
 
+class ConstantUndefineNode(ASTNode):
+    def __init__(self, undefine_token, name):
+        self.name = name
+
+        super().__init__(Position(undefine_token.position.start, name.position.end))
+
+    def __repr__(self):
+        return f"UNDEFINE {self.name}"
+
 class SymbolAccessNode(ASTNode):
     def __init__(self, symbol):
         self.symbol = symbol

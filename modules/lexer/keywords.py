@@ -17,6 +17,7 @@ SYNTAX_KEYWORDS = {
     "if",
     "elif",
     "else",
+    "undefine",
     "define",
     "as"
 }

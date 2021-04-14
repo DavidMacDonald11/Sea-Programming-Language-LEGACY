@@ -38,3 +38,7 @@ class RedeclaredVariableError(VariableError):
 class ModifyingConstantError(SymbolError):
     def get_message(self):
         return f"Attempted to modify constant value {self.symbol.name}."
+
+class UndefiningUndefinedSymbolError(UndefinedSymbolError):
+    def get_message(self):
+        return f"{self.symbol} is already undefined and cannot be undefined."

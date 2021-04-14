@@ -87,6 +87,17 @@ class Transpiler(Visitor):
 
         return f"#define {name} {value}"
 
+    def visit_constant_undefine_node(self, node):
+        name = node.name.value
+        found = self.symbol_table[name]
+
+        if found is None:
+            raise v_errors.UndefiningUndefinedSymbolError(node, name)
+
+        del self.symbol_table[name]
+
+        return f"#undef {name}"
+
     def visit_symbol_access_node(self, node):
         symbol = self.symbol_table[node.symbol.value]
 

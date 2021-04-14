@@ -153,6 +153,9 @@ class Parser:
         if depth < self.depth:
             return (depth, indent_position)
 
+        if self.token.value == "undefine":
+            return nodes.LineNode(self.undefine_line(), depth, True)
+
         if self.token.value == "define":
             return nodes.LineNode(self.define_line(), depth, True)
 
@@ -248,6 +251,21 @@ class Parser:
         self.advance()
 
         return nodes.ConstantDefineNode(define_token, name, expression)
+
+    def undefine_line(self):
+        undefine_token = self.take_token()
+
+        if self.token.type is not TT.IDENTIFIER:
+            raise errors.NoIdentifierError(self.token)
+
+        name = self.take_token()
+
+        if self.token.type not in (TT.NEWLINE, TT.EOF):
+            raise errors.NoLineTerminationError(self.token)
+
+        self.advance()
+
+        return nodes.ConstantUndefineNode(undefine_token, name)
 
     def block_or_expression(self):
         if self.token.type is TT.NEWLINE:

@@ -48,6 +48,10 @@ class Visitor(ABC):
         pass
 
     @abstractmethod
+    def visit_constant_undefine_node(self, node):
+        pass
+
+    @abstractmethod
     def visit_symbol_access_node(self, node):
         pass
 

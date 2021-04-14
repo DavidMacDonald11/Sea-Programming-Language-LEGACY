@@ -29,6 +29,7 @@
 - line
     * EOF
     * NEWLINE
+    * (INDENT)* UNDEFINE IDENTIFIER (NEWLINE|EOF)
     * (INDENT)* DEFINE IDENTIFIER AS expression (NEWLINE|EOF)
     * (INDENT)* if_expression (NEWLINE|EOF)
     * (INDENT)* expression (NEWLINE|EOF)
