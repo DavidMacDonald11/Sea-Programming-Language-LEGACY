@@ -1,5 +1,7 @@
 from modules.lexer.tokens import TT
+from modules.parser import nodes
 from modules.visitor.visitor import Visitor
+from modules.visitor.symbol_table import SymbolTable
 from ..interpreter import arithmetic
 from ..interpreter import errors
 
@@ -105,6 +107,13 @@ class Interpreter(Visitor):
         return ternary_operator_func[(left_operation, right_operation)](*inputs)
 
     def visit_line_node(self, node):
+        if isinstance(node.expression, nodes.IfNode):
+            self.symbol_table = SymbolTable(type(self), self.symbol_table)
+            expression = self.visit(node.expression)
+            self.symbol_table = self.symbol_table.parent
+
+            return expression
+
         return self.visit(node.expression)
 
     def visit_sequential_operation_node(self, node):

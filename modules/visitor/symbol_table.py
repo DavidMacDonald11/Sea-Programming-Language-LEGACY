@@ -3,16 +3,16 @@ from modules.lexer.keywords import cast_value_to_type
 from ..visitor import errors
 
 class SymbolTable:
-    def __init__(self, visitor_type):
+    def __init__(self, visitor_type, parent = None):
         self.interpret = visitor_type.__name__ == "Interpreter"
         self.symbols = {}
-        self.parent = None
+        self.parent = parent
 
     def __getitem__(self, key):
         value = self.symbols.get(key, None)
 
         if value is None and self.parent is not None:
-            return self.parent.get(key, None)
+            return self.parent[key]
 
         return value
 

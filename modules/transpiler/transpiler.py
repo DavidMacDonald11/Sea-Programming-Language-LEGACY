@@ -1,5 +1,7 @@
 from modules.lexer.tokens import TT
+from modules.parser import nodes
 from modules.visitor.visitor import Visitor
+from modules.visitor.symbol_table import SymbolTable
 from ..transpiler import errors
 
 C_KEYWORD_OPERATORS = {
@@ -117,7 +119,13 @@ class Transpiler(Visitor):
     def visit_line_node(self, node):
         is_if = node.is_if
         indent = "\t" * node.depth
-        expression = self.visit(node.expression)
+
+        if isinstance(node.expression, nodes.IfNode):
+            self.symbol_table = SymbolTable(type(self), self.symbol_table)
+            expression = self.visit(node.expression)
+            self.symbol_table = self.symbol_table.parent
+        else:
+            expression = self.visit(node.expression)
 
         return f"{indent}{expression}{'' if is_if else ';'}\n"
 
