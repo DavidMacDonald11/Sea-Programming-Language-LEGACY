@@ -31,11 +31,11 @@ def main():
             if TERMINAL.line[-1].rstrip() == ":":
                 TERMINAL.line += "\n"
 
-                line = "Default"
+                line = ""
 
-                while line != "":
-                    line = input("...   ")
-                    TERMINAL.line += line + "\n"
+                while line != "\n":
+                    line = input("...   ") + "\n"
+                    TERMINAL.line += line
 
             retain_info = visit(io, Interpreter, debug, True, retain_info)
     except (KeyboardInterrupt, EOFError):
