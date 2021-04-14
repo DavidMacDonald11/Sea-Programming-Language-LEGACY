@@ -74,6 +74,12 @@ class Transpiler(Visitor):
 
         return f"{var_type} {var_name} = {value}"
 
+    def visit_unary_operation_node(self, node):
+        operator = get_c_operator(node)
+        right = self.visit(node.right)
+
+        return f"{operator}{right}"
+
     def visit_binary_operation_node(self, node):
         if node.operation is None:
             left = self.visit(node.left)
@@ -93,11 +99,20 @@ class Transpiler(Visitor):
 
         return f"({left} {operator} {right})"
 
-    def visit_unary_operation_node(self, node):
-        operator = get_c_operator(node)
+    def visit_ternary_operation_node(self, node):
+        left = self.visit(node.left)
+        left_operation = node.left_operation
+        middle = self.visit(node.middle)
+        right_operation = node.right_operation
         right = self.visit(node.right)
 
-        return f"{operator}{right}"
+        operation_value = (left_operation.value, right_operation.value)
+        operator = (left_operation.type, right_operation.type)
+
+        if operator != (TT.KEYWORD, TT.KEYWORD) or operation_value != ("if", "else"):
+            raise errors.UnimplementedOperationError(node)
+
+        return f"{middle} ? {left} : {right}"
 
     def visit_line_node(self, node):
         is_if = node.is_if

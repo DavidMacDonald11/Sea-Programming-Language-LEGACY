@@ -47,11 +47,15 @@ class Visitor(ABC):
         pass
 
     @abstractmethod
+    def visit_unary_operation_node(self, node):
+        pass
+
+    @abstractmethod
     def visit_binary_operation_node(self, node):
         pass
 
     @abstractmethod
-    def visit_unary_operation_node(self, node):
+    def visit_ternary_operation_node(self, node):
         pass
 
     @abstractmethod

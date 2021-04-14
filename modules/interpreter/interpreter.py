@@ -31,6 +31,14 @@ binary_operator_keyword_func = {
     "or": (lambda x, y: x or y)
 }
 
+ternary_operator_func = {
+
+}
+
+ternary_operator_keyword_func = {
+    ("if", "else"): (lambda x, c, y: x if c else y)
+}
+
 class Interpreter(Visitor):
     vocab_base = "Interpret"
 
@@ -55,6 +63,16 @@ class Interpreter(Visitor):
 
         return value
 
+    def visit_unary_operation_node(self, node):
+        operation = node.operation
+        operator = operation.type
+        right = self.visit(node.right)
+
+        if operator is TT.KEYWORD:
+            return unary_operator_keyword_func[operation.value](right)
+
+        return unary_operator_func[operator](right)
+
     def visit_binary_operation_node(self, node):
         left = self.visit(node.left)
         right = self.visit(node.right)
@@ -70,15 +88,21 @@ class Interpreter(Visitor):
             error.node = node.right_node
             raise error
 
-    def visit_unary_operation_node(self, node):
-        operation = node.operation
-        operator = operation.type
+    def visit_ternary_operation_node(self, node):
+        left = self.visit(node.left)
+        left_operation = node.left_operation
+        middle = self.visit(node.middle)
+        right_operation = node.right_operation
         right = self.visit(node.right)
 
-        if operator is TT.KEYWORD:
-            return unary_operator_keyword_func[operation.value](right)
+        inputs = (left, middle, right)
+        operation_value = (left_operation.value, right_operation.value)
+        operator = (left_operation.type, right_operation.type)
 
-        return unary_operator_func[operator](right)
+        if operator == (TT.KEYWORD, TT.KEYWORD):
+            return ternary_operator_keyword_func[operation_value](*inputs)
+
+        return ternary_operator_func[(left_operation, right_operation)](*inputs)
 
     def visit_line_node(self, node):
         return self.visit(node.expression)

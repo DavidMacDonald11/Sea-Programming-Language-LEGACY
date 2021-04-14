@@ -16,6 +16,16 @@ class NumberNode(ASTNode):
     def __repr__(self):
         return f"{self.token}"
 
+class UnaryOperationNode(ASTNode):
+    def __init__(self, operation, right):
+        self.operation = operation
+        self.right = right
+
+        super().__init__(Position(operation.position.start, right.position.end))
+
+    def __repr__(self):
+        return f"({self.operation}, {self.right})"
+
 class BinaryOperationNode(ASTNode):
     def __init__(self, left, operation, right):
         self.left = left
@@ -27,15 +37,19 @@ class BinaryOperationNode(ASTNode):
     def __repr__(self):
         return f"({self.left}, {self.operation}, {self.right})"
 
-class UnaryOperationNode(ASTNode):
-    def __init__(self, operation, right):
-        self.operation = operation
+class TernaryOperationNode(ASTNode):
+    def __init__(self, left, left_operation, middle, right_operation, right):
+        self.left = left
+        self.left_operation = left_operation
+        self.middle = middle
+        self.right_operation = right_operation
         self.right = right
 
-        super().__init__(Position(operation.position.start, right.position.end))
+        super().__init__(Position(left.position.start, right.position.end))
 
     def __repr__(self):
-        return f"({self.operation}, {self.right})"
+        left = f"({self.left}, {self.left_operation}, "
+        return left + f"{self.middle}, {self.right_operation}, {self.right})"
 
 class VariableAssignNode(ASTNode):
     def __init__(self, variable_type, variable, value):

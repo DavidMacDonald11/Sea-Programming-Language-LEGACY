@@ -82,9 +82,13 @@ class Parser:
     def boolean_and_expression(self):
         return self.binary_operation(self.comparison_expression, ((TT.KEYWORD, "and"), ))
 
+    def boolean_or_expression(self):
+        return self.binary_operation(self.boolean_and_expression, ((TT.KEYWORD, "or"), ))
+
     def expression(self):
         if not self.token.matches_type_keyword():
-            return self.binary_operation(self.boolean_and_expression, ((TT.KEYWORD, "or"), ))
+            operations = [(TT.KEYWORD, "if"), (TT.KEYWORD, "else")]
+            return self.ternary_operation(self.boolean_or_expression, operations)
 
         keyword_token = self.take_token()
 
@@ -189,13 +193,36 @@ class Parser:
         token_type_value = (self.token.type, self.token.value)
 
         while self.token.type in operations or token_type_value in operations:
-            operation_token = self.take_token()
+            operation = self.take_token()
             right = right_func()
-            left = nodes.BinaryOperationNode(left, operation_token, right)
+            left = nodes.BinaryOperationNode(left, operation, right)
 
             token_type_value = (self.token.type, self.token.value)
 
         return left
+
+    def ternary_operation(self, left_func, operations, right_func = None):
+        if right_func is None:
+            right_func = left_func
+
+        left = left_func()
+        token_type_value = (self.token.type, self.token.value)
+
+        if self.token.type not in operations[0] and token_type_value not in operations[0]:
+            return left
+
+        left_operation = self.take_token()
+        middle = right_func()
+
+        token_type_value = (self.token.type, self.token.value)
+
+        if self.token.type not in operations[1] and token_type_value not in operations[1]:
+            return nodes.BinaryOperationNode(left, left_operation, middle)
+
+        right_operation = self.take_token()
+        right = right_func()
+
+        return nodes.TernaryOperationNode(left, left_operation, middle, right_operation, right)
 
     def block_or_expression(self):
         if self.token.type is TT.NEWLINE:

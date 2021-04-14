@@ -14,12 +14,14 @@
     * term ((PLUS|MINUS) term)*
 - comparison_expression
     * NOT comparison_expression
-    * arithmetic_expresion ((EE|NE|LT|GT|LTE|GTE) arithmetic_expression)*
+    * arithmetic_expression ((EE|NE|LT|GT|LTE|GTE) arithmetic_expression)*
 - boolean_and_expression
     * comparison_expression (AND comparison_expression)*
-- expression
-    * TYPE IDENTIFIER EQUALS expression
+- boolean_or_expression
     * boolean_and_expression (OR boolean_and_expression)*
+- expression
+    * boolean_or_expression IF boolean_or_expression ELSE boolean_or_expression
+    * TYPE IDENTIFIER EQUALS expression
 - if_expression
     * IF expression COLON (block|(expression (NEWLINE|EOF)))
     * (ELIF expression COLON (block|(expression (NEWLINE|EOF)))*

@@ -45,3 +45,11 @@ class NoLineTerminationError(InvalidSyntaxError):
 class NoColonError(InvalidSyntaxError):
     def get_message(self):
         return "Expected ':'."
+
+class TernaryError(InvalidSyntaxError):
+    def __init__(self, missing_if, token, message = ""):
+        self.missing_if = missing_if
+        super().__init__(token, message)
+
+    def get_message(self):
+        return f"Expected {'if' if self.missing_if else 'else'}."
