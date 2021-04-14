@@ -19,7 +19,7 @@ class UndefinedVisitMethod(VisitorError):
 
 class VariableError(VisitorError):
     def __init__(self, node, message = ""):
-        self.variable_name = node.variable_token.value
+        self.variable_name = node.variable.value
         super().__init__(node, message)
 
 class UndefinedVariableError(VariableError):

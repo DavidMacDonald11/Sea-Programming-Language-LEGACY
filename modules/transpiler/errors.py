@@ -5,7 +5,7 @@ class TranspilerError(VisitorError):
 
 class UnimplementedOperationError(TranspilerError):
     def __init__(self, node, message = ""):
-        self.token_type = node.operation_token.type
+        self.token_type = node.operation.type
         super().__init__(node, message)
 
     def get_message(self):
