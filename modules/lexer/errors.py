@@ -1,4 +1,4 @@
-from modules.errors.errors import SeaError
+from modules.helpers.errors import SeaError
 
 class LexerError(SeaError):
     lexer = None

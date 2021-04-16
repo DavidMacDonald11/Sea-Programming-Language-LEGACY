@@ -1,5 +1,5 @@
 import sys
-from modules.helpers.file_handler import visit_files
+from modules.files.file_handler import visit_files
 from modules.interpreter.interpreter import Interpreter
 from modules.compiler.compiler import Compiler
 from modules.transpiler.transpiler import Transpiler

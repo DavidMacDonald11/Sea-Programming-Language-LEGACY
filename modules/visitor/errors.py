@@ -1,4 +1,4 @@
-from modules.errors import errors
+from modules.helpers import errors
 from .helpers import convert_to_camel_case
 
 class VisitorError(errors.SeaError):

@@ -1,4 +1,4 @@
-from modules.helpers.warnings import raise_warning
+from modules.visitor.print_warnings import raise_warning
 from ..lexer import errors
 
 TYPE_KEYWORDS = {

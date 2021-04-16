@@ -1,5 +1,5 @@
 from types import SimpleNamespace
-from modules.errors.errors import SeaError
+from modules.helpers.errors import SeaError
 
 class ParserError(SeaError):
     def __init__(self, token, message = ""):

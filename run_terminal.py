@@ -1,8 +1,8 @@
 import sys
-from modules.helpers.warnings import init_global_warning
 from modules.visitor.io import new_io
 from modules.visitor.io import new_null_output
 from modules.visitor.main import visit
+from modules.visitor.print_warnings import init_global_warning
 from modules.interpreter.io import TERMINAL
 from modules.interpreter.io import new_terminal_input
 from modules.interpreter.io import new_terminal_output

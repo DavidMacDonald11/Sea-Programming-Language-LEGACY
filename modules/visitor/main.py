@@ -1,8 +1,8 @@
-from modules.errors.errors import SeaError
-from modules.helpers.warnings import print_error
+from modules.helpers.errors import SeaError
 from modules.lexer.lexer import Lexer
 from modules.lexer.errors import LexerError
 from modules.parser.parser import Parser
+from .print_warnings import print_error
 
 def visit(io, visitor_type, debug = False, retain = False, retain_info = None):
     try:

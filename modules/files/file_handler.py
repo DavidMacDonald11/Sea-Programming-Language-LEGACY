@@ -1,10 +1,10 @@
-from modules.helpers.warnings import init_global_warning
 from modules.visitor.io import new_io
 from modules.visitor.io import new_file_input
 from modules.visitor.io import new_file_output
 from modules.visitor.io import new_null_output
 from modules.interpreter.io import new_terminal_output
 from modules.visitor.main import visit
+from modules.visitor.print_warnings import init_global_warning
 from .navigate_dirs import get_new, find_files, make_dirs
 
 class Files:
