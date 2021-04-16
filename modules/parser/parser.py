@@ -1,7 +1,7 @@
 from modules.lexer.position import Position
 from modules.lexer.token_types import TT
+from .nodes.collection import NODES
 from ..parser import errors
-from ..parser import nodes
 
 class Parser:
     def __init__(self, tokens):
@@ -28,17 +28,17 @@ class Parser:
     def parse(self):
         line = self.line()
 
-        if isinstance(line, nodes.EofNode):
+        if isinstance(line, NODES.EOFNode):
             return line
 
-        return nodes.SequentialOperationNode(line, self.parse())
+        return NODES.SequentialOperationNode(line, self.parse())
 
     def atom(self):
         if self.token.type in (TT.INT, TT.FLOAT):
-            return nodes.NumberNode(self.take_token())
+            return NODES.NumberNode(self.take_token())
 
         if self.token.type == TT.IDENTIFIER:
-            return nodes.SymbolAccessNode(self.take_token())
+            return NODES.SymbolAccessNode(self.take_token())
 
         if self.token.type == TT.LPAREN:
             self.advance()
@@ -58,7 +58,7 @@ class Parser:
     def factor(self):
         if self.token.type in (TT.PLUS, TT.MINUS):
             operation_token = self.take_token()
-            return nodes.UnaryOperationNode(operation_token, self.factor())
+            return NODES.LeftUnaryOperationNode(operation_token, self.factor())
 
         return self.power()
 
@@ -73,7 +73,7 @@ class Parser:
             operation_token = self.take_token()
             node = self.comparison_expression()
 
-            return nodes.UnaryOperationNode(operation_token, node)
+            return NODES.LeftUnaryOperationNode(operation_token, node)
 
         operations = (TT.EQ, TT.NE, TT.LT, TT.GT, TT.LTE, TT.GTE)
 
@@ -102,7 +102,7 @@ class Parser:
 
         self.advance()
 
-        return nodes.VariableAssignNode(keyword_token, variable_token, self.expression())
+        return NODES.VariableAssignNode(keyword_token, variable_token, self.expression())
 
     def if_expression(self):
         cases = []
@@ -127,11 +127,11 @@ class Parser:
 
             else_case = self.block_or_expression()
 
-        return nodes.IfNode(if_token, cases, else_case)
+        return NODES.IfNode(if_token, cases, else_case)
 
     def line(self):
         if self.token.type is TT.EOF:
-            return nodes.EofNode(self.take_token())
+            return NODES.EOFNode(self.take_token())
 
         if self.token.type is TT.NEWLINE:
             self.advance()
@@ -154,13 +154,13 @@ class Parser:
             return (depth, indent_position)
 
         if self.token.value == "undefine":
-            return nodes.LineNode(self.undefine_line(), depth, True)
+            return NODES.LineNode(self.undefine_line(), depth, True)
 
         if self.token.value == "define":
-            return nodes.LineNode(self.define_line(), depth, True)
+            return NODES.LineNode(self.define_line(), depth, True)
 
         if self.token.value == "if":
-            return nodes.LineNode(self.if_expression(), depth, True)
+            return NODES.LineNode(self.if_expression(), depth, True)
 
         expression = self.expression()
 
@@ -169,7 +169,7 @@ class Parser:
 
         self.advance()
 
-        return nodes.LineNode(expression, depth)
+        return NODES.LineNode(expression, depth)
 
     def block(self):
         self.depth += 1
@@ -185,7 +185,7 @@ class Parser:
         right = self.line()
 
         while is_normal(right):
-            block = nodes.SequentialOperationNode(block, right)
+            block = NODES.SequentialOperationNode(block, right)
             right = self.line()
 
         self.depth -= 1
@@ -201,7 +201,7 @@ class Parser:
         while self.token.type in operations or token_type_value in operations:
             operation = self.take_token()
             right = right_func()
-            left = nodes.BinaryOperationNode(left, operation, right)
+            left = NODES.BinaryOperationNode(left, operation, right)
 
             token_type_value = (self.token.type, self.token.value)
 
@@ -223,12 +223,15 @@ class Parser:
         token_type_value = (self.token.type, self.token.value)
 
         if self.token.type not in operations[1] and token_type_value not in operations[1]:
-            return nodes.BinaryOperationNode(left, left_operation, middle)
+            return NODES.BinaryOperationNode(left, left_operation, middle)
 
         right_operation = self.take_token()
         right = right_func()
 
-        return nodes.TernaryOperationNode(left, left_operation, middle, right_operation, right)
+        operations = (left_operation, right_operation)
+        values = (left, middle, right)
+
+        return NODES.TernaryOperationNode(operations, values)
 
     def define_line(self):
         define_token = self.take_token()
@@ -250,7 +253,7 @@ class Parser:
 
         self.advance()
 
-        return nodes.ConstantDefineNode(define_token, name, expression)
+        return NODES.ConstantDefineNode(define_token, name, expression)
 
     def undefine_line(self):
         undefine_token = self.take_token()
@@ -265,7 +268,7 @@ class Parser:
 
         self.advance()
 
-        return nodes.ConstantUndefineNode(undefine_token, name)
+        return NODES.ConstantUndefineNode(undefine_token, name)
 
     def block_or_expression(self):
         if self.token.type is TT.NEWLINE:
@@ -287,4 +290,4 @@ class Parser:
         return self.take_token()
 
 def is_normal(node):
-    return isinstance(node, nodes.ASTNode) and not isinstance(node, nodes.EofNode)
+    return isinstance(node, NODES.ASTNode) and not isinstance(node, NODES.EOFNode)
