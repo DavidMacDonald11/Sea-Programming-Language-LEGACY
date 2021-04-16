@@ -30,7 +30,7 @@ def main():
 
             TERMINAL.line += "\n"
 
-            if TERMINAL.line[-1].rstrip() == ":":
+            if TERMINAL.line.rstrip()[-1] == ":":
                 TERMINAL.line += "\n"
 
                 line = ""
@@ -40,8 +40,10 @@ def main():
                     TERMINAL.line += line
 
             retain_info = visit(io, Interpreter, debug, True, retain_info)
-    except (KeyboardInterrupt, EOFError):
+    except KeyboardInterrupt:
         print()
+    except EOFError:
+        pass
 
 if __name__ == "__main__":
     main()
