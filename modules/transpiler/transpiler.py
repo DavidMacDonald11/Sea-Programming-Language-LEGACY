@@ -1,4 +1,4 @@
-from modules.lexer.tokens import TT
+from modules.lexer.token_types import TT
 from modules.parser import nodes
 from modules.visitor.visitor import Visitor
 from modules.visitor import symbols

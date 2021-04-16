@@ -1,5 +1,5 @@
 from modules.lexer.position import Position
-from modules.lexer.tokens import TT
+from modules.lexer.token_types import TT
 from ..parser import errors
 from ..parser import nodes
 

@@ -14,7 +14,6 @@ class UnknownTokenError(LexerError):
     def get_message(self):
         return f"Token \"{self.token}\" is undefined."
 
-
 class IndentError(LexerError):
     def get_message(self):
         return "Indents must be 4 spaces or 1 tab."
