@@ -12,7 +12,7 @@ class ConstantUndefineNode(ASTNode):
 
     def interpret(self, interpreter):
         self.remove_from_symbol_table(interpreter)
-        return ""
+        return f"Success: Undefined {self.name}"
 
     def transpile(self, transpiler):
         self.remove_from_symbol_table(transpiler)
