@@ -20,8 +20,7 @@ This project contains a few key features:
 
 # Future Development
 - I'm currently writing all of this code in Python. Once I create everything, I want to rewrite it in Sea.
-- I plan on creating syntax highling and a linter for Code OSS as well as icons and logos.
-- I plan on creating a unified bash command for all functionality as well as a more formal package for the code with aliases, etc.
+- I plan on creating syntax highlighting and a linter for Code OSS as well as icons and logos.
 - I also plan on making Sea usable on other operating systems besides Unix-based ones.
 
 # Set-up Instructions
