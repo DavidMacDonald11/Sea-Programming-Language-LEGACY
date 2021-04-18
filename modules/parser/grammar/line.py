@@ -39,12 +39,26 @@ def get_indent(parser):
 
 def special_or_default(parser, **make_funcs):
     expression, no_end = {
+        "redefine": make_redefine_line,
         "undefine": make_undefine_line,
         "define": make_define_line,
         "if": make_if_expression
     }.get(parser.token.value, default)(parser, **make_funcs)
 
     return NODES.LineNode(expression, parser.depth, no_end)
+
+def make_redefine_line(parser, **make_funcs):
+    redefine_token = parser.take_token()
+    name = parser.expecting(TT.IDENTIFIER)
+    parser.expecting_keyword("as")
+
+    expression = make_expression(parser, **make_funcs)
+    parser.expecting(TT.NEWLINE, TT.EOF)
+
+    undefine = NODES.ConstantUndefineNode(redefine_token, name)
+    define = NODES.ConstantDefineNode(redefine_token, name, expression)
+
+    return NODES.SequentialOperationNode(undefine, define), True
 
 def make_undefine_line(parser, **_):
     undefine_token = parser.take_token()
@@ -53,12 +67,12 @@ def make_undefine_line(parser, **_):
 
     return NODES.ConstantUndefineNode(undefine_token, name), True
 
-def make_define_line(parser, **_):
+def make_define_line(parser, **make_funcs):
     define_token = parser.take_token()
     name = parser.expecting(TT.IDENTIFIER)
     parser.expecting_keyword("as")
 
-    expression = make_expression(parser)
+    expression = make_expression(parser, **make_funcs)
     parser.expecting(TT.NEWLINE, TT.EOF)
 
     return NODES.ConstantDefineNode(define_token, name, expression), True
