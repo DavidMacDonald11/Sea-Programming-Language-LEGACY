@@ -29,7 +29,8 @@ class LeftUnaryOperationNode(ASTNode):
 
 OPERATOR_FUNC = {
     TT.PLUS: (lambda x: +x),
-    TT.MINUS: (lambda x: -x)
+    TT.MINUS: (lambda x: -x),
+    TT.NOT: (lambda x: ~x)
 }
 
 OPERATOR_KEYWORD_FUNC = {

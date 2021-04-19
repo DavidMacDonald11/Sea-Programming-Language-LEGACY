@@ -40,10 +40,17 @@ C_OPERATORS = {
     TT.MINUS: "-",
     TT.MULTIPLY: "*",
     TT.DIVIDE: "/",
+    TT.MODULO: "%",
     TT.EQ: "==",
     TT.NE: "!=",
     TT.LT: "<",
     TT.GT: ">",
     TT.LTE: "<=",
-    TT.GTE: ">="
+    TT.GTE: ">=",
+    TT.NOT: "~",
+    TT.LSHIFT: "<<",
+    TT.RSHIFT: ">>",
+    TT.AND: "&",
+    TT.XOR: "^",
+    TT.OR: "|"
 }

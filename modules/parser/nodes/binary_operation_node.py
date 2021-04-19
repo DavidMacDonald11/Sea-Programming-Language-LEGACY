@@ -30,26 +30,29 @@ class BinaryOperationNode(ASTNode):
             raise error
 
     def transpile(self, transpiler):
-        if self.operation.type is TT.POWER:
-            return self.transpile_power(transpiler)
-
         left = self.left.transpile(transpiler)
         right = self.right.transpile(transpiler)
+
+        if self.operation.type is TT.POWER:
+            return self.transpile_power(transpiler, left, right)
+
+        if self.operation.matches(TT.KEYWORD, "xor"):
+            return f"(({left} || {right}) && !({left} && {right}))"
+
         operator = transpiler.get_operator(self)
 
         return f"({left} {operator} {right})"
 
-    def transpile_power(self, transpiler):
-        left = self.left.token
-        right = self.right.token
+    def transpile_power(self, transpiler, left, right):
+        left_token = self.left.token
+        right_token = self.right.token
 
         transpiler.headers.add("#include <math.h>")
 
-        if left.type is TT.INT and right.type is TT.INT:
-            return f"((int)powf({left.value}, {right.value}))"
+        if left_token.type is TT.INT and right_token.type is TT.INT:
+            return f"((int)powf({left}, {right}))"
 
-        return f"powl({left.value}, {right.value})"
-
+        return f"powl({left}, {right})"
 
 def arithmetic_power(transpiler, left, right):
     transpiler.headers.add("#include <math.h>")
@@ -65,15 +68,22 @@ OPERATOR_FUNC = {
     TT.MULTIPLY: (lambda x, y: x * y),
     TT.POWER: arithmetic.pow_nums,
     TT.DIVIDE: arithmetic.div_nums,
+    TT.MODULO: arithmetic.mod_nums,
     TT.EQ: (lambda x, y: x == y),
     TT.NE: (lambda x, y: x != y),
     TT.LT: (lambda x, y: x < y),
     TT.GT: (lambda x, y: x > y),
     TT.LTE: (lambda x, y: x <= y),
-    TT.GTE: (lambda x, y: x >= y)
+    TT.GTE: (lambda x, y: x >= y),
+    TT.LSHIFT: (lambda x, y: x << y),
+    TT.RSHIFT: (lambda x, y: x >> y),
+    TT.AND: (lambda x, y: x & y),
+    TT.XOR: (lambda x, y: x ^ y),
+    TT.OR: (lambda x, y: x | y)
 }
 
 OPERATOR_KEYWORD_FUNC = {
     "and": (lambda x, y: x and y),
+    "xor": (lambda x, y: (x or y) and not (x and y)),
     "or": (lambda x, y: x or y)
 }

@@ -1,5 +1,5 @@
 from modules.lexer.token_types import TT
-from .comparison_expression import make_comparison_expression
+from ..comparison_expression import make_comparison_expression
 
 def make_boolean_and_expression(parser, **make_funcs):
     make_funcs["boolean_and_expression"] = make_boolean_and_expression

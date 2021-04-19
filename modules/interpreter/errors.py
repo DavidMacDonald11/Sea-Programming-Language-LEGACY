@@ -12,4 +12,4 @@ class UndefinedOperationError(NumericalError):
 
 class DivideByZeroError(UndefinedOperationError):
     def get_message(self):
-        return "Cannot divide by 0."
+        return "Cannot divide or mod by 0."

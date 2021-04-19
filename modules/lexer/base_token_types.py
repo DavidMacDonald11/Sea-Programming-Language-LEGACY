@@ -13,11 +13,16 @@ class BaseTT(Enum):
     MINUS = "-"
     STAR = "*"
     SLASH = "/"
+    PERCENT = "%"
     EQUALS = "="
     PAREN = "()"
     CHEVRON = "<>"
     EXCLAMATION = "!"
     COLON = ":"
+    TILDE = "~"
+    AMPERSAND = "&"
+    CARET = "^"
+    PIPE = "|"
 
 GET_VALUE = {
     BaseTT.IDENTIFIER: (lambda x: x),
@@ -29,17 +34,25 @@ OTHER_VALID_SYMBOLS = {
     BaseTT.CHEVRON: "="
 }
 
-SIZE_OF_ONE = lambda x: len(x) == 1
+def size_matches(size):
+    def matches(x):
+        return len(x) == size
+
+    return matches
 
 STOP_IF = {
     BaseTT.SPACE: (lambda x: "\t" in x or " " * 4 in x),
-    BaseTT.NEWLINE: SIZE_OF_ONE,
-    BaseTT.PLUS: SIZE_OF_ONE,
-    BaseTT.MINUS: SIZE_OF_ONE,
-    BaseTT.SLASH: SIZE_OF_ONE,
-    BaseTT.PAREN: SIZE_OF_ONE,
-    BaseTT.COLON: SIZE_OF_ONE
-
+    BaseTT.NEWLINE: size_matches(1),
+    BaseTT.PLUS: size_matches(1),
+    BaseTT.MINUS: size_matches(1),
+    BaseTT.SLASH: size_matches(1),
+    BaseTT.PERCENT: size_matches(1),
+    BaseTT.PAREN: size_matches(1),
+    BaseTT.COLON: size_matches(1),
+    BaseTT.TILDE: size_matches(1),
+    BaseTT.AMPERSAND: size_matches(1),
+    BaseTT.CARET: size_matches(1),
+    BaseTT.PIPE: size_matches(1)
 }
 
 MAKE_MAP = SimpleNamespace(

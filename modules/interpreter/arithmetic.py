@@ -11,3 +11,9 @@ def div_nums(left, right):
         raise errors.DivideByZeroError(None)
 
     return left / right
+
+def mod_nums(left, right):
+    if right == 0:
+        raise errors.DivideByZeroError(None)
+
+    return left % right

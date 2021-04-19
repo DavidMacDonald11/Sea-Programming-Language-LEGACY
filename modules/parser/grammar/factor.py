@@ -3,7 +3,7 @@ from modules.parser.nodes.collection import NODES
 from .power import make_power
 
 def make_factor(parser, **make_funcs):
-    if parser.token.type in (TT.PLUS, TT.MINUS):
+    if parser.token.type in (TT.PLUS, TT.MINUS, TT.NOT):
         operation_token = parser.take_token()
         return NODES.LeftUnaryOperationNode(operation_token, make_factor(parser, **make_funcs))
 

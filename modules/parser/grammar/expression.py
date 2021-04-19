@@ -1,5 +1,5 @@
 from modules.lexer.token_types import TT
-from .boolean_or_expression import make_boolean_or_expression
+from .boolean.or_expression import make_boolean_or_expression
 from ..nodes.collection import NODES
 
 def make_expression(parser, **make_funcs):

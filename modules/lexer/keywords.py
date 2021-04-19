@@ -10,6 +10,7 @@ TYPE_KEYWORDS = {
 BOOL_KEYWORDS = {
     "not",
     "and",
+    "xor",
     "or"
 }
 

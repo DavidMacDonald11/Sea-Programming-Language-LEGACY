@@ -6,19 +6,29 @@
 - power
     * atom (POW factor)*
 - factor
-    * (PLUS|MINUS) factor
+    * (PLUS|MINUS|BIT_NOT) factor
     * power
 - term
-    * factor ((MUL|DIV) factor)*
+    * factor ((MUL|DIV|MOD) factor)*
 - arithmetic_expression
     * term ((PLUS|MINUS) term)*
+- bitwise_shift_expression
+    * arithmetic_expression (LSHIFT|RSHIFT) arithmetic_expression)*
+- bitwise_and_expression
+    * bitwise_and_expression (BIT_AND bitwise_and_expression)*
+- bitwise_xor_expression
+    * bitwise_and_expression (BIT_XOR bitwise_and_expression)*
+- bitwise_or_expression
+    * bitwise_xor_expression (BIT_OR bitwise_xor_expression)*
 - comparison_expression
     * NOT comparison_expression
-    * arithmetic_expression ((EE|NE|LT|GT|LTE|GTE) arithmetic_expression)*
+    * bitwise_or_expression ((EE|NE|LT|GT|LTE|GTE) bitwise_or_expression)*
 - boolean_and_expression
     * comparison_expression (AND comparison_expression)*
+- boolean_xor_expression
+    * boolean_and_expression (XOR boolean_and_expression)*
 - boolean_or_expression
-    * boolean_and_expression (OR boolean_and_expression)*
+    * boolean_xor_expression (OR boolean_xor_expression)*
 - expression
     * boolean_or_expression IF boolean_or_expression ELSE boolean_or_expression
     * TYPE IDENTIFIER EQUALS expression

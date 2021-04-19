@@ -18,6 +18,7 @@ class TT(Enum):
     MULTIPLY = re.compile(r"\*")
     POWER = re.compile(r"\*{2}")
     DIVIDE = re.compile(r"\/")
+    MODULO = re.compile(r"\%")
     EQUALS = re.compile(r"\=")
     NE = re.compile(r"\!\=")
     EQ = re.compile(r"\={2}")
@@ -26,6 +27,12 @@ class TT(Enum):
     LTE = re.compile(r"\<\=")
     GTE = re.compile(r"\>\=")
     COLON = re.compile(r"\:")
+    NOT = re.compile(r"\~")
+    LSHIFT = re.compile(r"\<\<")
+    RSHIFT = re.compile(r"\>\>")
+    AND = re.compile(r"\&")
+    XOR = re.compile(r"\^")
+    OR = re.compile(r"\|")
     EOF = re.compile("")
 
 @unique
