@@ -1,6 +1,7 @@
 from modules.lexer.position import Position
 from modules.lexer.token_types import TT
 from modules.interpreter import arithmetic
+from modules.interpreter import bitwise
 from modules.interpreter import errors as i_errors
 from .ast_node import ASTNode
 
@@ -25,7 +26,7 @@ class BinaryOperationNode(ASTNode):
                 return OPERATOR_KEYWORD_FUNC[self.operation.value](left, right)
 
             return OPERATOR_FUNC[self.operator](left, right)
-        except i_errors.NumericalError as error:
+        except i_errors.InterpreterError as error:
             error.node = self.right
             raise error
 
@@ -75,11 +76,11 @@ OPERATOR_FUNC = {
     TT.GT: (lambda x, y: x > y),
     TT.LTE: (lambda x, y: x <= y),
     TT.GTE: (lambda x, y: x >= y),
-    TT.LSHIFT: (lambda x, y: x << y),
-    TT.RSHIFT: (lambda x, y: x >> y),
-    TT.AND: (lambda x, y: x & y),
-    TT.XOR: (lambda x, y: x ^ y),
-    TT.OR: (lambda x, y: x | y)
+    TT.LSHIFT: bitwise.lshift_nums,
+    TT.RSHIFT: bitwise.rshift_nums,
+    TT.AND: bitwise.and_nums,
+    TT.XOR: bitwise.xor_nums,
+    TT.OR: bitwise.or_nums
 }
 
 OPERATOR_KEYWORD_FUNC = {

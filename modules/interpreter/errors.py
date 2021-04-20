@@ -13,3 +13,7 @@ class UndefinedOperationError(NumericalError):
 class DivideByZeroError(UndefinedOperationError):
     def get_message(self):
         return "Cannot divide or mod by 0."
+
+class BitwiseOperationTypeError(InterpreterError):
+    def get_message(self):
+        return "Bitwise operations can only be used with integers."
