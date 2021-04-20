@@ -21,10 +21,11 @@
 - bitwise_or_expression
     * bitwise_xor_expression (BIT_OR bitwise_xor_expression)*
 - comparison_expression
-    * NOT comparison_expression
     * bitwise_or_expression ((EE|NE|LT|GT|LTE|GTE) bitwise_or_expression)*
+- boolean_not_expression
+    * NOT comparison_expression
 - boolean_and_expression
-    * comparison_expression (AND comparison_expression)*
+    * boolean_not_expression (AND boolean_not_expression)*
 - boolean_xor_expression
     * boolean_and_expression (XOR boolean_and_expression)*
 - boolean_or_expression
