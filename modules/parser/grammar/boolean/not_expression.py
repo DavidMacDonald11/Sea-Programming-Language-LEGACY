@@ -9,6 +9,6 @@ def make_boolean_not_expression(parser, **make_funcs):
         return make_comparison_expression(parser, **make_funcs)
 
     operation_token = parser.take_token()
-    node = make_comparison_expression(parser, **make_funcs)
+    node = make_boolean_not_expression(parser, **make_funcs)
 
     return NODES.LeftUnaryOperationNode(operation_token, node)

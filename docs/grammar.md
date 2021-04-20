@@ -15,7 +15,7 @@
 - bitwise_shift_expression
     * arithmetic_expression (LSHIFT|RSHIFT) arithmetic_expression)*
 - bitwise_and_expression
-    * bitwise_and_expression (BIT_AND bitwise_and_expression)*
+    * bitwise_shift_expression (BIT_AND bitwise_shift_expression)*
 - bitwise_xor_expression
     * bitwise_and_expression (BIT_XOR bitwise_and_expression)*
 - bitwise_or_expression
@@ -23,7 +23,7 @@
 - comparison_expression
     * bitwise_or_expression ((EE|NE|LT|GT|LTE|GTE) bitwise_or_expression)*
 - boolean_not_expression
-    * NOT comparison_expression
+    * ((NOT boolean_not_expression)|comparison_expression)
 - boolean_and_expression
     * boolean_not_expression (AND boolean_not_expression)*
 - boolean_xor_expression
