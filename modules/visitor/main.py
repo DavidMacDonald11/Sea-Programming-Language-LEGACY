@@ -2,6 +2,7 @@ from modules.helpers.errors import SeaError
 from modules.lexer.lexer import Lexer
 from modules.lexer.errors import LexerError
 from modules.parser.parser import Parser
+from .visitor import Visitor
 from .print_warnings import print_error
 
 def visit(io, visitor_type, debug = False, retain = False, retain_info = None):
@@ -20,7 +21,8 @@ def visit(io, visitor_type, debug = False, retain = False, retain_info = None):
         parser = Parser(tokens)
         ast = parser.parse()
 
-        visitor = visitor_type(io.output_stream) if retain_info[2] is None else retain_info[2]
+        args = (visitor_type, io.output_stream)
+        visitor = Visitor(*args) if retain_info[2] is None else retain_info[2]
         visitor.traverse(ast)
         symbol_table = visitor.symbol_table
 

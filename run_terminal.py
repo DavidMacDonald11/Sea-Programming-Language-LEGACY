@@ -3,10 +3,9 @@ from modules.visitor.io import new_io
 from modules.visitor.io import new_null_output
 from modules.visitor.main import visit
 from modules.visitor.print_warnings import init_global_warning
-from modules.interpreter.io import TERMINAL
-from modules.interpreter.io import new_terminal_input
-from modules.interpreter.io import new_terminal_output
-from modules.interpreter.interpreter import Interpreter
+from modules.visitor.io import TERMINAL
+from modules.visitor.io import new_terminal_input
+from modules.visitor.io import new_terminal_output
 
 def main():
     debug = sys.argv[1] == "True"
@@ -39,7 +38,7 @@ def main():
                     line = input("...   ") + "\n"
                     TERMINAL.line += line
 
-            retain_info = visit(io, Interpreter, debug, True, retain_info)
+            retain_info = visit(io, "Interpreter", debug, True, retain_info)
     except KeyboardInterrupt:
         print()
     except EOFError:

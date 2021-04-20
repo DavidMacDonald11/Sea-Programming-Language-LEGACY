@@ -1,4 +1,4 @@
-from ..interpreter import errors
+from ...visitor import errors
 
 def lshift_nums(x, y):
     return get_and_check(x, y, lambda x, y: x << y)

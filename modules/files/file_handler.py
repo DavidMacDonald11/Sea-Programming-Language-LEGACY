@@ -2,8 +2,9 @@ from modules.visitor.io import new_io
 from modules.visitor.io import new_file_input
 from modules.visitor.io import new_file_output
 from modules.visitor.io import new_null_output
-from modules.interpreter.io import new_terminal_output
+from modules.visitor.io import new_terminal_output
 from modules.visitor.main import visit
+from modules.visitor.visitor import Visitor
 from modules.visitor.print_warnings import init_global_warning
 from .navigate_dirs import get_new, find_files, make_dirs
 
@@ -27,16 +28,16 @@ class Files:
 def get_dirs(args):
     return tuple(file[:-1] if file[-1] == "/" else file for file in args)
 
-def visit_files(args, visitor, dir_count, debug = False):
+def visit_files(args, visitor_type, dir_count, debug = False):
     dirs = get_dirs(args[:dir_count])
     paths = args[dir_count:]
 
-    files = list(visit_each_file(visitor, dirs, paths, debug))
+    files = list(visit_each_file(visitor_type, dirs, paths, debug))
 
     if len(dirs) > 2:
         write_tmp_output(dirs[1], files)
 
-def visit_each_file(visitor, dirs, paths, debug):
+def visit_each_file(visitor_type, dirs, paths, debug):
     for file_paths in generate_files(dirs, paths):
         if not isinstance(file_paths, (tuple, list)):
             file_paths = (file_paths,)
@@ -44,14 +45,14 @@ def visit_each_file(visitor, dirs, paths, debug):
             file_paths = (*file_paths, f"{file_paths[1]}.tmp")
 
         with Files(file_paths) as files:
-            print(f"{visitor.vocab_base}ing {files[0].name}", end = "")
+            print(f"{Visitor.get_vocab_base(visitor_type)}ing {files[0].name}", end = "")
             print("" if len(files) < 2 else f" into {files[1].name}", end = "")
             print(" ...")
 
             io = get_io(files, debug)
             init_global_warning(io.error_stream)
 
-            success = visit(io, visitor, debug)
+            success = visit(io, visitor_type, debug)
 
             if success and len(dirs) > 1:
                 yield file_paths[1].replace(f"{dirs[1]}/", "", 1)

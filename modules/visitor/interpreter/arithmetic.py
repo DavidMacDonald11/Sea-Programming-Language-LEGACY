@@ -1,4 +1,4 @@
-from ..interpreter import errors
+from ...visitor import errors
 
 def pow_nums(left, right):
     if right == left == 0:

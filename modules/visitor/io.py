@@ -31,3 +31,24 @@ def new_file_output(file):
 
 def new_null_output():
     return new_output(lambda x: None)
+
+TERMINAL = SimpleNamespace()
+TERMINAL.line = ""
+
+def new_terminal_input():
+    def read():
+        if TERMINAL.line == "":
+            return None
+
+        c = TERMINAL.line[0]
+        TERMINAL.line = TERMINAL.line[1:]
+
+        return c
+
+    return new_input("stdin", read)
+
+def new_terminal_output():
+    def write(string):
+        print(string, end = "")
+
+    return new_output(write)

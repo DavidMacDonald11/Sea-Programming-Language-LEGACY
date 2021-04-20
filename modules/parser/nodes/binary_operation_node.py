@@ -1,8 +1,8 @@
 from modules.lexer.position import Position
 from modules.lexer.token_types import TT
-from modules.interpreter import arithmetic
-from modules.interpreter import bitwise
-from modules.interpreter import errors as i_errors
+from modules.visitor.interpreter import arithmetic
+from modules.visitor.interpreter import bitwise
+from modules.visitor import errors as v_errors
 from .ast_node import ASTNode
 
 class BinaryOperationNode(ASTNode):
@@ -26,7 +26,7 @@ class BinaryOperationNode(ASTNode):
                 return OPERATOR_KEYWORD_FUNC[self.operation.value](left, right)
 
             return OPERATOR_FUNC[self.operator](left, right)
-        except i_errors.InterpreterError as error:
+        except v_errors.InterpreterError as error:
             error.node = self.right
             raise error
 
