@@ -6,7 +6,7 @@ class ASTNode(ABC):
         self.position = position
 
     def visit(self, visitor):
-        visitor_type = type(visitor).__name__
+        visitor_type = visitor.type
 
         return {
             "Interpreter": self.interpret,

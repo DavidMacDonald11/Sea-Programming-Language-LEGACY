@@ -1,6 +1,6 @@
 from modules.lexer.position import Position
 from modules.lexer.token_types import TT
-from modules.transpiler import errors as t_errors
+from modules.visitor import errors as v_errors
 from .ast_node import ASTNode
 
 class TernaryOperationNode(ASTNode):
@@ -35,7 +35,7 @@ class TernaryOperationNode(ASTNode):
         right = self.right.transpile(transpiler)
 
         if self.operators != (TT.KEYWORD, TT.KEYWORD) or self.operation_values != ("if", "else"):
-            raise t_errors.UnimplementedOperationError(self)
+            raise v_errors.UnimplementedOperationError(self)
 
         return f"({middle} ? {left} : {right})"
 
