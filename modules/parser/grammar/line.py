@@ -51,8 +51,8 @@ def special_or_default(parser, **make_funcs):
         "while": make_while_expression
     }
 
-    expression = special.get(parser.token.value, default)(parser, **make_funcs)
     no_end = parser.token.value in special
+    expression = special.get(parser.token.value, default)(parser, **make_funcs)
 
     return NODES.LineNode(expression, parser.depth, no_end)
 
