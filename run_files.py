@@ -1,5 +1,5 @@
 import sys
-from modules.files.file_handler import visit_files
+from modules.helpers.file_handler import visit_files
 
 def main():
     visitors = {
