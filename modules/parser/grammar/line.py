@@ -1,9 +1,10 @@
 from modules.lexer.position import Position
 from modules.lexer.token_types import TT
 from .expression import make_expression
-from .if_expression import make_if_expression
-from .while_expression import make_while_expression
 from .do_while_expression import make_do_while_expression
+from .while_expression import make_while_expression
+from .for_expression import make_for_expression
+from .if_expression import make_if_expression
 from ..nodes.collection import NODES
 from ...parser import errors
 
@@ -50,6 +51,7 @@ def special_or_default(parser, **make_funcs):
         "define": make_define_line,
         "do": make_do_while_expression,
         "while": make_while_expression,
+        "for": make_for_expression,
         "if": make_if_expression
     }
 

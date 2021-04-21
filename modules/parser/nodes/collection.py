@@ -5,6 +5,7 @@ from .constant_define_node import ConstantDefineNode
 from .constant_undefine_node import ConstantUndefineNode
 from .do_while_node import DoWhileNode
 from .eof_node import EOFNode
+from .for_node import ForNode
 from .if_node import IfNode
 from .keyword_operation_node import KeywordOperationNode
 from .left_unary_operation_node import LeftUnaryOperationNode
@@ -24,6 +25,7 @@ NODES = SimpleNamespace(
     ConstantUndefineNode = ConstantUndefineNode,
     DoWhileNode = DoWhileNode,
     EOFNode = EOFNode,
+    ForNode = ForNode,
     IfNode = IfNode,
     KeywordOperationNode = KeywordOperationNode,
     LeftUnaryOperationNode = LeftUnaryOperationNode,

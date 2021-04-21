@@ -27,3 +27,4 @@ def get_if_case(parser, cases = None, **make_funcs):
         return expression
 
     cases += [(condition, expression)]
+    parser.remove_newlines()

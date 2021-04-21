@@ -1,0 +1,12 @@
+int j = 0
+bool broke = true
+
+for int i = 0; i < 10; ++i:
+    if i % 2 == 0:
+        ++j
+else:
+    broke = false
+
+i
+j
+broke
