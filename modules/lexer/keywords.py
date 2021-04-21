@@ -21,7 +21,13 @@ SYNTAX_KEYWORDS = {
     "redefine",
     "undefine",
     "define",
-    "as"
+    "as",
+    "for",
+    "while",
+    "do",
+    "break",
+    "continue",
+    "pass"
 }
 
 KEYWORDS = TYPE_KEYWORDS | BOOL_KEYWORDS | SYNTAX_KEYWORDS

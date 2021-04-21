@@ -27,6 +27,7 @@ class TT(Enum):
     LTE = re.compile(r"\<\=")
     GTE = re.compile(r"\>\=")
     COLON = re.compile(r"\:")
+    SEMICOLON = re.compile(r"\;")
     NOT = re.compile(r"\~")
     LSHIFT = re.compile(r"\<\<")
     RSHIFT = re.compile(r"\>\>")

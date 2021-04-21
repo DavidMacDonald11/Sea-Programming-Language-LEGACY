@@ -13,7 +13,7 @@ def make_if_expression(parser, **make_funcs):
     if parser.token.matches(TT.KEYWORD, "else"):
         else_case = get_if_case(parser, **make_funcs)
 
-    return NODES.IfNode(if_token, cases, else_case), True
+    return NODES.IfNode(if_token, cases, else_case)
 
 def get_if_case(parser, cases = None, **make_funcs):
     token = parser.take_token()

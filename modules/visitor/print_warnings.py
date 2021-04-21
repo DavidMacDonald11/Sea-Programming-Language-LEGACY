@@ -21,8 +21,8 @@ def print_warning(error_stream, error):
 def print_error(visitor_type, io, error):
     to_print = print_warning(io.error_stream, error)
 
-    if visitor_type.__name__ == "Transpiler":
+    if visitor_type == "Transpiler":
         io.output_stream.write("// Transpilation stopped due to error\n")
         io.output_stream.write(f"/* {to_print} */\n")
-    elif visitor_type.__name__ == "Interpreter":
+    elif visitor_type == "Interpreter":
         io.output_stream.write(f"{to_print}\n")

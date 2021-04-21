@@ -33,3 +33,19 @@ class IncorrectBlockError(InvalidSyntaxError):
 
     def get_message(self):
         return f"Current block is {self.found}, but in block {self.expected}."
+
+class UndefinedContinueError(InvalidSyntaxError):
+    def __init__(self, node, message = ""):
+        self.node = node
+        super().__init__(node.keyword_token)
+
+    def get_message(self):
+        return "Continue is undefined in the current block."
+
+class UndefinedBreakError(InvalidSyntaxError):
+    def __init__(self, node, message = ""):
+        self.node = node
+        super().__init__(node.keyword_token)
+
+    def get_message(self):
+        return "Break is undefined in the current block."

@@ -33,6 +33,12 @@
 - expression
     * boolean_or_expression IF boolean_or_expression ELSE boolean_or_expression
     * TYPE IDENTIFIER EQUALS expression
+- do_while_expression
+    DO COLON (block|(expression (NEWLINE))) WHILE expression (NEWLINE|EOF)
+- while_expression
+    WHILE expression COLON (block|(expression (NEWLINE|EOF)))
+- for_expression
+    FOR expression? SEMICOLON expression? SEMICOLON expression? COLON (block|(expression (NEWLINE|EOF)))
 - if_expression
     * IF expression COLON (block|(expression (NEWLINE|EOF)))
     * (ELIF expression COLON (block|(expression (NEWLINE|EOF)))*
@@ -40,10 +46,11 @@
 - line
     * EOF
     * NEWLINE
+    * (INDENT)* (((BREAK|CONTINUE) (IF expression)?)|PASS) (NEWLINE|EOF)
     * (INDENT)* REDEFINE IDENTIFIER AS expression (NEWLINE|EOF)
     * (INDENT)* UNDEFINE IDENTIFIER (NEWLINE|EOF)
     * (INDENT)* DEFINE IDENTIFIER AS expression (NEWLINE|EOF)
-    * (INDENT)* if_expression (NEWLINE|EOF)
+    * (INDENT)* (if_expression|for_expression|while_expression|do_while_expression) (NEWLINE|EOF)
     * (INDENT)* expression (NEWLINE|EOF)
 - block
     * (line)*

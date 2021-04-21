@@ -5,6 +5,7 @@ from .constant_define_node import ConstantDefineNode
 from .constant_undefine_node import ConstantUndefineNode
 from .eof_node import EOFNode
 from .if_node import IfNode
+from .keyword_operation_node import KeywordOperationNode
 from .left_unary_operation_node import LeftUnaryOperationNode
 from .line_node import LineNode
 from .number_node import NumberNode
@@ -12,6 +13,7 @@ from .sequential_operation_node import SequentialOperationNode
 from .symbol_access_node import SymbolAccessNode
 from .ternary_operation_node import TernaryOperationNode
 from .variable_assign_node import VariableAssignNode
+from .while_node import WhileNode
 
 NODES = SimpleNamespace(
     ASTNode = ASTNode,
@@ -20,11 +22,13 @@ NODES = SimpleNamespace(
     ConstantUndefineNode = ConstantUndefineNode,
     EOFNode = EOFNode,
     IfNode = IfNode,
+    KeywordOperationNode = KeywordOperationNode,
     LeftUnaryOperationNode = LeftUnaryOperationNode,
     LineNode = LineNode,
     NumberNode = NumberNode,
     SequentialOperationNode = SequentialOperationNode,
     SymbolAccessNode = SymbolAccessNode,
     TernaryOperationNode = TernaryOperationNode,
-    VariableAssignNode = VariableAssignNode
+    VariableAssignNode = VariableAssignNode,
+    WhileNode = WhileNode
 )

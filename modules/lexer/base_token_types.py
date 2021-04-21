@@ -19,6 +19,7 @@ class BaseTT(Enum):
     CHEVRON = "<>"
     EXCLAMATION = "!"
     COLON = ":"
+    SEMICOLON = ";"
     TILDE = "~"
     AMPERSAND = "&"
     CARET = "^"
@@ -49,6 +50,7 @@ STOP_IF = {
     BaseTT.PERCENT: size_matches(1),
     BaseTT.PAREN: size_matches(1),
     BaseTT.COLON: size_matches(1),
+    BaseTT.SEMICOLON: size_matches(1),
     BaseTT.TILDE: size_matches(1),
     BaseTT.AMPERSAND: size_matches(1),
     BaseTT.CARET: size_matches(1),
