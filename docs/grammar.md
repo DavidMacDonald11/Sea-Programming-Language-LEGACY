@@ -4,9 +4,11 @@
     * INT|FLOAT|IDENTIFIER
     * LPAREN expression RPAREN
 - mole
-    * (atom (INCREMENT|DECREMENT)*)
+    * IDENTIFIER (INCREMENT|DECREMENT)
+    * atom
 - part
-    * ((PLUS|MINUS|BIT_NOT|INCREMENT|DECREMENT)* mole)
+    * (INCREMENT|DECREMENT) IDENTIFIER
+    * (PLUS|MINUS|BIT_NOT)? mole
 - factor
     * part (POW part)*
 - term

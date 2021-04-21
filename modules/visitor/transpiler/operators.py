@@ -24,6 +24,8 @@ C_OPERATORS = {
     TT.MULTIPLY: "*",
     TT.DIVIDE: "/",
     TT.MODULO: "%",
+    TT.INCREMENT: "++",
+    TT.DECREMENT: "--",
     TT.EQ: "==",
     TT.NE: "!=",
     TT.LT: "<",
