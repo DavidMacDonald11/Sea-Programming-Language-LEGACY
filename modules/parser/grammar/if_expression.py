@@ -11,7 +11,7 @@ def make_if_expression(parser, **make_funcs):
     while parser.take_tokens_if_ahead(*(*parser.indent, (TT.KEYWORD, "elif"))):
         get_if_case(parser, cases, **make_funcs)
 
-    if parser.take_tokens_if_ahead(*(*parser.indent, (TT.KEYWORD), "else")):
+    if parser.take_tokens_if_ahead(*(*parser.indent, (TT.KEYWORD, "else"))):
         else_case = get_if_case(parser, **make_funcs)
 
     return NODES.IfNode(if_token, cases, else_case)
