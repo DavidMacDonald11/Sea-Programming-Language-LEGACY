@@ -1,5 +1,6 @@
 from modules.lexer.position import Position
 from modules.lexer.token_types import TT
+from modules.visitor.transpiler.operators import get_c_operator
 from .ast_node import ASTNode
 
 class LeftUnaryOperationNode(ASTNode):
@@ -22,7 +23,7 @@ class LeftUnaryOperationNode(ASTNode):
         return OPERATOR_FUNC[self.operation.type](right)
 
     def transpile(self, transpiler):
-        operator = type(transpiler).get_operator(self)
+        operator = get_c_operator(self)
         right = self.right.transpile(transpiler)
 
         return f"({operator}{right})"

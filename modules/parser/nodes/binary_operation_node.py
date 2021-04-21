@@ -2,6 +2,7 @@ from modules.lexer.position import Position
 from modules.lexer.token_types import TT
 from modules.visitor.interpreter import arithmetic
 from modules.visitor.interpreter import bitwise
+from modules.visitor.transpiler.operators import get_c_operator
 from modules.visitor import errors as v_errors
 from .ast_node import ASTNode
 
@@ -40,7 +41,7 @@ class BinaryOperationNode(ASTNode):
         if self.operation.matches(TT.KEYWORD, "xor"):
             return f"(({left} || {right}) && !({left} && {right}))"
 
-        operator = transpiler.get_operator(self)
+        operator = get_c_operator(self)
 
         return f"({left} {operator} {right})"
 
