@@ -1,0 +1,15 @@
+int i = 0
+
+do:
+    ++i
+while i < 4
+
+i
+
+do:
+    i = 10
+while i < 0
+else:
+    i = 11
+
+i

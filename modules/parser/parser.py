@@ -60,6 +60,10 @@ class Parser:
 
         return result
 
+    def remove_newlines(self):
+        while self.token.type is TT.NEWLINE:
+            self.advance()
+
     def expecting(self, *valid_token_types):
         if self.token.type not in valid_token_types:
             raise errors.ExpectedTokenError(self.token, valid_token_types)
@@ -71,3 +75,9 @@ class Parser:
             raise errors.ExpectedTokenError(self.token, valid_keywords)
 
         return self.take_token()
+
+    def expecting_ahead(self, *tokens):
+        return [self.expecting(*token) for token in tokens]
+
+    def expecting_keywords_ahead(self, *keywords):
+        return [self.expecting_keyword(*keyword) for keyword in keywords]

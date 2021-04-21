@@ -3,6 +3,7 @@ from .ast_node import ASTNode
 from .binary_operation_node import BinaryOperationNode
 from .constant_define_node import ConstantDefineNode
 from .constant_undefine_node import ConstantUndefineNode
+from .do_while_node import DoWhileNode
 from .eof_node import EOFNode
 from .if_node import IfNode
 from .keyword_operation_node import KeywordOperationNode
@@ -21,6 +22,7 @@ NODES = SimpleNamespace(
     BinaryOperationNode = BinaryOperationNode,
     ConstantDefineNode = ConstantDefineNode,
     ConstantUndefineNode = ConstantUndefineNode,
+    DoWhileNode = DoWhileNode,
     EOFNode = EOFNode,
     IfNode = IfNode,
     KeywordOperationNode = KeywordOperationNode,
