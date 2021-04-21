@@ -3,11 +3,12 @@
 - atom
     * INT|FLOAT|IDENTIFIER
     * LPAREN expression RPAREN
-- power
-    * atom (POW factor)*
+- mole
+    * (atom (INCREMENT|DECREMENT)*)
+- part
+    * ((PLUS|MINUS|BIT_NOT|INCREMENT|DECREMENT)* mole)
 - factor
-    * (PLUS|MINUS|BIT_NOT) factor
-    * power
+    * part (POW part)*
 - term
     * factor ((MUL|DIV|MOD) factor)*
 - arithmetic_expression
@@ -33,6 +34,7 @@
 - expression
     * boolean_or_expression IF boolean_or_expression ELSE boolean_or_expression
     * TYPE IDENTIFIER EQUALS expression
+    * IDENTIFIER (EQUALS|PLUS_EQUALS|MINUS_EQUALS|MULTIPLY_EQUALS|POWER_EQUALS|DIVIDE_EQUALS|MODULO_EQUALS|LSHIFT_EQUALS|RSHIFT_EQUALS|AND_EQUALS|XOR_EQUALS|OR_EQUALS) expression
 - do_while_expression
     DO COLON (block|(expression (NEWLINE))) WHILE expression (NEWLINE|EOF)
 - while_expression

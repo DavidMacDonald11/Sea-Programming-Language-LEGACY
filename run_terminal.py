@@ -20,6 +20,9 @@ def main():
         while True:
             TERMINAL.line = input("sea > ")
 
+            if TERMINAL.line == "":
+                continue
+
             if TERMINAL.line == "exit":
                 raise EOFError()
 

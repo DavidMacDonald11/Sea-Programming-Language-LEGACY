@@ -10,6 +10,13 @@ def make_expression(parser, **make_funcs):
     if parser.token.matches_type_keyword():
         return make_var_assign(parser, **make_funcs)
 
+    reassigners = (TT.EQUALS, TT.PLUS_EQUALS, TT.MINUS_EQUALS, TT.MINUS_EQUALS,
+                TT.MULTIPLY_EQUALS, TT.POWER_EQUALS, TT.DIVIDE_EQUALS, TT.MODULO_EQUALS,
+                TT.LSHIFT_EQUALS, TT.RSHIFT_EQUALS, TT.AND_EQUALS, TT.XOR_EQUALS, TT.OR_EQUALS)
+
+    if parser.token.type is TT.IDENTIFIER and parser.token_ahead().type in reassigners:
+        return make_var_reassign(parser, **make_funcs)
+
     operations = [(TT.KEYWORD, "if"), (TT.KEYWORD, "else")]
     return ternary_operation(parser, make_boolean_or_expression, operations, **make_funcs)
 
@@ -20,6 +27,13 @@ def make_var_assign(parser, **make_funcs):
 
     expression = make_funcs["expression"](parser, **make_funcs)
     return NODES.VariableAssignNode(keyword_token, variable_token, expression)
+
+def make_var_reassign(parser, **make_funcs):
+    variable_token = parser.take_token()
+    operation = parser.take_token()
+    expression = make_funcs["expression"](parser, **make_funcs)
+
+    return NODES.VariableReassignNode(variable_token, operation, expression)
 
 def ternary_operation(parser, left_func, operations, right_func = None, **make_funcs):
     if right_func is None:

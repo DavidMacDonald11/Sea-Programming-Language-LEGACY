@@ -13,6 +13,7 @@ from .sequential_operation_node import SequentialOperationNode
 from .symbol_access_node import SymbolAccessNode
 from .ternary_operation_node import TernaryOperationNode
 from .variable_assign_node import VariableAssignNode
+from .variable_reassign_node import VariableReassignNode
 from .while_node import WhileNode
 
 NODES = SimpleNamespace(
@@ -30,5 +31,6 @@ NODES = SimpleNamespace(
     SymbolAccessNode = SymbolAccessNode,
     TernaryOperationNode = TernaryOperationNode,
     VariableAssignNode = VariableAssignNode,
+    VariableReassignNode = VariableReassignNode,
     WhileNode = WhileNode
 )

@@ -32,7 +32,16 @@ GET_VALUE = {
 
 OTHER_VALID_SYMBOLS = {
     BaseTT.EXCLAMATION: "=",
-    BaseTT.CHEVRON: "="
+    BaseTT.CHEVRON: "=",
+    BaseTT.PLUS: "=",
+    BaseTT.MINUS: "=",
+    BaseTT.STAR: "=",
+    BaseTT.SLASH: "=",
+    BaseTT.PERCENT: "=",
+    BaseTT.TILDE: "=",
+    BaseTT.AMPERSAND: "=",
+    BaseTT.CARET: "=",
+    BaseTT.PIPE: "="
 }
 
 def size_matches(size):
@@ -44,17 +53,9 @@ def size_matches(size):
 STOP_IF = {
     BaseTT.SPACE: (lambda x: "\t" in x or " " * 4 in x),
     BaseTT.NEWLINE: size_matches(1),
-    BaseTT.PLUS: size_matches(1),
-    BaseTT.MINUS: size_matches(1),
-    BaseTT.SLASH: size_matches(1),
-    BaseTT.PERCENT: size_matches(1),
     BaseTT.PAREN: size_matches(1),
     BaseTT.COLON: size_matches(1),
     BaseTT.SEMICOLON: size_matches(1),
-    BaseTT.TILDE: size_matches(1),
-    BaseTT.AMPERSAND: size_matches(1),
-    BaseTT.CARET: size_matches(1),
-    BaseTT.PIPE: size_matches(1)
 }
 
 MAKE_MAP = SimpleNamespace(

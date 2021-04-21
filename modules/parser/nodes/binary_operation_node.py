@@ -35,7 +35,7 @@ class BinaryOperationNode(ASTNode):
         left = self.left.transpile(transpiler)
         right = self.right.transpile(transpiler)
 
-        if self.operation.type is TT.POWER:
+        if self.operator is TT.POWER:
             return self.transpile_power(transpiler, left, right)
 
         if self.operation.matches(TT.KEYWORD, "xor"):

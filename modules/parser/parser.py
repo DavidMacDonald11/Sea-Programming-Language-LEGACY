@@ -26,6 +26,14 @@ class Parser:
 
         return self.token
 
+    def token_ahead(self, amount = 1):
+        i = self.token_i + amount
+
+        if i < len(self.tokens):
+            return self.tokens[i]
+
+        return self.token
+
     def parse(self):
         line = make_line(self, **MAKE_FUNCS)
 
