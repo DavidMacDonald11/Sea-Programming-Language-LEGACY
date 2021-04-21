@@ -14,30 +14,30 @@ def make_line(parser, **make_funcs):
 
     if parser.token.type is TT.NEWLINE:
         parser.advance()
-        return make_line(parser, **make_funcs)
+        return make_line(parser,  **make_funcs)
 
-    depth, indent_position = get_indent(parser)
+    has_indent = parser.tokens_ahead(*parser.indent)
+    token_after_indent = parser.token_ahead(len(parser.indent) + 1)
+    has_indent = has_indent and token_after_indent.type is not TT.INDENT
 
-    if depth > parser.depth:
+    depth, indent_position = take_indent(parser)
+
+    if not has_indent:
         block_error_info = (parser.depth, depth, indent_position)
         raise errors.IncorrectBlockError(*block_error_info)
 
-    if depth < parser.depth:
-        return (depth, indent_position)
-
     return special_or_default(parser, **make_funcs)
 
-def get_indent(parser):
+def take_indent(parser):
     indent_start = parser.token.position.start
-    depth = 0
+    tokens = []
 
     while parser.token.type is TT.INDENT:
-        parser.advance()
-        depth += 1
+        tokens += [parser.take_token()]
 
     indent_position = Position(indent_start, parser.token.position.end)
 
-    return (depth, indent_position)
+    return len(tokens), indent_position
 
 def special_or_default(parser, **make_funcs):
     special = {

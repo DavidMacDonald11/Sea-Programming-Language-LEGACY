@@ -5,6 +5,10 @@ from .nodes.collection import NODES
 from ..parser import errors
 
 class Parser:
+    @property
+    def indent(self):
+        return tuple((TT.INDENT, None) for _ in range(self.depth))
+
     def __init__(self, tokens):
         self.tokens = tokens
         self.token_i = -1
@@ -12,6 +16,14 @@ class Parser:
         self.advance()
 
         self.depth = 0
+
+    def parse(self):
+        line = make_line(self, **MAKE_FUNCS)
+
+        if isinstance(line, NODES.EOFNode):
+            return line
+
+        return NODES.SequentialOperationNode(line, self.parse())
 
     def take_token(self):
         token = self.token
@@ -34,13 +46,19 @@ class Parser:
 
         return self.token
 
-    def parse(self):
-        line = make_line(self, **MAKE_FUNCS)
+    def tokens_ahead(self, *tokens):
+        return all(self.token_ahead(i).matches(*token) for i, token in enumerate(tokens))
 
-        if isinstance(line, NODES.EOFNode):
-            return line
+    def take_tokens(self, amount = 1):
+        return [self.take_token() for _ in range(amount)]
 
-        return NODES.SequentialOperationNode(line, self.parse())
+    def take_tokens_if_ahead(self, *tokens):
+        result = self.tokens_ahead(*tokens)
+
+        if result:
+            result = self.take_tokens(len(tokens))
+
+        return result
 
     def expecting(self, *valid_token_types):
         if self.token.type not in valid_token_types:

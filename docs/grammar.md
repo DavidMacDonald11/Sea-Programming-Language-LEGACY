@@ -38,11 +38,14 @@
     * TYPE IDENTIFIER EQUALS expression
     * IDENTIFIER (EQUALS|PLUS_EQUALS|MINUS_EQUALS|MULTIPLY_EQUALS|POWER_EQUALS|DIVIDE_EQUALS|MODULO_EQUALS|LSHIFT_EQUALS|RSHIFT_EQUALS|AND_EQUALS|XOR_EQUALS|OR_EQUALS) expression
 - do_while_expression
-    DO COLON (block|(expression (NEWLINE))) WHILE expression (NEWLINE|EOF)
+    * DO COLON (block|(expression (NEWLINE))) WHILE expression (NEWLINE|EOF)?
+    * (ELSE COLON (block|(expression (NEWLINE|EOF))))?
 - while_expression
-    WHILE expression COLON (block|(expression (NEWLINE|EOF)))
+    * WHILE expression COLON (block|(expression (NEWLINE|EOF)))
+    * (ELSE COLON (block|(expression (NEWLINE|EOF))))?
 - for_expression
-    FOR expression? SEMICOLON expression? SEMICOLON expression? COLON (block|(expression (NEWLINE|EOF)))
+    * FOR expression? SEMICOLON expression? SEMICOLON expression? COLON (block|(expression (NEWLINE|EOF)))
+    * (ELSE COLON (block|(expression (NEWLINE|EOF))))?
 - if_expression
     * IF expression COLON (block|(expression (NEWLINE|EOF)))
     * (ELIF expression COLON (block|(expression (NEWLINE|EOF)))*

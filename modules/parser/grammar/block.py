@@ -5,24 +5,26 @@ from ..nodes.collection import NODES
 from ...parser import errors
 
 def make_block(parser):
+    remove_newlines(parser)
+
+    if not parser.tokens_ahead(*parser.indent):
+        raise errors.EmptyBlockError(parser.token)
+
     parser.depth += 1
-    left = make_line(parser, **MAKE_FUNCS)
+    block = make_line(parser, **MAKE_FUNCS)
+    remove_newlines(parser)
 
-    if not is_normal(left):
-        depth, indent_position = left
-        block_error_info = (parser.depth, depth, indent_position)
-
-        raise errors.IncorrectBlockError(*block_error_info)
-
-    block = left
-    right = make_line(parser, **MAKE_FUNCS)
-
-    while is_normal(right):
-        block = NODES.SequentialOperationNode(block, right)
+    while parser.tokens_ahead(*parser.indent):
         right = make_line(parser, **MAKE_FUNCS)
+        block = NODES.SequentialOperationNode(block, right)
+        remove_newlines(parser)
 
     parser.depth -= 1
     return block
+
+def remove_newlines(parser):
+    while parser.token.type is TT.NEWLINE:
+        parser.advance()
 
 def block_or_expression(parser):
     if parser.token.type is TT.NEWLINE:
@@ -32,9 +34,6 @@ def block_or_expression(parser):
     parser.expecting(TT.NEWLINE, TT.EOF)
 
     return right
-
-def is_normal(node):
-    return isinstance(node, NODES.ASTNode) and not isinstance(node, NODES.EOFNode)
 
 MAKE_FUNCS = {
     "block": make_block,

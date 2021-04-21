@@ -17,6 +17,9 @@ class Visitor:
         self.symbol_table.interpret = visitor_type == "Interpreter"
         self.add_global_vars()
 
+        self.depth = 0
+        self.break_depth = 0
+
     def add_global_vars(self):
         self.symbol_table["null"] = symbols.Constant("null", 0)
         self.symbol_table["true"] = symbols.Constant("true", 1)

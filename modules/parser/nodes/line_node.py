@@ -17,6 +17,7 @@ class LineNode(ASTNode):
         return self.get_expression(interpreter)
 
     def transpile(self, transpiler):
+        transpiler.depth = self.depth
         expression = self.get_expression(transpiler)
         indent = "\t" * self.depth
 

@@ -14,7 +14,10 @@ class Token:
     def __repr__(self):
         return f"{self.type}" + ("" if self.value is None else f":{self.value}")
 
-    def matches(self, token_type, value):
+    def matches(self, token_type, value = None):
+        if value is None:
+            return self.type is token_type
+
         return self.type is token_type and self.value == value
 
     def matches_type_keyword(self):

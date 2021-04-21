@@ -32,7 +32,11 @@ class IncorrectBlockError(InvalidSyntaxError):
         super().__init__(SimpleNamespace(position = position), message)
 
     def get_message(self):
-        return f"Current block is {self.found}, but in block {self.expected}."
+        return f"Current block is {self.found}, but expected block {self.expected}."
+
+class EmptyBlockError(InvalidSyntaxError):
+    def get_message(self):
+        return "Blocks cannot be empty."
 
 class UndefinedContinueError(InvalidSyntaxError):
     def __init__(self, node, message = ""):

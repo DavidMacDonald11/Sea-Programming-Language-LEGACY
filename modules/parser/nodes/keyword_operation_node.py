@@ -45,9 +45,15 @@ class KeywordOperationNode(ASTNode):
         keyword = "" if self.keyword == "pass" else self.keyword
         value = "" if self.value is None else self.value.transpile(transpiler)
 
+        indent = "\t" * transpiler.depth
+        broke_variable = f"__sea__Broke_{transpiler.break_depth}"
+
+        if self.keyword == "break":
+            value = f"{value};\n{indent}{broke_variable} = 1;"
+
         if self.condition is None:
             return f"{keyword} {value}"
 
         condition = self.condition.transpile(transpiler)
 
-        return f"if({condition}){{ {keyword} {value} }}"
+        return f"if({condition})\n{indent}{{\n{indent}{keyword} {value}\n{indent}}}\n"

@@ -8,5 +8,10 @@ def make_while_expression(parser, **make_funcs):
 
     parser.expecting(TT.COLON)
     expression = make_funcs["block_or_expression"](parser)
+    else_case = None
 
-    return NODES.WhileNode(while_token, condition, expression)
+    if parser.take_tokens_if_ahead(*(*parser.indent, (TT.KEYWORD, "else"))):
+        parser.expecting(TT.COLON)
+        else_case = make_funcs["block_or_expression"](parser)
+
+    return NODES.WhileNode(while_token, condition, expression, else_case)

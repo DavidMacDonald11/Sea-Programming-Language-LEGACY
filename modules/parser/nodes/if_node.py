@@ -28,6 +28,7 @@ class IfNode(ASTNode):
         return ""
 
     def transpile(self, transpiler):
+        indent = "\t" * transpiler.depth
         statement = ""
         first = True
 
@@ -35,15 +36,15 @@ class IfNode(ASTNode):
             condition_value = condition.transpile(transpiler)
 
             if first:
-                statement += f"if({condition_value})\n{{\n"
+                statement += f"if({condition_value})\n{indent}{{\n"
                 first = False
             else:
-                statement += f"else if({condition_value})\n{{\n"
+                statement += f"else if({condition_value})\n{indent}{{\n"
 
             statement += f"{expression.transpile(transpiler)}"
-            statement += "}\n"
+            statement += f"{indent}}}\n"
 
         if self.else_case is not None:
-            statement += f"else\n{{\n{self.else_case.transpile(transpiler)}}}\n"
+            statement += f"else\n{indent}{{\n{self.else_case.transpile(transpiler)}{indent}}}\n"
 
         return statement

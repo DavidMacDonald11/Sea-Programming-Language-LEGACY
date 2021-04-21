@@ -5,19 +5,18 @@ from ..nodes.collection import NODES
 def make_if_expression(parser, **make_funcs):
     cases = []
     else_case = None
-    if_token = get_if_case(parser, cases, **make_funcs)
+    if_token = parser.take_token()
+    get_if_case(parser, cases, **make_funcs)
 
-    while parser.token.matches(TT.KEYWORD, "elif"):
+    while parser.take_tokens_if_ahead(*(*parser.indent, (TT.KEYWORD, "elif"))):
         get_if_case(parser, cases, **make_funcs)
 
-    if parser.token.matches(TT.KEYWORD, "else"):
+    if parser.take_tokens_if_ahead(*(*parser.indent, (TT.KEYWORD), "else")):
         else_case = get_if_case(parser, **make_funcs)
 
     return NODES.IfNode(if_token, cases, else_case)
 
 def get_if_case(parser, cases = None, **make_funcs):
-    token = parser.take_token()
-
     if cases is not None:
         condition = make_expression(parser)
 
@@ -28,4 +27,3 @@ def get_if_case(parser, cases = None, **make_funcs):
         return expression
 
     cases += [(condition, expression)]
-    return token

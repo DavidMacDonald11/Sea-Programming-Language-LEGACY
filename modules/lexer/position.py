@@ -17,7 +17,10 @@ class Position:
         file = f"of {self.start.filename}"
 
         if self.end.line == self.start.line:
-            return f"{line}, {column} {file}"
+            if self.end.column == self.start.column:
+                return f"{line}, {column} {file}"
+
+            return f"{line}, {column} to {self.end.column} {file}"
 
         line = f"{line} to {self.end.line}"
 
