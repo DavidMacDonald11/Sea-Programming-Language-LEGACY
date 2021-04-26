@@ -1,4 +1,4 @@
-from .basic import InStream, OutStream
+from .basic import InStream, OutStream, ErrorStream
 
 class TerminalInStream(InStream):
     buffer = ""
@@ -17,4 +17,11 @@ class TerminalOutStream(OutStream):
         super().__init__("stdout")
 
     def write(self, data):
+        print(data, end = "")
+
+class TerminalErrorStream(ErrorStream):
+    def __init__(self):
+        super().__init__("stderr")
+
+    def write_error(self, error, data):
         print(data, end = "")
