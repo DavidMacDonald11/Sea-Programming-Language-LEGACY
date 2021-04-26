@@ -171,27 +171,16 @@ source venv/bin/activate
 eval cd "$working"
 
 python=$(printf '%s' "$sea_lang"; printf "venv/bin/python3")
-run_terminal=$(printf '%s' "$sea_lang"; printf "run_terminal.py")
-run_files=$(printf '%s' "$sea_lang"; printf "run_files.py")
+main=$(printf '%s' "$sea_lang"; printf "modules/main.py")
 
-if [[ "$mode" == "None" ]]
-then
-    eval "$python" "$run_terminal" "$debug"
-elif [[ "$mode" == "t" ]]
-then
-    eval "$python" "$run_files" "transpile" "$debug" "$input_dir" "$output_dir" "$bin_dir" "${paths[@]}"
-elif [[ "$mode" == "c" ]]
-then
-    # eval "$python" "$run_files" "compile" "$debug" "$input_dir" "$bin_dir" "${paths[@]}"
-    printf "Compiler is not currently functional. \n"
-    printf "Please transpile to C and then manually compile. \n"
-    exit 4
-elif [[ "$mode" == "i" ]]
-then
-    eval "$python" "$run_files" "interpret" "$debug" "$input_dir" "${paths[@]}"
-else
-    usage
-    exit 1
-fi
+case "$mode" in
+    "None"|"t"|"c"|"i")
+        eval "$python" "$main" "$mode" "$debug" "$input_dir" "$output_dir" "$bin_dir" "${paths[@]}"
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac
 
 exit 0
