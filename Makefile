@@ -9,13 +9,11 @@ LINT_ARGS	+= --max-parents=15
 PIP_MODULES	:= pylint pydocstyle pycodestyle mypy rope
 
 CACHE 		:= $(wildcard $(patsubst %, %/**/__pycache__, .))
-CACHE 		+= $(wildcard $(patsubst %, %/modules/**/__pycache__, .))
 MODULES 	:= modules
 
 VENV 		:= venv
 PY			:= python3
 PYTHON 		:= ./$(VENV)/bin/$(PY)
-MAIN 		:= run_files.py run_terminal.py
 
 .DEFAULT_GOAL := run
 
@@ -42,11 +40,11 @@ run: $(VENV) activate
 
 .PHONY: lint
 lint: $(VENV) activate
-	$(PYTHON) -m pylint $(LINT_ARGS) $(MAIN) $(MODULES)
+	$(PYTHON) -m pylint $(LINT_ARGS) $(MODULES)
 
 .PHONY: full_lint
 full_lint: $(VENV) activate
-	$(PYTHON) -m pylint $(MAIN) $(MODULES)
+	$(PYTHON) -m pylint $(MODULES)
 
 .PHONY: deep
 deep:
