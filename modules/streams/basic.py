@@ -30,7 +30,7 @@ class ErrorStream(OutStream):
     def write_error(self, error, data):
         pass
 
-class NullStream(InStream, OutStream):
+class NullStream(InStream, ErrorStream):
     def __init__(self):
         super().__init__("null")
 
@@ -38,4 +38,7 @@ class NullStream(InStream, OutStream):
         return ""
 
     def write(self, data):
+        pass
+
+    def write_error(self, error, data):
         pass
