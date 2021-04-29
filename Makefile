@@ -1,15 +1,10 @@
 SHELL 		:= /bin/bash
 
-LINT_ARGS	:= --disable=C0111
-LINT_ARGS	+= --include-naming-hint=y
-LINT_ARGS	+= --variable-rgx=^[a-z][a-z0-9]*\(\(_[a-z0-9]+\)*\)?$$
-LINT_ARGS	+= --argument-rgx=^[a-z][a-z0-9]*\(\(_[a-z0-9]+\)*\)?$$
-LINT_ARGS	+= --max-parents=15
-
 PIP_MODULES	:= pylint pydocstyle pycodestyle mypy rope
 
-CACHE 		:= $(wildcard $(patsubst %, %/**/__pycache__, .))
-MODULES 	:= modules
+CACHE 		:= $(wildcard $(patsubst %, %/modules/**/__pycache__, .))
+INITS		:= $(wildcard $(patsubst %, %/modules/*/__init__.py, .))
+MODULES		:= $(patsubst ./modules/%/__init__.py, %, $(INITS))
 
 VENV 		:= venv
 PY			:= python3
@@ -40,11 +35,7 @@ run: $(VENV) activate
 
 .PHONY: lint
 lint: $(VENV) activate
-	$(PYTHON) -m pylint $(LINT_ARGS) $(MODULES)
-
-.PHONY: full_lint
-full_lint: $(VENV) activate
-	$(PYTHON) -m pylint $(MODULES)
+	$(PYTHON) -m pylint --rcfile=.pylintrc $(MODULES)
 
 .PHONY: deep
 deep:
