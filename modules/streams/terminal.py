@@ -7,7 +7,7 @@ class TerminalInStream(InStream):
         super().__init__("stdin")
 
     def read(self, amount = 1):
-        c = type(self).buffer[0:1]
+        c = type(self).buffer[:1]
         type(self).buffer = type(self).buffer[1:]
 
         return c
