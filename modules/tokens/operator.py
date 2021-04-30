@@ -12,7 +12,10 @@ class Operator(Token):
 
     @classmethod
     def construct(cls, lexer):
-        pass
+        token_string = lexer.take_token_string(cls.allowed())
+        operator = cls.get_operator(token_string)
+
+        return Operator(operator)
 
     @classmethod
     def get_operator(cls, token_string):

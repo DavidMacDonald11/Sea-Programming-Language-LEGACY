@@ -1,3 +1,4 @@
+from lexer import errors
 from .token import Token
 
 class Literal(Token):
@@ -12,7 +13,16 @@ class Literal(Token):
 
     @classmethod
     def construct(cls, lexer):
-        pass
+        token_string = lexer.take_token_string(cls.allowed())
+        dots = token_string.count(".")
+
+        if dots > 1:
+            raise errors.FloatError()
+
+        if dots == 1:
+            return Literal("float", token_string)
+
+        return Literal("int", token_string)
 
     @classmethod
     def allowed(cls):

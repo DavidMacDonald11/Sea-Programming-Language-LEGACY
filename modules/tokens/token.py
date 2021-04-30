@@ -24,7 +24,3 @@ class Token(ABC):
 
     def matches(self, what, data):
         return isinstance(self, what) and self.data == data
-
-    @classmethod
-    def construct_from_all(cls, lexer, whats):
-        pass

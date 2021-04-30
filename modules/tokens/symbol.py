@@ -12,7 +12,13 @@ class Symbol(Token):
 
     @classmethod
     def construct(cls, lexer):
-        pass
+        symbol = Sym(lexer.take())
+
+        if symbol is Sym.NEWLINE:
+            lexer.at_line_start = True
+            lexer.position.end.advance_line()
+
+        return Symbol(symbol)
 
     @classmethod
     def allowed(cls):

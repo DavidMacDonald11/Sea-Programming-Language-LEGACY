@@ -12,7 +12,11 @@ class Identifier(Token):
 
     @classmethod
     def construct(cls, lexer):
-        pass
+        raise NotImplementedError()
+
+    @classmethod
+    def construct_from_child(cls, _, token_string):
+        return Identifier(token_string)
 
     @classmethod
     def allowed(cls):
