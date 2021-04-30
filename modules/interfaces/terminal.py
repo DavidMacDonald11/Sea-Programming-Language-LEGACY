@@ -1,10 +1,15 @@
-from streams.basic import NullStream
+from interfaces import general
 from streams.holder import StreamHolder
 from streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 
 def main(debug):
     print("Sea Programming Language")
-    streams = StreamHolder(TerminalInStream(), TerminalOutStream(), TerminalErrorStream())
+    streams = StreamHolder(
+        TerminalInStream(),
+        TerminalOutStream(),
+        TerminalErrorStream(),
+        TerminalOutStream()
+        )
 
     try:
         while True:
@@ -14,7 +19,7 @@ def main(debug):
                 continue
 
             if buffer == "exit":
-                raise EOFError()
+                raise ExitError()
 
             if buffer in ("debug", "nodebug"):
                 debug = buffer == "debug"
@@ -28,5 +33,12 @@ def main(debug):
                 while buffer != "\n":
                     buffer = input("...   ") + "\n"
                     TerminalInStream.buffer += buffer
+
+            general.main(streams, debug)
     except (KeyboardInterrupt, EOFError):
         print()
+    except ExitError:
+        pass
+
+class ExitError(Exception):
+    pass

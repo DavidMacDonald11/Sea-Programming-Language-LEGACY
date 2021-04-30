@@ -1,8 +1,8 @@
 from position.position import Position
 from tokens.symbol import Symbol, Sym
+from tokens.keyword import Keyword
 from tokens.literal import Literal
 from tokens.operator import Operator
-from tokens.identifier import Identifier
 from lexer import errors
 
 class Lexer:
@@ -11,6 +11,7 @@ class Lexer:
         self.position = Position(in_stream)
         self.at_line_start = True
         self.symbol = ""
+        self.tokens = []
 
         self.advance()
 
@@ -42,17 +43,11 @@ class Lexer:
         return self.position
 
     def make_tokens(self):
-        return list(self.generate_tokens())
-
-    def generate_tokens(self):
         while self.symbol != "":
             position = self.take_position()
-            self.check_spaces()
-            token = self.construct_token(position)
+            self.tokens += [self.construct_token(position)]
 
-            yield token
-
-        return Symbol(Sym.EOF, self.position.copy())
+        self.tokens += [Symbol(Sym.EOF, self.position.copy())]
 
     def check_spaces(self):
         is_space = self.symbol == " "
@@ -63,11 +58,11 @@ class Lexer:
             if is_indent:
                 self.take()
 
-            return
+            return False
 
         if not is_indent:
             self.at_line_start = False
-            return
+            return False
 
         if is_space:
             token_string = self.take_token_string(" ", 4)
@@ -75,10 +70,18 @@ class Lexer:
             if token_string != " " * 4:
                 raise errors.IndentError()
 
-            self.symbol = "\t"
+            return True
+
+        return False
 
     def construct_token(self, position):
-        for token_type in {Symbol, Operator, Literal, Identifier}:
+        if self.check_spaces():
+            token = Symbol(Sym.INDENT)
+            token.position = position
+
+            return token
+
+        for token_type in (Symbol, Literal, Operator, Keyword):
             if self.symbol in token_type.allowed():
                 token = token_type.construct(self)
                 token.position = position

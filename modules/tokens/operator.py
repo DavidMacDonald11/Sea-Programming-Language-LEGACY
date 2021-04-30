@@ -3,6 +3,10 @@ from lexer import errors
 from .token import Token
 
 class Operator(Token):
+    @property
+    def data(self):
+        return self.operator
+
     def __init__(self, operator, position = None):
         self.operator = operator
         super().__init__(position)
@@ -26,7 +30,7 @@ class Operator(Token):
 
     @classmethod
     def allowed(cls):
-        return {c for c in op.value for op in Op}
+        return {c for op in Op for c in op.value}
 
 @unique
 class Op(Enum):
