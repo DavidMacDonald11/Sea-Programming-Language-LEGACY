@@ -10,6 +10,9 @@ class InStream(ABC):
         pass
 
 class OutStream(ABC):
+    def __init__(self, name):
+        self.name = name
+
     @abstractmethod
     def write(self, data):
         pass
@@ -17,7 +20,7 @@ class OutStream(ABC):
 class ErrorStream(OutStream):
     def __init__(self, name, output_warnings = True):
         self.output_warnings = output_warnings
-        super().__init__(self, name)
+        super().__init__(name)
 
     def write(self, data):
         if not self.output_warnings and isinstance(data, errors.SeaWarning):

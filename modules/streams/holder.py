@@ -3,7 +3,7 @@ from .basic import InStream, OutStream, ErrorStream
 
 @dataclass
 class StreamHolder:
-    in_stream: InStream
-    out_stream: OutStream
-    error_stream: ErrorStream
-    debug_stream: OutStream
+    in_stream: InStream = None
+    out_stream: OutStream = None
+    error_stream: ErrorStream = None
+    debug_stream: OutStream = None
