@@ -16,6 +16,7 @@ class Lexer:
 
     def advance(self):
         self.symbol = self.in_stream.read(1)
+        self.position.end.advance()
 
     def take(self):
         symbol = self.symbol
@@ -34,17 +35,20 @@ class Lexer:
 
         return token_string
 
+    def take_position(self):
+        self.position = Position(self.in_stream, self.position.end.copy())
+        self.position.start.advance()
+
+        return self.position
+
     def make_tokens(self):
         return list(self.generate_tokens())
 
     def generate_tokens(self):
         while self.symbol != "":
+            position = self.take_position()
             self.check_spaces()
-
-            position = self.position.copy()
-            token = self.construct_token()
-            position.end = self.position.start.copy()
-            token.position = position
+            token = self.construct_token(position)
 
             yield token
 
@@ -73,9 +77,12 @@ class Lexer:
 
             self.symbol = "\t"
 
-    def construct_token(self):
+    def construct_token(self, position):
         for token_type in {Symbol, Operator, Literal, Identifier}:
             if self.symbol in token_type.allowed():
-                return token_type.construct(self)
+                token = token_type.construct(self)
+                token.position = position
+
+                return token
 
         raise errors.UnknownSymbolError(self.symbol)

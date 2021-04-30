@@ -23,7 +23,7 @@ class Operator(Token):
 
     @classmethod
     def allowed(cls):
-        return {c for c in op for op in Op}
+        return {c for c in op.value for op in Op}
 
 @unique
 class Op(Enum):

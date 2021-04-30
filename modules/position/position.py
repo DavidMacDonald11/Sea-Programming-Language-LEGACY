@@ -1,13 +1,12 @@
+from .char_position import CharPosition
+
 class Position:
     def __init__(self, stream, start = None, end = None):
         self.stream = stream
-        self.start = start
-        self.end = end if end is not None else start
+        self.start = start if start is not None else CharPosition()
+        self.end = end if end is not None else self.start
 
     def __repr__(self):
-        if self.start is None:
-            return "Unknown Position"
-
         line = f"Line {self.start.line}"
         column = f"Col {self.start.column}"
         stream = f"of {self.stream}"

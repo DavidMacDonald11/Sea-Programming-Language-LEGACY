@@ -1,5 +1,5 @@
 class CharPosition:
-    def __init__(self, line = 1, column = -1):
+    def __init__(self, line = 1, column = 0):
         self.line = line
         self.column = column
 
