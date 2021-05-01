@@ -1,3 +1,8 @@
+from parser import errors
+from nodes.eof_node import EOFNode
+from nodes.operations.sequential_node import SequentialOperationNode
+from .makes import MAKES
+
 class Parser:
     @property
     def token(self):
@@ -29,6 +34,9 @@ class Parser:
         self.tokens += self.lexer.tokens[i:self.i]
 
     def take(self, amount = 1):
+        if amount < 1:
+            return
+
         taken = self.tokens[:amount]
         self.tokens = self.tokens[amount:]
 
@@ -37,5 +45,27 @@ class Parser:
 
         return taken[0] if len(taken) == 1 else taken
 
+    def expecting(self, *datas):
+        self.advance(len(datas))
+        tokens = []
+
+        for data in datas:
+            data_tuple = data if isinstance(data, (tuple, list)) else (data,)
+
+            if self.token.data not in data_tuple:
+                raise errors.ExpectedTokenError(data)
+
+            tokens += [self.take()]
+
+        return tokens[0] if len(tokens) == 1 else tokens
+
     def make_ast(self):
-        pass
+        def make_node():
+            line = MAKES.line_node(self, MAKES)
+
+            if isinstance(line, EOFNode):
+                return line
+
+            return SequentialOperationNode(line, make_node())
+
+        self.ast = make_node()
