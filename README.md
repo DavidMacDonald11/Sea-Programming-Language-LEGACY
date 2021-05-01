@@ -24,7 +24,7 @@ This project contains a few key features:
 - I also plan on making Sea usable on other operating systems besides Unix-based ones.
 
 # Set-up Instructions
-First thing's first, download the latest version from this [GitHub page](https://github.com/DavidMacDonald11/Sea-Programming-Language) and place it somewhere reasonable on your system.
+First thing's first, download the latest version from this [GitHub page](https://github.com/DavidMacDonald11/Sea-Programming-Language) and place it somewhere reasonable on your system. I recommend using `git clone` to be allow for convenient updating.
 
 It is possible to run Sea from inside of this folder without doing anything else. However, it'll be more convenient to perform the following steps:
 1. [Create an alias](https://www.cyberciti.biz/faq/create-permanent-bash-alias-linux-unix/) for the ./sea.bash command as the following (note that this will override any preexisting `sea` command):
@@ -41,7 +41,9 @@ It is possible to run Sea from inside of this folder without doing anything else
 # Run Instructions
 This will provide you with a `sea` command. Run `sea --help` to see the usage information.
 
-If you want to see the generated tokens and AST, add the `--debug` (or `-d`) argument to your command.
+If you want to update sea, add the `--update` (or `-u`) argument to your command.
+
+If you want to see the generated tokens and AST, add the `--debug` (or `-d`) argument.
 * If you're interpreting, it will print out info to the terminal.
 * If you're compiling or transpiling, it will create a `.tmp` file in your `BIN` or `OUT` directory respectively.
 

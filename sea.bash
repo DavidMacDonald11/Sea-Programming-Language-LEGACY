@@ -46,6 +46,11 @@ print_help() {
     printf "\tprints the sea command's usage information.\n\n"
 }
 
+print_update() {
+    printf "\t--update or -u            "
+    printf "\tuses git to update sea to the latest version.\n\n"
+}
+
 print_debug() {
     printf "\t--debug or -d             "
     printf "\tprints the generated tokens and AST for debugging.\n\n"
@@ -94,11 +99,16 @@ usage() {
     printf "Options:\n"
 
     print_help
+    print_update
     print_debug
     print_mode
     print_sea_dir
     print_c_src_dir
     print_bin_dir
+}
+
+update() {
+    git pull origin main
 }
 
 mode="None"
@@ -114,6 +124,12 @@ do
     then
         usage
         exit 1
+    fi
+
+    if [[ "${!i}" == "--update" ||  "${!i}" == "-u" ]]
+    then
+        update
+        exit 0
     fi
 
     if [[ "${!i}" == "--debug" ||  "${!i}" == "-d" ]]
