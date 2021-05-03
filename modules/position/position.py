@@ -4,12 +4,12 @@ class Position:
     def __init__(self, stream, start = None, end = None):
         self.stream = stream
         self.start = start if start is not None else CharPosition()
-        self.end = end if end is not None else self.start
+        self.end = end if end is not None else self.start.copy()
 
     def __repr__(self):
         line = f"Line {self.start.line}"
         column = f"Col {self.start.column}"
-        stream = f"of {self.stream}"
+        stream = f"of {self.stream.name}"
 
         if self.start.column != self.end.column:
             column += f" to {self.end.column}"

@@ -17,4 +17,4 @@ class CharPosition:
 
     def advance_line(self, amount = 1):
         self.line += amount
-        self.column = -1
+        self.column = 0

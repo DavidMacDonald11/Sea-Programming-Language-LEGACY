@@ -14,7 +14,7 @@ def make_comparison_expression(parser, makes):
         new_right = makes.bitwise_or_expression(parser, makes)
 
         if right is None:
-            left = BinaryOperationNode(left, operator, right)
+            left = BinaryOperationNode(left, operator, new_right)
         else:
             position = Position(right.position.stream, right.position.end, operator.position.start)
             and_token = Keyword("and", position)

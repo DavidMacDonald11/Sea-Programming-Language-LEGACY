@@ -53,7 +53,7 @@ def make_break_or_continue(parser, makes):
 
     if parser.token.data == "if":
         parser.take()
-        condition = makes.expression_node(parser, makes)
+        condition = makes.expression(parser, makes)
 
     parser.expecting((Sym.NEWLINE, Sym.EOF))
 

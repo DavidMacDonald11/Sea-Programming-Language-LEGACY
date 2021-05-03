@@ -11,7 +11,7 @@ def make_boolean_not_expression(parser, makes):
     return LeftUnaryOperationNode(operator, node)
 
 def make_boolean_and_expression(parser, makes):
-    return makes.binary_expression(parser, makes, "and", make_boolean_not_expression)
+    return makes.binary_operation(parser, makes, "and", make_boolean_not_expression)
 
 def make_boolean_or_expression(parser, makes):
     return makes.binary_operation(parser, makes, "or", make_boolean_and_expression)

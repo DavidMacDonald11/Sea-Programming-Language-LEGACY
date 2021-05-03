@@ -1,4 +1,5 @@
 from position.position import Position
+from position.char_position import CharPosition
 from tokens.symbol import Symbol, Sym
 from tokens.keyword import Keyword
 from tokens.literal import Literal
@@ -8,15 +9,18 @@ from lexer import errors
 class Lexer:
     def __init__(self, in_stream):
         self.in_stream = in_stream
-        self.position = Position(in_stream)
+        self.position = Position(in_stream, CharPosition(1, 1), CharPosition(1, 0))
         self.at_line_start = True
         self.symbol = ""
         self.tokens = []
 
-        self.advance()
+        self.skip()
+
+    def skip(self):
+        self.symbol = self.in_stream.read(1)
 
     def advance(self):
-        self.symbol = self.in_stream.read(1)
+        self.skip()
         self.position.end.advance()
 
     def take(self):
@@ -44,8 +48,7 @@ class Lexer:
 
     def make_tokens(self):
         while self.symbol != "":
-            position = self.take_position()
-            self.tokens += [self.construct_token(position)]
+            self.tokens += [self.construct_token()]
 
         self.tokens += [Symbol(Sym.EOF, self.position.copy())]
 
@@ -56,7 +59,7 @@ class Lexer:
 
         if not self.at_line_start:
             if is_indent:
-                self.take()
+                self.advance()
 
             return False
 
@@ -74,12 +77,16 @@ class Lexer:
 
         return False
 
-    def construct_token(self, position):
+    def construct_token(self):
+        position = self.take_position()
+
         if self.check_spaces():
             token = Symbol(Sym.INDENT)
             token.position = position
 
             return token
+
+        position = self.take_position()
 
         for token_type in (Symbol, Literal, Operator, Keyword):
             if self.symbol in token_type.allowed():

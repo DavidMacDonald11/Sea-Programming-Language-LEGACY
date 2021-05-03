@@ -1,5 +1,0 @@
-define MINE as 8 > 4
-
-redefine MINE as false
-
-undefine MINE

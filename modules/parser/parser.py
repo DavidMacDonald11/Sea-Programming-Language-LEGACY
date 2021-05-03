@@ -11,6 +11,9 @@ class Parser:
 
     @property
     def token(self):
+        if self.i >= len(self.tokens):
+            return self.tokens[-1]
+
         return self.tokens[self.i]
 
     @property
@@ -31,8 +34,6 @@ class Parser:
         self.i = 0
         self.bounds = [0, 0]
 
-        self.advance()
-
     def mark(self):
         self.bounds[1] = self.bounds[0] = self.i
 
@@ -50,7 +51,8 @@ class Parser:
         i = self.i
         self.advance(amount)
 
-        return self.tokens[i:self.i]
+        tokens = self.tokens[i:self.i] or [self.tokens[-1]]
+        return tokens[0] if len(tokens) == 1 else tokens
 
     def retreat(self, amount = 1):
         if amount < 1:
@@ -68,9 +70,9 @@ class Parser:
                 condition = isinstance(self.token, data)
             else:
                 data_tuple = data if isinstance(data, (tuple, list)) else (data,)
-                condition = self.token.data not in data_tuple
+                condition = self.token.data in data_tuple
 
-            if condition:
+            if not condition:
                 raise errors.ExpectedTokenError(data)
 
             self.advance()

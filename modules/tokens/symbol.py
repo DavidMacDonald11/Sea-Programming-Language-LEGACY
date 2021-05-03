@@ -16,9 +16,10 @@ class Symbol(Token):
 
         if symbol is Sym.NEWLINE:
             while lexer.symbol == "\n":
-                lexer.advance()
                 lexer.position.end.advance_line()
+                lexer.skip()
 
+            lexer.position.end.advance_line()
             lexer.at_line_start = True
 
         return Symbol(symbol)

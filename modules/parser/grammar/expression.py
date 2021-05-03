@@ -1,5 +1,5 @@
 from tokens.token import Token
-from tokens.symbol import Symbol
+from tokens.keyword import Keyword, TYPE_KEYWORDS
 from tokens.operator import Op
 from tokens.identifier import Identifier
 from nodes.memory_assign_node import MemoryAssignNode
@@ -8,13 +8,14 @@ from nodes.operations.binary_node import BinaryOperationNode
 from nodes.operations.ternary_node import TernaryOperationNode
 
 def make_expression(parser, makes):
-    if isinstance(parser.token, Symbol):
+    if parser.token.matches(Keyword) and parser.token.data in TYPE_KEYWORDS:
         return make_memory_assign(parser, makes)
 
-    if isinstance(parser.token, Identifier):
+    if parser.token.matches(Identifier):
         parser.advance()
 
         if "EQUALS" in f"{parser.token.data}":
+            parser.retreat()
             return make_memory_reassign(parser, makes)
 
         parser.retreat()
@@ -36,8 +37,8 @@ def make_memory_reassign(parser, makes):
 
     return MemoryReassignNode(identifier, operator, expression)
 
-def ternary_operation(parser, _, left_operations, right_operations, *funcs):
-    left = funcs[0]
+def ternary_operation(parser, makes, left_operations, right_operations, *funcs):
+    left = funcs[0](parser, makes)
 
     if not isinstance(left_operations, (tuple, list)):
         left_operations = (left_operations,)
@@ -46,7 +47,7 @@ def ternary_operation(parser, _, left_operations, right_operations, *funcs):
         return left
 
     left_operation = parser.take()
-    middle = funcs[-1]
+    middle = funcs[-1](parser, makes)
 
     if not isinstance(right_operations, (tuple, list)):
         right_operations = (right_operations,)
@@ -55,7 +56,7 @@ def ternary_operation(parser, _, left_operations, right_operations, *funcs):
         return BinaryOperationNode(left, left_operation, middle)
 
     right_operation = parser.take()
-    right = funcs[-2] if len(funcs) > 2 else funcs[-1]
+    right = funcs[-2](parser, makes) if len(funcs) > 2 else funcs[-1](parser, makes)
 
     operations = (left_operation, right_operation)
     values = (left, middle, right)
