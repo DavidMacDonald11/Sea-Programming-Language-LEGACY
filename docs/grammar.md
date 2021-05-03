@@ -29,10 +29,8 @@
     * ((NOT boolean_not_expression)|comparison_expression)
 - boolean_and_expression
     * boolean_not_expression (AND boolean_not_expression)*
-- boolean_xor_expression
-    * boolean_and_expression (XOR boolean_and_expression)*
 - boolean_or_expression
-    * boolean_xor_expression (OR boolean_xor_expression)*
+    * boolean_and_expression (OR boolean_and_expression)*
 - expression
     * boolean_or_expression IF boolean_or_expression ELSE boolean_or_expression
     * TYPE IDENTIFIER EQUALS expression
