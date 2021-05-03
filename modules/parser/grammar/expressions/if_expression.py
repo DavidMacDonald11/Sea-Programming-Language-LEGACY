@@ -20,7 +20,7 @@ def get_if_case(parser, makes, cases = None):
         condition = makes.expression(parser, makes)
 
     parser.expecting(Sym.COLON)
-    expression = makes.expression(parser, makes)
+    expression = makes.block_or_expression(parser, makes)
 
     if cases is None:
         return expression

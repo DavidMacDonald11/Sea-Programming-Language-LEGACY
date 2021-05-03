@@ -3,6 +3,9 @@ from tokens.symbol import Sym
 from nodes.eof_node import EOFNode
 from nodes.line_node import LineNode
 from nodes.operations.keyword_node import KeywordOperationNode
+from .expressions.do_while_expression import make_do_while_expression
+from .expressions.while_expression import make_while_expression
+from .expressions.for_expression import make_for_expression
 from .expressions.if_expression import make_if_expression
 
 def make_line_node(parser, makes):
