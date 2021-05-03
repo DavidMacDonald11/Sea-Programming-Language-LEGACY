@@ -1,32 +1,30 @@
 from parser import errors
-from position.position import Position
-from tokens.symbol import Symbol, Sym
-from tokens.keyword import Keyword
+from tokens.symbol import Sym
 from nodes.eof_node import EOFNode
 from nodes.line_node import LineNode
+from nodes.operations.keyword_node import KeywordOperationNode
+from .expressions.if_expression import make_if_expression
 
 def make_line_node(parser, makes):
     if parser.token.data is Sym.EOF:
         return EOFNode(parser.take())
 
-    if parser.token.data is Sym.NEWLINE:
-        parser.take()
-        return make_line_node(parser, makes)
-
+    parser.grab_newlines()
     check_indent(parser)
+
     return make_expressions(parser, makes)
 
 def check_indent(parser):
-    parser.advance(parser.depth - 1)
-    indent_position = parser.position
+    try:
+        parser.mark()
+        parser.expecting(parser.indent)
+        indent_position = parser.position
 
-    parser.advance()
-    depth = sum(1 if token.data is Sym.INDENT else 0 for token in parser.tokens)
-
-    parser.take(parser.depth)
-
-    if parser.depth == depth:
-        raise errors.IncorrectBlockError(depth, indent_position)
+        if parser.token.data == Sym.INDENT:
+            raise errors.IncorrectBlockError(parser.depth + 1, indent_position)
+    except errors.ExpectedTokenError as e:
+        depth = parser.bounds[1] - parser.bounds[0]
+        raise errors.IncorrectBlockError(depth, indent_position) from e
 
 def make_expressions(parser, makes):
     specials = {
@@ -43,6 +41,21 @@ def make_expressions(parser, makes):
     expression = specials.get(parser.token.data, default)(parser, makes)
 
     return LineNode(expression, parser.depth, no_end)
+
+def make_pass(parser, _):
+    return KeywordOperationNode(parser.take())
+
+def make_break_or_continue(parser, makes):
+    keyword_token = parser.take()
+    condition = None
+
+    if parser.token.data == "if":
+        parser.take()
+        condition = makes.expression_node(parser, makes)
+
+    parser.expecting((Sym.NEWLINE, Sym.EOF))
+
+    return KeywordOperationNode(keyword_token, None, condition)
 
 def default(parser, makes):
     expression = makes.expression(parser, makes)

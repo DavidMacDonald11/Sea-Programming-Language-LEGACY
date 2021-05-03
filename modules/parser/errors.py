@@ -5,7 +5,7 @@ class ParserError(SeaError):
 
     def __init__(self, position = None, message = ""):
         if position is None:
-            position = type(self).parser.position.copy()
+            position = type(self).parser.token.position.copy()
 
         super().__init__(position, message)
 
@@ -16,7 +16,7 @@ class IncorrectBlockError(ParserError):
         super().__init__(position, message)
 
     def get_message(self):
-        return f"Current block is {self.depth}, but expected {self.expected}."
+        return f"Found {self.depth} indents, but expected {self.expected}."
 
 class ExpectedTokenError(ParserError):
     def __init__(self, expected, message = ""):
