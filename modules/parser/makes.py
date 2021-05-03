@@ -1,6 +1,9 @@
 from types import SimpleNamespace
-from .grammar.line import make_line_node
+from .grammar.line import make_line
+from .grammar.block import make_block, make_block_or_expression
 
 MAKES = SimpleNamespace(
-    line_node = make_line_node
+    line = make_line,
+    block = make_block,
+    block_or_expression = make_block_or_expression
 )

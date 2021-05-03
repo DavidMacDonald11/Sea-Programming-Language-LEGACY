@@ -88,7 +88,7 @@ class Parser:
 
     def make_ast(self):
         def make_node():
-            line = MAKES.line_node(self, MAKES)
+            line = MAKES.line(self, MAKES)
 
             if isinstance(line, EOFNode):
                 return line

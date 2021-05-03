@@ -8,7 +8,7 @@ from .expressions.while_expression import make_while_expression
 from .expressions.for_expression import make_for_expression
 from .expressions.if_expression import make_if_expression
 
-def make_line_node(parser, makes):
+def make_line(parser, makes):
     if parser.token.data is Sym.EOF:
         return EOFNode(parser.take())
 

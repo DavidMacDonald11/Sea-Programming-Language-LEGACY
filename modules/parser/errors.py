@@ -25,3 +25,7 @@ class ExpectedTokenError(ParserError):
 
     def get_message(self):
         return f"Expected {self.expected}."
+
+class EmptyBlockError(ParserError):
+    def get_message(self):
+        return "Blocks cannot be empty. Consider using pass."
