@@ -62,11 +62,15 @@ class Parser:
         self.bounds[1] = self.i
         self.bounds[0] = min(self.bounds)
 
-    def expecting(self, *datas):
+    def expecting(self, *datas, check_type = False):
         for data in datas:
-            data_tuple = data if isinstance(data, (tuple, list)) else (data,)
+            if check_type:
+                condition = isinstance(self.token, data)
+            else:
+                data_tuple = data if isinstance(data, (tuple, list)) else (data,)
+                condition = self.token.data not in data_tuple
 
-            if self.token.data not in data_tuple:
+            if condition:
                 raise errors.ExpectedTokenError(data)
 
             self.advance()

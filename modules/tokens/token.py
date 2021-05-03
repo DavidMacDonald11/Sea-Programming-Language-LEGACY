@@ -22,5 +22,10 @@ class Token(ABC):
     def allowed(cls):
         pass
 
-    def matches(self, what, data):
-        return isinstance(self, what) and self.data == data
+    def matches(self, what, *datas):
+        is_what = isinstance(self, what)
+
+        if len(datas) == 0:
+            return is_what
+
+        return is_what and self.data in datas
