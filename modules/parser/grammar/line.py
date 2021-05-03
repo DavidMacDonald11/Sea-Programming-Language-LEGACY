@@ -12,7 +12,6 @@ def make_line_node(parser, makes):
     if parser.token.data is Sym.EOF:
         return EOFNode(parser.take())
 
-    parser.grab_newlines()
     check_indent(parser)
 
     return make_expressions(parser, makes)
@@ -20,7 +19,7 @@ def make_line_node(parser, makes):
 def check_indent(parser):
     try:
         parser.mark()
-        parser.expecting(parser.indent)
+        parser.expecting(*parser.indent)
         indent_position = parser.position
 
         if parser.token.data == Sym.INDENT:

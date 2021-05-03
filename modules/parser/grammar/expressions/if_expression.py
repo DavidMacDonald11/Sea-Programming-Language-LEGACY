@@ -7,10 +7,10 @@ def make_if_expression(parser, makes):
     if_token = parser.take()
     get_if_case(parser, makes, cases)
 
-    while parser.wanting(parser.indent, "elif") is not None:
+    while parser.wanting(*parser.indent, "elif") is not None:
         get_if_case(parser, makes, cases)
 
-    if parser.wanting(parser.indent, "else") is not None:
+    if parser.wanting(*parser.indent, "else") is not None:
         get_if_case(parser, makes)
 
     return IfNode(if_token, cases, else_case)
@@ -26,4 +26,3 @@ def get_if_case(parser, makes, cases = None):
         return expression
 
     cases += [(condition, expression)]
-    parser.grab_newlines()

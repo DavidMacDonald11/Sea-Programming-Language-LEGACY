@@ -8,7 +8,7 @@ def make_do_while_expression(parser, makes):
     block = makes.block_or_expression(parser, makes)
     else_case = None
 
-    parser.expecting(parser.indent, "while")
+    parser.expecting(*parser.indent, "while")
     condition = makes.expression(parser, makes)
 
     if parser.wanting("else") is not None:
@@ -16,9 +16,8 @@ def make_do_while_expression(parser, makes):
         else_case = makes.block_or_expression(parser, makes)
     else:
         parser.expecting((Sym.NEWLINE, Sym.EOF))
-        parser.grab_newlines()
 
-        if parser.wanting(parser.indent, "else") is not None:
+        if parser.wanting(*parser.indent, "else") is not None:
             parser.expecting(Sym.COLON)
             else_case = makes.block_or_expression(parser, makes)
 

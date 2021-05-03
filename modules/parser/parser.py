@@ -22,7 +22,7 @@ class Parser:
 
     @property
     def indent(self):
-        return *([Sym.INDENT] * self.depth)
+        return [Sym.INDENT] * self.depth
 
     def __init__(self, lexer):
         self.lexer = lexer
@@ -85,10 +85,6 @@ class Parser:
             self.i = i
 
             return None
-
-    def grab_newlines(self):
-        while self.token.data == Sym.NEWLINE:
-            self.take()
 
     def make_ast(self):
         def make_node():

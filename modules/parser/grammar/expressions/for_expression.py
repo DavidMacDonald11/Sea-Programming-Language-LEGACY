@@ -15,7 +15,7 @@ def make_for_expression(parser, makes):
     block = makes.block_or_expression(parser, makes)
     else_case = None
 
-    if parser.wanting(parser.indent, "else") is not None:
+    if parser.wanting(*parser.indent, "else") is not None:
         parser.expecting(Sym.COLON)
         else_case = makes.block_or_expression(parser, makes)
 
