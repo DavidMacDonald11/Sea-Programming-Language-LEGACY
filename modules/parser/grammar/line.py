@@ -45,7 +45,10 @@ def make_expressions(parser, makes):
     return LineNode(expression, parser.depth, no_end)
 
 def make_pass(parser, _):
-    return KeywordOperationNode(parser.take())
+    keyword = parser.take()
+    parser.expecting((Sym.NEWLINE, Sym.EOF))
+
+    return KeywordOperationNode(keyword)
 
 def make_break_or_continue(parser, makes):
     keyword_token = parser.take()
