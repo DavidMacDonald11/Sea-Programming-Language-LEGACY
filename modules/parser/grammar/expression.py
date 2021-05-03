@@ -19,7 +19,7 @@ def make_expression(parser, makes):
 
         parser.retreat()
 
-    return ternary_operation(parser, makes, ["if", "else"], makes.boolean_or_expression)
+    return ternary_operation(parser, makes, "if", "else", makes.boolean_or_expression)
 
 def make_memory_assign(parser, makes):
     keyword = parser.take()
@@ -36,16 +36,22 @@ def make_memory_reassign(parser, makes):
 
     return MemoryReassignNode(identifier, operator, expression)
 
-def ternary_operation(parser, _, operations, *funcs):
+def ternary_operation(parser, _, left_operations, right_operations, *funcs):
     left = funcs[0]
 
-    if not parser.token.matches(Token, *operations[0]):
+    if not isinstance(left_operations, (tuple, list)):
+        left_operations = (left_operations,)
+
+    if not parser.token.matches(Token, *left_operations):
         return left
 
     left_operation = parser.take()
     middle = funcs[-1]
 
-    if not parser.token.matches(Token, *operations[1]):
+    if not isinstance(right_operations, (tuple, list)):
+        right_operations = (right_operations,)
+
+    if not parser.token.matches(Token, *right_operations):
         return BinaryOperationNode(left, left_operation, middle)
 
     right_operation = parser.take()
@@ -58,6 +64,9 @@ def ternary_operation(parser, _, operations, *funcs):
 
 def binary_operation(parser, makes, operations, *funcs):
     left = funcs[0](parser, makes)
+
+    if not isinstance(operations, (tuple, list)):
+        operations = (operations,)
 
     while parser.token.matches(Token, *operations):
         operator = parser.take()

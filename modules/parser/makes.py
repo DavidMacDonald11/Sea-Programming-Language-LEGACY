@@ -1,4 +1,10 @@
 from types import SimpleNamespace
+from .grammar.atom import make_atom
+from .grammar.mole import make_mole
+from .grammar.part import make_part
+from .grammar.factor import make_factor
+from .grammar.term import make_term
+from .grammar.arithmetic_expression import make_arithmetic_expression
 from .grammar.bitwise_expression import make_bitwise_shift_expression
 from .grammar.bitwise_expression import make_bitwise_and_expression
 from .grammar.bitwise_expression import make_bitwise_xor_expression
@@ -12,6 +18,12 @@ from .grammar.line import make_line
 from .grammar.block import make_block, make_block_or_expression
 
 MAKES = SimpleNamespace(
+    atom = make_atom,
+    mole = make_mole,
+    part = make_part,
+    factor = make_factor,
+    term = make_term,
+    arithmetic_expression = make_arithmetic_expression,
     bitwise_shift_expression = make_bitwise_shift_expression,
     bitwise_and_expression = make_bitwise_and_expression,
     bitwise_xor_expression = make_bitwise_xor_expression,

@@ -27,3 +27,6 @@ class Literal(Token):
     @classmethod
     def allowed(cls):
         return "0123456789."
+
+    def matches_type(self, *types):
+        return self.type in types
