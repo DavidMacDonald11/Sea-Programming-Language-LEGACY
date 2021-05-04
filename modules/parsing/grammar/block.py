@@ -1,4 +1,4 @@
-from parser import errors
+from parsing import errors
 from tokens.symbol import Sym
 from nodes.operations.sequential_node import SequentialOperationNode
 

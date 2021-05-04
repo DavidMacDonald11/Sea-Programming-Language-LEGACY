@@ -2,8 +2,8 @@ from tokens.token import Token
 from tokens.keyword import Keyword, TYPE_KEYWORDS
 from tokens.operator import Op
 from tokens.identifier import Identifier
-from nodes.memory_assign_node import MemoryAssignNode
-from nodes.memory_reassign_node import MemoryReassignNode
+from nodes.variable_assign_node import VariableAssignNode
+from nodes.variable_reassign_node import VariableReassignNode
 from nodes.operations.binary_node import BinaryOperationNode
 from nodes.operations.ternary_node import TernaryOperationNode
 
@@ -28,14 +28,14 @@ def make_memory_assign(parser, makes):
     parser.expecting(Op.EQUALS)
     expression = makes.expression(parser, makes)
 
-    return MemoryAssignNode(keyword, identifier, expression)
+    return VariableAssignNode(keyword, identifier, expression)
 
 def make_memory_reassign(parser, makes):
     identifier = parser.take()
     operator = parser.take()
     expression = makes.expression(parser, makes)
 
-    return MemoryReassignNode(identifier, operator, expression)
+    return VariableReassignNode(identifier, operator, expression)
 
 def ternary_operation(parser, makes, left_operations, right_operations, *funcs):
     left = funcs[0](parser, makes)

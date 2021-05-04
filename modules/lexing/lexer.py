@@ -4,7 +4,7 @@ from tokens.symbol import Symbol, Sym
 from tokens.keyword import Keyword
 from tokens.literal import Literal
 from tokens.operator import Operator
-from lexer import errors
+from lexing import errors
 
 class Lexer:
     def __init__(self, in_stream):

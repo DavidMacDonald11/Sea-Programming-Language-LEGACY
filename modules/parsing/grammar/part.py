@@ -1,6 +1,6 @@
 from tokens.operator import Operator, Op
 from tokens.identifier import Identifier
-from nodes.memory_reassign_node import MemoryReassignNode
+from nodes.variable_reassign_node import VariableReassignNode
 from nodes.operations.left_unary_node import LeftUnaryOperationNode
 
 def make_part(parser, makes):
@@ -8,7 +8,7 @@ def make_part(parser, makes):
         operator = parser.take()
         identifier = parser.expecting(Identifier, check_type = True)
 
-        return MemoryReassignNode(identifier, operator, None, True)
+        return VariableReassignNode(identifier, operator, None, True)
 
     if parser.token.matches(Operator, Op.PLUS, Op.MINUS, Op.NOT):
         operator = parser.take()

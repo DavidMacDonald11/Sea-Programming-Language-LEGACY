@@ -1,7 +1,7 @@
 from position.position import Position
 from .ast_node import ASTNode
 
-class MemoryReassignNode(ASTNode):
+class VariableReassignNode(ASTNode):
     def __init__(self, identifier, operator, value = None, left = False):
         self.identifier = identifier
         self.operator = operator

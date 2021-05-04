@@ -11,7 +11,7 @@ def make_if_expression(parser, makes):
         get_if_case(parser, makes, cases)
 
     if parser.wanting(*parser.indent, "else") is not None:
-        get_if_case(parser, makes)
+        else_case = get_if_case(parser, makes)
 
     return IfNode(if_token, cases, else_case)
 
@@ -22,7 +22,7 @@ def get_if_case(parser, makes, cases = None):
     parser.expecting(Sym.COLON)
     expression = makes.block_or_expression(parser, makes)
 
-    if cases is None:
-        return expression
+    if cases is not None:
+        cases += [(condition, expression)]
 
-    cases += [(condition, expression)]
+    return expression

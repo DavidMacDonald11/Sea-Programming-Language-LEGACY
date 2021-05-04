@@ -1,6 +1,6 @@
 from tokens.operator import Operator, Op
 from tokens.identifier import Identifier
-from nodes.memory_reassign_node import MemoryReassignNode
+from nodes.variable_reassign_node import VariableReassignNode
 
 def make_mole(parser, makes):
     if isinstance(parser.token, Identifier):
@@ -11,7 +11,7 @@ def make_mole(parser, makes):
             identifier = parser.take()
             operator = parser.take()
 
-            return MemoryReassignNode(identifier, operator)
+            return VariableReassignNode(identifier, operator)
 
         parser.retreat()
 

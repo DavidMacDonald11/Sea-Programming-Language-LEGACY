@@ -1,8 +1,8 @@
-from parser.parser import Parser
-from parser.errors import ParserError
-from lexer.lexer import Lexer
-from lexer.errors import LexerError
 from preprocessor.preprocessor import PreProcessor
+from lexing.lexer import Lexer
+from lexing.errors import LexerError
+from parsing.parser import Parser
+from parsing.errors import ParserError
 from errors.errors import SeaError
 
 def main(streams, debug):

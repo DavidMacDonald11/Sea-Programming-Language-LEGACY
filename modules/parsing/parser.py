@@ -1,4 +1,4 @@
-from parser import errors
+from parsing import errors
 from tokens.symbol import Sym
 from nodes.eof_node import EOFNode
 from nodes.operations.sequential_node import SequentialOperationNode
@@ -46,7 +46,7 @@ class Parser:
 
     def take(self, amount = 1):
         if amount < 1:
-            return
+            return None
 
         i = self.i
         self.advance(amount)
