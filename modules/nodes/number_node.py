@@ -7,3 +7,9 @@ class NumberNode(ASTNode):
 
     def __repr__(self):
         return f"{self.literal}"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

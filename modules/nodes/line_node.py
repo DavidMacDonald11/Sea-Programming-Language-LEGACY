@@ -10,3 +10,9 @@ class LineNode(ASTNode):
 
     def __repr__(self):
         return f"[{self.expression}]"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

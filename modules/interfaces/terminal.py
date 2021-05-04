@@ -34,7 +34,7 @@ def main(debug):
                     buffer = input("...   ") + "\n"
                     TerminalInStream.buffer += buffer
 
-            general.main(streams, debug)
+            general.main(streams, debug, "i")
     except (KeyboardInterrupt, EOFError):
         print()
     except ExitError:

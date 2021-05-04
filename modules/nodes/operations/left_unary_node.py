@@ -10,3 +10,9 @@ class LeftUnaryOperationNode(ASTNode):
 
     def __repr__(self):
         return f"({self.operator}, {self.right})"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

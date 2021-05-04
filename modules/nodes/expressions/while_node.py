@@ -15,3 +15,9 @@ class WhileNode(ASTNode):
     def __repr__(self):
         else_str = ")" if not self.else_case else f", ELSE, {{{self.else_case}}})"
         return f"(WHILE, {{({self.condition}, {self.block})}}" + else_str
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

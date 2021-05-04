@@ -24,3 +24,9 @@ class KeywordOperationNode(ASTNode):
         condition = "" if self.condition is None else f" if {self.condition}"
 
         return f"{keyword}{value}{condition}"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

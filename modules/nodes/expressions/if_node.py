@@ -14,3 +14,9 @@ class IfNode(ASTNode):
     def __repr__(self):
         else_str = ")" if self.else_case is None else f", ELSE, {{{self.else_case}}})"
         return f"(IF, {{{self.cases}}}" + else_str
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

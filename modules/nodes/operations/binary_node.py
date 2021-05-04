@@ -11,3 +11,9 @@ class BinaryOperationNode(ASTNode):
 
     def __repr__(self):
         return f"({self.left}, {self.operator}, {self.right})"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

@@ -11,3 +11,9 @@ class TernaryOperationNode(ASTNode):
     def __repr__(self):
         left = f"({self.left}, {self.operations[0]}, "
         return left + f"{self.middle}, {self.operations[1]}, {self.right})"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

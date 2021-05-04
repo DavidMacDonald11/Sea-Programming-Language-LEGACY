@@ -7,3 +7,9 @@ class EOFNode(ASTNode):
 
     def __repr__(self):
         return f"{self.eof_token}"
+
+    def interpret(self, memory):
+        return ""
+
+    def transpile(self, memory):
+        return ""

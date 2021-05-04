@@ -11,3 +11,9 @@ class VariableAssignNode(ASTNode):
 
     def __repr__(self):
         return f"({self.keyword}, {self.identifier}, EQUALS, {self.value})"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

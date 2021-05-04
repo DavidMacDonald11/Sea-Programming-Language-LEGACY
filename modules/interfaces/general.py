@@ -5,7 +5,7 @@ from parsing.parser import Parser
 from parsing.errors import ParserError
 from errors.errors import SeaError
 
-def main(streams, debug):
+def main(streams, debug, mode):
     try:
         preprocessor = lexer = parser = None
         in_file = None
@@ -18,6 +18,8 @@ def main(streams, debug):
 
         ParserError.parser = parser = Parser(lexer)
         parser.make_ast()
+
+        streams.out_stream.write(f"{parser.ast.visit(mode, {})}\n")
     except SeaError as error:
         streams.error_stream.write(error)
     finally:

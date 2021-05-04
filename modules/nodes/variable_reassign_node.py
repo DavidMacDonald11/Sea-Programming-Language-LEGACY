@@ -22,3 +22,9 @@ class VariableReassignNode(ASTNode):
             return f"({self.operator}, {self.identifier}{value})"
 
         return f"({self.identifier}, {self.operator}{value})"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

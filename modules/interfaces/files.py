@@ -23,7 +23,7 @@ def visit_files(mode, debug, filenames, dirs):
         print("" if mode == "i" else f" into {streams.out_stream.name}", end = "")
         print(" ...")
 
-        general.main(streams, debug)
+        general.main(streams, debug, mode[0].lower())
 
 def get_streams(mode, file_pair):
     return StreamHolder(

@@ -19,3 +19,9 @@ class ForNode(ASTNode):
         for_triple = f"{self.assignment}; {self.condition}; {self.reassignment}"
 
         return f"(FOR, {{(({for_triple}), {self.block})}}" + else_str
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass

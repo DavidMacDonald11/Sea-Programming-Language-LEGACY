@@ -10,3 +10,9 @@ class SequentialOperationNode(ASTNode):
 
     def __repr__(self):
         return f"({self.left}, THEN, {self.right})"
+
+    def interpret(self, memory):
+        pass
+
+    def transpile(self, memory):
+        pass
