@@ -10,11 +10,24 @@ class MainMemory:
         self.stacks = [Memory()]
         self.heap = Memory()
         self.table = {}
+        self.init_globals()
+
+    def __repr__(self):
+        table = f"Table: {self.table}"
+        stacks = f"Stacks: {self.stacks}"
+        heap = f"Heap: {self.heap}"
+
+        return f"{table}\n\t{stacks}\n\t{heap}"
+
+    def init_globals(self):
+        self.implicit_new("bool", "true", 1)
+        self.implicit_new("bool", "false", 0)
+        self.implicit_new("bool", "null", 0)
 
     def implicit_new(self, keyword, identifier, value):
         value = type(self).convert_to_value(keyword, value)
         pointer = self.stack.new(value)
-        self.table[identifier] = (len(self.stacks) - 1, pointer[0], keyword.data)
+        self.table[identifier] = (len(self.stacks) - 1, pointer[0], keyword)
 
     def access(self, identifier):
         full_pointer, memory = self.get_identifier_pair(identifier)
@@ -48,7 +61,7 @@ class MainMemory:
             "bool": 1,
             "int": 4,
             "float": 4
-        }[keyword.data]
+        }[keyword]
 
     @classmethod
     def convert_to_value(cls, keyword, value):
@@ -66,4 +79,4 @@ class MainMemory:
             "bool": "?",
             "int": "i",
             "float": "f"
-        }[keyword.data]
+        }[keyword]

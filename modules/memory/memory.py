@@ -2,6 +2,9 @@ class Memory:
     def __init__(self):
         self.values = []
 
+    def __repr__(self):
+        return f"{self.values}"
+
     def new(self, value):
         size = len(value)
 
