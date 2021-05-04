@@ -16,6 +16,7 @@ from .grammar.boolean_expression import make_boolean_or_expression
 from .grammar.expression import make_expression, binary_operation, ternary_operation
 from .grammar.line import make_line
 from .grammar.block import make_block, make_block_or_expression
+from .grammar.partials.else_case import make_else_case
 
 MAKES = SimpleNamespace(
     atom = make_atom,
@@ -37,5 +38,6 @@ MAKES = SimpleNamespace(
     binary_operation = binary_operation,
     line = make_line,
     block = make_block,
-    block_or_expression = make_block_or_expression
+    block_or_expression = make_block_or_expression,
+    else_case = make_else_case
 )
