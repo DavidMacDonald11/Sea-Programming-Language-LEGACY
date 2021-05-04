@@ -11,8 +11,14 @@ class SequentialOperationNode(ASTNode):
     def __repr__(self):
         return f"({self.left}, THEN, {self.right})"
 
+    def visit(self, mode, memory):
+        left = self.left.visit(mode, memory)
+        right = self.right.visit(mode, memory)
+
+        return left if right == "" else f"{left}\n{right}"
+
     def interpret(self, memory):
-        pass
+        self.visit("i", memory)
 
     def transpile(self, memory):
-        pass
+        self.visit("t", memory)

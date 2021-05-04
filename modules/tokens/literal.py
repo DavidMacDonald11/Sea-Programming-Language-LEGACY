@@ -30,3 +30,9 @@ class Literal(Token):
 
     def matches_type(self, *types):
         return self.type in types
+
+    def get_consistent_value(self):
+        if self.type == "float":
+            return float(self.value)
+
+        return int(self.value)
