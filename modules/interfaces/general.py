@@ -1,4 +1,4 @@
-from preprocessor.preprocessor import PreProcessor
+from preprocessing.preprocessor import PreProcessor
 from lexing.lexer import Lexer
 from lexing.errors import LexerError
 from parsing.parser import Parser
