@@ -18,8 +18,36 @@ class IfNode(ASTNode):
 
     def interpret(self, memory):
         with stack(memory):
-            pass
+            for condition, expression in self.cases:
+                condition_value = condition.interpret(memory)
+
+                if condition_value:
+                    return expression.interpret(memory)
+
+            if self.else_case is not None:
+                return self.else_case.interpret(memory)
+
+            return ""
 
     def transpile(self, memory):
-        with stack(memory):
-            pass
+        with stack(memory.memory):
+            indent = "\t" * memory.depth
+            statement = ""
+            first = True
+
+            for condition, expression in self.cases:
+                condition_value = condition.transpile(memory)
+
+                if first:
+                    statement += f"if({condition_value})\n{indent}{{\n"
+                    first = False
+                else:
+                    statement += f"else if({condition_value})\n{indent}{{\n"
+
+                statement += f"{expression.transpile(memory)}"
+                statement += f"{indent}}}\n"
+
+            if self.else_case is not None:
+                statement += f"else\n{indent}{{\n{self.else_case.transpile(memory)}{indent}}}\n"
+
+            return statement

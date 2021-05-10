@@ -1,4 +1,5 @@
 from position.position import Position
+from interpreting import errors
 from ..ast_node import ASTNode
 
 class KeywordOperationNode(ASTNode):
@@ -26,7 +27,33 @@ class KeywordOperationNode(ASTNode):
         return f"{keyword}{value}{condition}"
 
     def interpret(self, memory):
-        pass
+        if self.keyword == "pass":
+            return "Success: Do Nothing"
+
+        if self.condition is not None:
+            condition = self.condition.interpret(memory)
+
+            if not condition:
+                return ""
+
+        if self.keyword == "continue":
+            raise errors.UndefinedContinueError(self)
+
+        raise errors.UndefinedBreakError(self)
 
     def transpile(self, memory):
-        pass
+        keyword = "" if self.keyword == "pass" else self.keyword
+        value = "" if self.value is None else self.value.transpile(memory)
+
+        indent = "\t" * memory.depth
+        broke_variable = f"__sea__Broke_{memory.break_depth}"
+
+        if self.keyword == "break":
+            value = f"{value};\n{indent}{broke_variable} = 1;"
+
+        if self.condition is None:
+            return f"{keyword} {value}"
+
+        condition = self.condition.transpile(memory)
+
+        return f"if({condition})\n{indent}{{\n{indent}{keyword} {value}\n{indent}}}\n"

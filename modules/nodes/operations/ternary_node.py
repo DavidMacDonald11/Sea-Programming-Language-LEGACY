@@ -13,7 +13,22 @@ class TernaryOperationNode(ASTNode):
         return left + f"{self.middle}, {self.operations[1]}, {self.right})"
 
     def interpret(self, memory):
-        pass
+        left = self.left.interpret(memory)
+        middle = self.middle.interpret(memory)
+        right = self.right.interpret(memory)
+
+        key = (self.operations[0].data, self.operations[1].data)
+        inputs = (left, middle, right)
+
+        return OPERATOR_FUNC[key](*inputs)
 
     def transpile(self, memory):
-        pass
+        left = self.left.transpile(memory)
+        middle = self.middle.transpile(memory)
+        right = self.right.transpile(memory)
+
+        return f"({middle} ? {left} : {right})"
+
+OPERATOR_FUNC = {
+    ("if", "else"): (lambda x, y, z: x if y else z)
+}

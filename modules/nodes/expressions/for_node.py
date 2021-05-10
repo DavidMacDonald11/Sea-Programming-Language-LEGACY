@@ -1,5 +1,6 @@
 from position.position import Position
 from memory.stack import stack
+from interpreting import errors
 from ..ast_node import ASTNode
 
 class ForNode(ASTNode):
@@ -23,8 +24,45 @@ class ForNode(ASTNode):
 
     def interpret(self, memory):
         with stack(memory):
-            pass
+            self.assignment.interpret(memory)
+            broke = False
+
+            while self.condition.interpret(memory):
+                try:
+                    self.block.interpret(memory)
+                except errors.UndefinedBreakError:
+                    broke = True
+                    break
+                except errors.UndefinedContinueError:
+                    continue
+
+                self.reassignment.interpret(memory)
+
+            if self.else_case is not None and not broke:
+                self.else_case.interpret(memory)
+
+            return ""
 
     def transpile(self, memory):
-        with stack(memory):
-            pass
+        with stack(memory.memory):
+            broke_variable = f"__sea__Broke_{memory.depth}"
+            memory.headers.add(f"int {broke_variable} = 0;")
+            memory.break_depth = memory.depth
+
+            assignment = self.assignment.transpile(memory)
+            condition = self.condition.transpile(memory)
+            reassignment = self.reassignment.transpile(memory)
+            expression = self.block.transpile(memory)
+
+            indent = "\t" * memory.break_depth
+            inner_indent = "\t" * memory.depth
+
+            result = f"for({assignment}; {condition}; {reassignment})\n"
+            result += f"{indent}{{\n{expression}{indent}}}\n"
+            result += f"if({broke_variable})\n{indent}{{\n"
+            result += f"{inner_indent}{broke_variable} = 0;\n{indent}}}\n"
+
+            if self.else_case is not None:
+                result += f"else\n{indent}{{\n{self.else_case.transpile(memory)}{indent}}}\n"
+
+            return result

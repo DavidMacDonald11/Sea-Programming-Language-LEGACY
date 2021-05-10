@@ -18,3 +18,11 @@ class DivideByZeroError(InterpreterError):
 class BitwiseOperationTypeError(InterpreterError):
     def get_message(self):
         return "Bitwise operations can only be used with integers."
+
+class UndefinedContinueError(InterpreterError):
+    def get_message(self):
+        return "Continue is undefined in the current block."
+
+class UndefinedBreakError(InterpreterError):
+    def get_message(self):
+        return "Break is undefined in the current block."

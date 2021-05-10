@@ -24,7 +24,10 @@ def main(streams, debug, mode, memory = None):
         if memory is None:
             memory = MainMemory() if mode == "i" else ContainedMemory()
 
-        streams.out_stream.write(f"{parser.ast.visit(mode, memory)}\n")
+        result = parser.ast.visit(mode, memory)
+        headers = "" if mode == "i" else "".join(memory.headers) + "\n\n"
+
+        streams.out_stream.write(f"{headers}{result}\n")
     except SeaError as error:
         streams.error_stream.write(error)
     finally:
