@@ -55,6 +55,15 @@ class MainMemory:
         memory = self.heap if full_pointer[0] < 0 else self.stacks[full_pointer[0]]
         return full_pointer, memory
 
+    def add_stack(self):
+        stack = Memory()
+        self.stacks += [stack]
+
+        return stack
+
+    def remove_stack(self):
+        self.stacks = self.stacks[:-1]
+
     @classmethod
     def size_of_type(cls, keyword):
         return {

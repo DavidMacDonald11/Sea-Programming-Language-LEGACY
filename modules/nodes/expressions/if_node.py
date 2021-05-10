@@ -1,4 +1,5 @@
 from position.position import Position
+from memory.stack import stack
 from ..ast_node import ASTNode
 
 class IfNode(ASTNode):
@@ -16,7 +17,9 @@ class IfNode(ASTNode):
         return f"(IF, {{{self.cases}}}" + else_str
 
     def interpret(self, memory):
-        pass
+        with stack(memory):
+            pass
 
     def transpile(self, memory):
-        pass
+        with stack(memory):
+            pass

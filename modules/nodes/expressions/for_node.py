@@ -1,4 +1,5 @@
 from position.position import Position
+from memory.stack import stack
 from ..ast_node import ASTNode
 
 class ForNode(ASTNode):
@@ -21,7 +22,9 @@ class ForNode(ASTNode):
         return f"(FOR, {{(({for_triple}), {self.block})}}" + else_str
 
     def interpret(self, memory):
-        pass
+        with stack(memory):
+            pass
 
     def transpile(self, memory):
-        pass
+        with stack(memory):
+            pass

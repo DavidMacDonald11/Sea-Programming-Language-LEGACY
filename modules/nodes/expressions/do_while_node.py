@@ -1,4 +1,5 @@
 from position.position import Position
+from memory.stack import stack
 from ..ast_node import ASTNode
 
 class DoWhileNode(ASTNode):
@@ -17,7 +18,9 @@ class DoWhileNode(ASTNode):
         return f"(DO, {{{self.block}}}, WHILE, {self.condition}" + else_str
 
     def interpret(self, memory):
-        pass
+        with stack(memory):
+            pass
 
     def transpile(self, memory):
-        pass
+        with stack(memory):
+            pass
