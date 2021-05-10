@@ -1,4 +1,5 @@
 from position.position import Position
+from visiting import errors
 from .ast_node import ASTNode
 
 class VariableAssignNode(ASTNode):
@@ -13,7 +14,23 @@ class VariableAssignNode(ASTNode):
         return f"({self.keyword}, {self.identifier}, EQUALS, {self.value})"
 
     def interpret(self, memory):
-        pass
+        keyword = self.keyword.data
+        identifier = self.identifier.data
+        value = self.value.interpret(memory)
+
+        if memory.contains(identifier, memory.scope_id):
+            raise errors.RedeclaredIdentifierError(self, identifier)
+
+        memory.implicit_new(keyword, identifier, value)
+
+        return value
 
     def transpile(self, memory):
-        pass
+        self.interpret(memory.memory)
+
+        keyword = self.keyword.data
+        identifier = self.identifier.data
+        tvalue = self.value.transpile(memory)
+
+        memory.new(keyword, identifier, tvalue)
+        return f"{keyword} {identifier} = {tvalue}"

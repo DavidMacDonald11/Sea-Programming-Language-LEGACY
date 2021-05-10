@@ -5,6 +5,7 @@ from parsing.parser import Parser
 from parsing.errors import ParserError
 from errors.errors import SeaError
 from memory.main_memory import MainMemory
+from memory.contained_memory import ContainedMemory
 
 def main(streams, debug, mode):
     try:
@@ -20,7 +21,7 @@ def main(streams, debug, mode):
         ParserError.parser = parser = Parser(lexer)
         parser.make_ast()
 
-        memory = MainMemory()
+        memory = MainMemory() if mode == "i" else ContainedMemory()
         streams.out_stream.write(f"{parser.ast.visit(mode, memory)}\n")
     except SeaError as error:
         streams.error_stream.write(error)

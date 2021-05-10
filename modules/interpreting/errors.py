@@ -1,6 +1,4 @@
-from errors.errors import SeaError
+from visiting.errors import VisitorError
 
-class InterpreterError(SeaError):
-    def __init__(self, node, message = ""):
-        self.node = node
-        super().__init__(node.position, message)
+class InterpreterError(VisitorError):
+    pass
