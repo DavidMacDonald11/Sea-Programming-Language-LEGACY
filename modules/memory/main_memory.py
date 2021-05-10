@@ -27,33 +27,52 @@ class MainMemory:
     def implicit_new(self, keyword, identifier, value):
         value = type(self).convert_to_value(keyword, value)
         pointer = self.stack.new(value)
-        self.table[identifier] = (len(self.stacks) - 1, pointer[0], keyword)
+
+        if identifier not in self.table:
+            self.table[identifier] = {}
+
+        self.table[identifier][len(self.stacks) - 1] = (pointer[0], keyword)
+
+    def contains(self, identifier, stack = None):
+        in_any = identifier in self.table
+
+        if stack is None:
+            return in_any
+
+        if not in_any:
+            return False
+
+        return stack in self.table[identifier]
 
     def access(self, identifier):
-        full_pointer, memory = self.get_identifier_pair(identifier)
-        address = full_pointer[1]
-        size = type(self).size_of_type(full_pointer[2])
+        partial_pointer, memory = self.get_identifier_pair(identifier)
+        address = partial_pointer[0]
+        size = type(self).size_of_type(partial_pointer[1])
 
         return memory.access(address, size)
 
     def modify(self, identifier, value):
-        full_pointer, memory = self.get_identifier_pair(identifier)
-        address = full_pointer[1]
-        value = type(self).convert_to_value(full_pointer[2], value)
+        partial_pointer, memory = self.get_identifier_pair(identifier)
+        address = partial_pointer[0]
+        value = type(self).convert_to_value(partial_pointer[1], value)
 
         memory.modify(address, value)
 
     def remove(self, identifier):
-        full_pointer, memory = self.get_identifier_pair(identifier)
-        address = full_pointer[1]
-        size = type(self).size_of_type(full_pointer[2])
+        partial_pointer, memory = self.get_identifier_pair(identifier)
+        address = partial_pointer[0]
+        size = type(self).size_of_type(partial_pointer[1])
 
         memory.remove(address, size)
 
     def get_identifier_pair(self, identifier):
-        full_pointer = self.table[identifier]
-        memory = self.heap if full_pointer[0] < 0 else self.stacks[full_pointer[0]]
-        return full_pointer, memory
+        table = self.table[identifier]
+        stack = max(table.keys())
+
+        partial_pointer = table[stack]
+        memory = self.heap if stack < 0 else self.stacks[stack]
+
+        return partial_pointer, memory
 
     def add_stack(self):
         stack = Memory()
