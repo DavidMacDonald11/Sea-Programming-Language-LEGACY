@@ -6,6 +6,10 @@ class MainMemory:
     def stack(self):
         return self.stacks[-1]
 
+    @property
+    def stack_id(self):
+        return len(self.stacks) - 1
+
     def __init__(self):
         self.stacks = [Memory()]
         self.heap = Memory()
@@ -31,18 +35,18 @@ class MainMemory:
         if identifier not in self.table:
             self.table[identifier] = {}
 
-        self.table[identifier][len(self.stacks) - 1] = (pointer[0], keyword)
+        self.table[identifier][self.stack_id] = (pointer[0], keyword)
 
-    def contains(self, identifier, stack = None):
+    def contains(self, identifier, stack_id = None):
         in_any = identifier in self.table
 
-        if stack is None:
+        if stack_id is None:
             return in_any
 
         if not in_any:
             return False
 
-        return stack in self.table[identifier]
+        return stack_id in self.table[identifier]
 
     def access(self, identifier):
         partial_pointer, memory = self.get_identifier_pair(identifier)
@@ -67,10 +71,10 @@ class MainMemory:
 
     def get_identifier_pair(self, identifier):
         table = self.table[identifier]
-        stack = max(table.keys())
+        stack_id = max(table.keys())
 
-        partial_pointer = table[stack]
-        memory = self.heap if stack < 0 else self.stacks[stack]
+        partial_pointer = table[stack_id]
+        memory = self.heap if stack_id < 0 else self.stacks[stack_id]
 
         return partial_pointer, memory
 
