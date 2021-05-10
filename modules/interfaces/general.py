@@ -7,9 +7,9 @@ from errors.errors import SeaError
 from memory.main_memory import MainMemory
 from memory.contained_memory import ContainedMemory
 
-def main(streams, debug, mode):
+def main(streams, debug, mode, memory = None):
     try:
-        preprocessor = lexer = parser = memory = None
+        preprocessor = lexer = parser = None
         in_file = None
 
         preprocessor = PreProcessor(streams.in_stream)
@@ -21,7 +21,9 @@ def main(streams, debug, mode):
         ParserError.parser = parser = Parser(lexer)
         parser.make_ast()
 
-        memory = MainMemory() if mode == "i" else ContainedMemory()
+        if memory is None:
+            memory = MainMemory() if mode == "i" else ContainedMemory()
+
         streams.out_stream.write(f"{parser.ast.visit(mode, memory)}\n")
     except SeaError as error:
         streams.error_stream.write(error)

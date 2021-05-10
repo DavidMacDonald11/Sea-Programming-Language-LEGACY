@@ -1,4 +1,5 @@
 from interfaces import general
+from memory.main_memory import MainMemory
 from streams.holder import StreamHolder
 from streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 
@@ -10,6 +11,8 @@ def main(debug):
         TerminalErrorStream(),
         TerminalOutStream()
         )
+
+    memory = MainMemory()
 
     try:
         while True:
@@ -34,7 +37,7 @@ def main(debug):
                     buffer = input("...   ") + "\n"
                     TerminalInStream.buffer += buffer
 
-            general.main(streams, debug, "i")
+            general.main(streams, debug, "i", memory)
     except (KeyboardInterrupt, EOFError):
         print()
     except ExitError:
