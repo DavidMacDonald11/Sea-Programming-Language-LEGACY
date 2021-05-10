@@ -4,6 +4,7 @@ class ContainedMemory:
     def __init__(self):
         self.memory = MainMemory()
         self.table = {}
+        self.line_depth = 0
 
     def __repr__(self):
         table = f"Contained Table: {self.table}"

@@ -5,10 +5,15 @@ class VisitorError(SeaError):
         self.node = node
         super().__init__(node.position, message)
 
-class RedeclaredIdentifierError(VisitorError):
+class IdentifierError(VisitorError):
     def __init__(self, node, identifier, message = ""):
         self.identifier = identifier
         super().__init__(node, message)
 
+class RedeclaredIdentifierError(IdentifierError):
     def get_message(self):
-        return
+        return f"Identifier {self.identifier} has already been declared in this scope."
+
+class UndefinedIdentifierError(IdentifierError):
+    def get_message(self):
+        return f"Identifier {self.identifier} is undefined in any scope."

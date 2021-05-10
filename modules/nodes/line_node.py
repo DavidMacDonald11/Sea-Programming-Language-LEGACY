@@ -12,7 +12,11 @@ class LineNode(ASTNode):
         return f"[{self.expression}]"
 
     def interpret(self, memory):
-        pass
+        return self.expression.interpret(memory)
 
     def transpile(self, memory):
-        pass
+        memory.line_depth = self.depth
+        expression = self.expression.transpile(memory)
+        indent = "\t" * self.depth
+
+        return f"{indent}{expression}{'' if self.no_end else ';'}"

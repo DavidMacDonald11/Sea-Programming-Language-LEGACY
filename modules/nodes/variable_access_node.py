@@ -1,3 +1,4 @@
+from visiting import errors
 from .ast_node import ASTNode
 
 class VariableAccessNode(ASTNode):
@@ -9,7 +10,13 @@ class VariableAccessNode(ASTNode):
         return f"{self.identifier}"
 
     def interpret(self, memory):
-        pass
+        identifier = self.identifier.data
+
+        if not memory.contains(identifier):
+            raise errors.UndefinedIdentifierError(self, identifier)
+
+        return memory.access(identifier)
 
     def transpile(self, memory):
-        pass
+        self.interpret(memory.memory)
+        return f"{self.identifier}"

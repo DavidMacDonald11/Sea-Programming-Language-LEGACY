@@ -51,9 +51,12 @@ class MainMemory:
     def access(self, identifier):
         partial_pointer, memory = self.get_identifier_pair(identifier)
         address = partial_pointer[0]
-        size = type(self).size_of_type(partial_pointer[1])
+        keyword = partial_pointer[1]
 
-        return memory.access(address, size)
+        size = type(self).size_of_type(keyword)
+        value = memory.access(address, size)
+
+        return type(self).convert_from_value(keyword, value)
 
     def modify(self, identifier, value):
         partial_pointer, memory = self.get_identifier_pair(identifier)

@@ -18,7 +18,7 @@ class VariableAssignNode(ASTNode):
         identifier = self.identifier.data
         value = self.value.interpret(memory)
 
-        if memory.contains(identifier, memory.scope_id):
+        if memory.contains(identifier, memory.stack_id):
             raise errors.RedeclaredIdentifierError(self, identifier)
 
         memory.implicit_new(keyword, identifier, value)
