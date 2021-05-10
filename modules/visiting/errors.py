@@ -17,3 +17,7 @@ class RedeclaredIdentifierError(IdentifierError):
 class UndefinedIdentifierError(IdentifierError):
     def get_message(self):
         return f"Identifier {self.identifier} is undefined in any scope."
+
+class UnimplementedOperationError(VisitorError):
+    def get_message(self):
+        return f"Operation {self.node.operation} is unimplemented."
