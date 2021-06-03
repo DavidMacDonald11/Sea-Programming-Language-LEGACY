@@ -19,7 +19,7 @@ class VariableReassignNode(ASTNode):
 
         right = identifier if left else identifier
         position_end = (value if value is not None else right).position.end
-        stream = position_start.stream
+        stream = operator.position.stream
 
         super().__init__(Position(stream, position_start, position_end))
 
@@ -32,10 +32,10 @@ class VariableReassignNode(ASTNode):
         return f"({self.identifier}, {self.operator}{value})"
 
     def visit(self, mode, memory):
-        if self.operator is Op.EQUALS:
+        if self.operator.operator is Op.EQUALS:
             return super().visit(mode, memory)
 
-        if self.operator in (Op.INCREMENT, Op.DECREMENT):
+        if self.operator.operator in (Op.INCREMENT, Op.DECREMENT):
             return self.visit_unary(mode, memory)
 
         position = Position(self.operator.position.stream, self.operator.position.start)
@@ -55,18 +55,22 @@ class VariableReassignNode(ASTNode):
         return self.interpret_unary(memory)
 
     def interpret(self, memory):
-        if self.operator is not Op.EQUALS:
+        if self.operator.operator is not Op.EQUALS:
             return self.visit("i", memory)
 
-        if not memory.contains(self.identifier):
-            raise errors.UndefinedIdentifierError(self, self.identifier)
+        identifier = self.identifier.data
+
+        if not memory.contains(identifier):
+            raise errors.UndefinedIdentifierError(self, identifier)
 
         value = self.value.interpret(memory)
-        return memory.modify(self.identifier, value)
+        memory.modify(identifier, value)
+
+        return value
 
     def interpret_unary(self, memory):
-        position = Position(self.operator.position.stream, self.operator.position)
-        token_type = Op.PLUS_EQUALS if self.operator is Op.INCREMENT else Op.MINUS_EQUALS
+        position = Position(self.operator.position.stream, self.operator.position.start)
+        token_type = Op.PLUS_EQUALS if self.operator.operator is Op.INCREMENT else Op.MINUS_EQUALS
         operation = Operator(token_type, position)
         one = NumberNode(Literal("int", 1, position))
 
@@ -81,7 +85,7 @@ class VariableReassignNode(ASTNode):
         return value
 
     def transpile(self, memory):
-        if self.operator is not Op.EQUALS:
+        if self.operator.operator is not Op.EQUALS:
             return self.visit("t", memory)
 
         value = self.value.transpile(memory)

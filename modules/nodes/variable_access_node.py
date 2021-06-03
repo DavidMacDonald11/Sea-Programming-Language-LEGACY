@@ -19,4 +19,4 @@ class VariableAccessNode(ASTNode):
 
     def transpile(self, memory):
         self.interpret(memory.memory)
-        return f"{self.identifier}"
+        return f"{self.identifier.data}"

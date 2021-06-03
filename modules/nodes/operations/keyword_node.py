@@ -11,7 +11,7 @@ class KeywordOperationNode(ASTNode):
 
         position_start = keyword_token.position.start
         position_end = keyword_token.position.end
-        stream = position_start.stream
+        stream = keyword_token.position.stream
 
         if condition is not None:
             position_end = condition.position.end

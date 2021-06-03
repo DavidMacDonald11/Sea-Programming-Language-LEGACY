@@ -12,11 +12,11 @@ class IdentifierError(VisitorError):
 
 class RedeclaredIdentifierError(IdentifierError):
     def get_message(self):
-        return f"Identifier {self.identifier} has already been declared in this scope."
+        return f"Identifier {self.identifier.data} has already been declared in this scope."
 
 class UndefinedIdentifierError(IdentifierError):
     def get_message(self):
-        return f"Identifier {self.identifier} is undefined in any scope."
+        return f"Identifier {self.identifier.data} is undefined in any scope."
 
 class UnimplementedOperationError(VisitorError):
     def get_message(self):

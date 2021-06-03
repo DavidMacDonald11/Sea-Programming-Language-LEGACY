@@ -9,7 +9,7 @@ class IfNode(ASTNode):
 
         position_start = if_token.position.start
         position_end = (else_case if else_case is not None else cases[-1][1]).position.end
-        stream = position_start.stream
+        stream = if_token.position.stream
 
         super().__init__(Position(stream, position_start, position_end))
 

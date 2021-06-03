@@ -75,9 +75,8 @@ class MainMemory:
     def get_identifier_pair(self, identifier):
         table = self.table[identifier]
         stack_id = max(table.keys())
-
         partial_pointer = table[stack_id]
-        memory = self.heap if stack_id < 0 else self.stacks[stack_id]
+        memory = self.heap if stack_id < 0 else self.stacks[stack_id - 1]
 
         return partial_pointer, memory
 
@@ -101,7 +100,17 @@ class MainMemory:
     @classmethod
     def convert_to_value(cls, keyword, value):
         c = cls.get_struct_char(keyword)
+        value = cls.cast(keyword, value)
+
         return [(bin(x)).replace("0b", "").rjust(8, "0") for x in struct.pack(f"!{c}", value)]
+
+    @classmethod
+    def cast(cls, keyword, value):
+        return {
+            "bool": int(value),
+            "int": int(value),
+            "float": float(value)
+        }[keyword]
 
     @classmethod
     def convert_from_value(cls, keyword, value):

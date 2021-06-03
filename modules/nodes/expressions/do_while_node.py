@@ -11,7 +11,7 @@ class DoWhileNode(ASTNode):
 
         position_start = do_token.position.start
         position_end = (else_case if else_case is not None else block).position.end
-        stream = position_start.stream
+        stream = do_token.position.stream
 
         super().__init__(Position(stream, position_start, position_end))
 
