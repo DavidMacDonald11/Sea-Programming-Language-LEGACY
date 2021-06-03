@@ -1,5 +1,5 @@
+import inspect
 from position.position import Position
-from interpreting import errors
 from interpreting import arithmetic as iarithmetic
 from interpreting import bitwise
 from transpiling import arithmetic as tarithmetic
@@ -13,7 +13,8 @@ class BinaryOperationNode(ASTNode):
         self.operator = operator
         self.right = right
 
-        super().__init__(Position(left.position.start, right.position.end))
+        stream = left.position.stream
+        super().__init__(Position(stream, left.position.start, right.position.end))
 
     def __repr__(self):
         return f"({self.left}, {self.operator}, {self.right})"
@@ -22,11 +23,12 @@ class BinaryOperationNode(ASTNode):
         left = self.left.interpret(memory)
         right = self.right.interpret(memory)
 
-        try:
-            return OPERATOR_FUNC[self.operator.data](left, right)
-        except errors.InterpreterError as error:
-            error.node = self
-            raise error
+        func = OPERATOR_FUNC[self.operator.data]
+
+        if len(inspect.signature(func).parameters) == 2:
+            return func(left, right)
+
+        return func(left, right, node = self)
 
     def transpile(self, memory):
         self.interpret(memory.memory)

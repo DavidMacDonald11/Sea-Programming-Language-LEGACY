@@ -8,7 +8,8 @@ class LeftUnaryOperationNode(ASTNode):
         self.operator = operator
         self.right = right
 
-        super().__init__(Position(operator.position.start, right.position.end))
+        stream = operator.position.stream
+        super().__init__(Position(stream, operator.position.start, right.position.end))
 
     def __repr__(self):
         return f"({self.operator}, {self.right})"

@@ -11,13 +11,14 @@ class KeywordOperationNode(ASTNode):
 
         position_start = keyword_token.position.start
         position_end = keyword_token.position.end
+        stream = position_start.stream
 
         if condition is not None:
             position_end = condition.position.end
         elif value is not None:
             position_end = value.position.end
 
-        super().__init__(Position(position_start, position_end))
+        super().__init__(Position(stream, position_start, position_end))
 
     def __repr__(self):
         keyword = f"{self.keyword}"

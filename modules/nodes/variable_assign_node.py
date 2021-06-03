@@ -8,7 +8,8 @@ class VariableAssignNode(ASTNode):
         self.identifier = identifier
         self.value = value
 
-        super().__init__(Position(keyword.position.start, value.position.end))
+        stream = keyword.position.stream
+        super().__init__(Position(stream, keyword.position.start, value.position.end))
 
     def __repr__(self):
         return f"({self.keyword}, {self.identifier}, EQUALS, {self.value})"

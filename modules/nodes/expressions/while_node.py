@@ -11,8 +11,9 @@ class WhileNode(ASTNode):
 
         position_start = while_token.position.start
         position_end = (else_case if else_case is not None else block).position.end
+        stream = position_start.stream
 
-        super().__init__(Position(position_start, position_end))
+        super().__init__(Position(stream, position_start, position_end))
 
     def __repr__(self):
         else_str = ")" if not self.else_case else f", ELSE, {{{self.else_case}}})"

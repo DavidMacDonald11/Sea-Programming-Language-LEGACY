@@ -6,7 +6,8 @@ class TernaryOperationNode(ASTNode):
         self.left, self.middle, self.right = values
         self.operations = operations
 
-        super().__init__(Position(self.left.position.start, self.right.position.end))
+        stream = self.left.position.stream
+        super().__init__(Position(stream, self.left.position.start, self.right.position.end))
 
     def __repr__(self):
         left = f"({self.left}, {self.operations[0]}, "
