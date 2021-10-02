@@ -1,12 +1,11 @@
 from .general import InStream, OutStream, ErrorStream
 
 class TerminalInStream(InStream):
-
     def __init__(self):
         self.buffer = ""
         super().__init__("stdin")
 
-    def read_character(self):
+    def read_symbol(self):
         c = self.buffer[:1]
         self.buffer = self.buffer[1:]
 

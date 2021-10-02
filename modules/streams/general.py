@@ -29,7 +29,7 @@ class NullStream(InStream, ErrorStream):
     def __init__(self):
         super().__init__("null")
 
-    def read_character(self):
+    def read_symbol(self):
         return ""
 
     def write(self, data):
