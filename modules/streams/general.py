@@ -18,7 +18,7 @@ class OutStream(ABC):
 
 class ErrorStream(OutStream):
     def write(self, data):
-        to_print = f"{type(data).__name__}: {data.get_message()}\n"
+        to_print = f"{type(data).__name__} at {data.position}: {data.get_message()}\n"
         self.write_error(data, to_print)
 
     @abstractmethod
