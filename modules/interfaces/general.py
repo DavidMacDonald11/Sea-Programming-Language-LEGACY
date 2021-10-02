@@ -2,7 +2,14 @@ from errors.errors import SeaError
 
 def interface(streams, debug, mode):
     try:
-        pass
+        data = ""
+        symbol = streams.in_stream.read_symbol()
+
+        while symbol != "":
+            data += symbol
+            symbol = streams.in_stream.read_symbol()
+
+        streams.out_stream.write(data)
     except SeaError as error:
         streams.error_stream.write(error)
     finally:
@@ -12,4 +19,4 @@ def print_debug_info(debug, debug_stream):
     if not debug:
         return
 
-    debug_stream.write("Debug is enabled.")
+    debug_stream.write("\nDebug is enabled.\n")

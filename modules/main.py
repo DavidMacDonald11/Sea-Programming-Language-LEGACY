@@ -6,7 +6,7 @@ def main():
     debug = (debug == "True")
 
     if mode == "None":
-        terminal.begin_interfacing(debug)
+        terminal.interface(debug)
     else:
         pass
 

@@ -31,7 +31,7 @@ init: activate .git
 
 .PHONY: run
 run: $(VENV) activate
-	./sea.bash
+	python modules/main.py None False
 
 .PHONY: lint
 lint: $(VENV) activate
