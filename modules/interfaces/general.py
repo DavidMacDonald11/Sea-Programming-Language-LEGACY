@@ -1,22 +1,22 @@
+from lexing.lexer import Lexer
+from lexing.errors import LexerError
 from errors.errors import SeaError
 
 def interface(streams, debug, mode):
     try:
-        data = ""
-        symbol = streams.in_stream.read_symbol()
+        lexer = None
 
-        while symbol != "":
-            data += symbol
-            symbol = streams.in_stream.read_symbol()
+        LexerError.lexer = lexer = Lexer(streams.in_stream)
+        lexer.make_tokens()
 
-        streams.out_stream.write(data)
+        streams.out_stream.write("Done.\n")
     except SeaError as error:
         streams.error_stream.write(error)
     finally:
-        print_debug_info(debug, streams.debug_stream)
+        print_debug_info(debug, streams.debug_stream, lexer)
 
-def print_debug_info(debug, debug_stream):
+def print_debug_info(debug, debug_stream, lexer):
     if not debug:
         return
 
-    debug_stream.write("\nDebug is enabled.\n")
+    debug_stream.write(f"\nTokens:\n\t{None if lexer is None else lexer.tokens}\n")
