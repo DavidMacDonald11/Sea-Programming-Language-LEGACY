@@ -1,3 +1,4 @@
+from lexing import errors
 from .token import Token
 
 class Constant(Token):
@@ -14,6 +15,16 @@ class NumericalConstant(Constant):
     def __init__(self, is_int, value, position = None):
         self.is_int = is_int
         super().__init__(value, position)
+
+    @classmethod
+    def construct(cls, lexer):
+        value = lexer.take_token_string(cls.symbols())
+        is_int = "." not in value
+
+        if value.count(".") > 1:
+            raise errors.FloatError()
+
+        return NumericalConstant(is_int, value)
 
     @classmethod
     def symbols(cls):

@@ -1,4 +1,5 @@
 from enum import Enum, unique
+from lexing import errors
 from .token import Token
 
 class Punctuator(Token):
@@ -6,9 +7,16 @@ class Punctuator(Token):
     def data(self):
         return self.punctuator
 
+    def __repr__(self):
+        return f"Punctuator: {self.punctuator.value or 'EOF'}"
+
     def __init__(self, punctuator, position = None):
         self.punctuator = punctuator
         super().__init__(position)
+
+    @classmethod
+    def construct(cls, lexer):
+        return Punctuator(Punc(lexer.take()))
 
     @classmethod
     def symbols(cls):
@@ -17,6 +25,15 @@ class Punctuator(Token):
 class Operator(Punctuator):
     def __repr__(self):
         return f"Operator: {self.punctuator.value}"
+
+    @classmethod
+    def construct(cls, lexer):
+        try:
+            token_string = lexer.take_token_string(cls.symbols(), 2)
+            operator = Op(token_string)
+            return Operator(operator)
+        except ValueError:
+            raise errors.UnknownOperatorError(token_string)
 
     @classmethod
     def symbols(cls):
