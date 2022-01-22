@@ -1,5 +1,8 @@
 from position.position import Position
 from position.symbol_position import SymbolPosition
+from tokens.constant import NumericalConstant
+from tokens.punctuator import Operator
+from tokens.punctuator import Punctuator, Punc
 from . import errors
 
 class Lexer:
@@ -13,7 +16,7 @@ class Lexer:
         self.skip()
 
     def skip(self):
-        self.symbol = self.in_stream.read()
+        self.symbol = self.in_stream.read_symbol()
 
     def advance(self):
         self.skip()
@@ -47,4 +50,16 @@ class Lexer:
             self.tokens += [self.take_token()]
 
     def take_token(self):
-        return ""
+        while self.symbol.isspace():
+            self.advance()
+
+        position = self.new_position()
+
+        for token_type in (Punctuator, NumericalConstant, Operator):
+            if self.symbol in token_type.symbols():
+                token = token_type.construct(self)
+                token.position = position
+
+                return token
+
+        raise errors.UnknownSymbolError(self.take())
