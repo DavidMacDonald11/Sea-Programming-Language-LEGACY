@@ -7,7 +7,16 @@ class Punctuator(Token):
         return self.punctuator
 
     def __repr__(self):
-        return f"P{{{self.punctuator.value or 'EOF'}}}"
+        printable = value = self.punctuator.value
+
+        if value == "":
+            printable = "EOF"
+        elif value == "\t":
+            printable = "\\t"
+        elif value == "\n":
+            printable = "\\n"
+
+        return f"P{{{printable}}}"
 
     def __init__(self, punctuator, position = None):
         self.punctuator = punctuator
@@ -15,7 +24,17 @@ class Punctuator(Token):
 
     @classmethod
     def construct(cls, lexer):
-        return Punctuator(Punc(lexer.take()))
+        symbol = Punc(lexer.take())
+
+        if symbol is Punc.NEWLINE:
+            while lexer.symbol == "\n":
+                lexer.position.end.advance_line()
+                lexer.skip()
+
+            lexer.position.end.advance_line()
+            lexer.at_line_start = True
+
+        return Punctuator(symbol)
 
     @classmethod
     def symbols(cls):

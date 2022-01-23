@@ -1,7 +1,7 @@
 from . import errors
 from .position.position import Position
 from .position.symbol_position import SymbolPosition
-from .tokens.punctuator import Punctuator
+from .tokens.punctuator import Punctuator, Punc
 from .tokens.operator import Operator
 from .tokens.constant import NumericalConstant
 from .tokens.keyword import Keyword
@@ -50,9 +50,39 @@ class Lexer:
         while self.symbol != "":
             self.tokens += [self.take_token()]
 
+    def check_spaces(self):
+        is_space = self.symbol == " "
+        is_tab = self.symbol == "\t"
+        is_indent = is_space or is_tab
+
+        if not self.at_line_start:
+            if is_indent:
+                self.advance()
+
+            return False
+
+        if not is_indent:
+            self.at_line_start = False
+            return False
+
+        if is_space:
+            token_string = self.take(" ", 4)
+
+            if token_string != " " * 4:
+                raise errors.IndentError()
+
+            return True
+
+        return False
+
     def take_token(self):
-        while self.symbol.isspace():
-            self.advance()
+        position = self.new_position()
+
+        if self.check_spaces():
+            token = Punctuator(Punc.INDENT)
+            token.position = position
+
+            return token
 
         position = self.new_position()
 

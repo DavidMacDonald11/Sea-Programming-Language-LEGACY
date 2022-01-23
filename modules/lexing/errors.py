@@ -25,6 +25,10 @@ class UnknownOperatorError(LexerError):
     def get_message(self):
         return f"Operator \"{self.operator}\" is unknown to the lexer."
 
+class IndentError(LexerError):
+    def get_message(self):
+        return "Indents must be 4 spaces or 1 tab."
+
 class FloatError(LexerError):
     def get_message(self):
         return "A float cannot contain more than one decimal point."
