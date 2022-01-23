@@ -13,7 +13,7 @@ class NumericalConstant(Constant):
 
     @classmethod
     def construct(cls, lexer):
-        value = lexer.take_token_string(cls.symbols())
+        value = lexer.take(cls.symbols())
         is_int = "." not in value
 
         if value.count(".") > 1:

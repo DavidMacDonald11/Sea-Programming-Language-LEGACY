@@ -7,32 +7,27 @@ class Lexer:
     def __init__(self, in_stream):
         self.in_stream = in_stream
         self.position = Position(in_stream, SymbolPosition(1, 1), SymbolPosition(1, 0))
+        self.symbol = self.in_stream.read_symbol()
         self.at_line_start = True
-        self.symbol = ""
         self.tokens = []
 
-        self.skip()
-
-    def skip(self):
-        self.symbol = self.in_stream.read_symbol()
-
     def advance(self):
-        self.skip()
+        self.symbol = self.in_stream.read_symbol()
         self.position.end.advance()
 
-    def take(self):
-        symbol = self.symbol
-        self.advance()
+    def take(self, symbols = None, max_len = None):
+        if symbols is None:
+            symbol = self.symbol
+            self.advance()
 
-        return symbol
+            return symbol
 
-    def take_token_string(self, symbols, max_length = None):
         token_string = ""
 
         while self.symbol in symbols:
             token_string += self.take()
 
-            if max_length is not None and len(token_string) == max_length:
+            if max_len is not None and len(token_string) == max_len:
                 break
 
         return token_string

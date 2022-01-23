@@ -9,7 +9,7 @@ class Operator(Punctuator):
     @classmethod
     def construct(cls, lexer):
         try:
-            token_string = lexer.take_token_string(cls.symbols(), 2)
+            token_string = lexer.take(cls.symbols(), 2)
             operator = Op(token_string)
             return Operator(operator)
         except ValueError as e:
