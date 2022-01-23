@@ -1,18 +1,26 @@
 from . import errors
 from .position.position import Position
 from .position.symbol_position import SymbolPosition
-from .tokens.token_types import TOKEN_TYPES
+from .tokens.punctuator import Punctuator
+from .tokens.operator import Operator
+from .tokens.constant import NumericalConstant
+from .tokens.keyword import Keyword
 
 class Lexer:
     def __init__(self, in_stream):
         self.in_stream = in_stream
         self.position = Position(in_stream, SymbolPosition(1, 1), SymbolPosition(1, 0))
-        self.symbol = self.in_stream.read_symbol()
         self.at_line_start = True
+        self.symbol = ""
         self.tokens = []
 
-    def advance(self):
+        self.skip()
+
+    def skip(self):
         self.symbol = self.in_stream.read_symbol()
+
+    def advance(self):
+        self.skip()
         self.position.end.advance()
 
     def take(self, symbols = None, max_len = None):
@@ -48,7 +56,7 @@ class Lexer:
 
         position = self.new_position()
 
-        for token_type in TOKEN_TYPES:
+        for token_type in (Punctuator, Operator, NumericalConstant, Keyword):
             if self.symbol in token_type.symbols():
                 token = token_type.construct(self)
                 token.position = position

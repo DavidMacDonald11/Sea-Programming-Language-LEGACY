@@ -1,5 +1,5 @@
 from enum import Enum, unique
-from ..token import Token
+from .token import Token
 
 class Punctuator(Token):
     @property
@@ -7,7 +7,7 @@ class Punctuator(Token):
         return self.punctuator
 
     def __repr__(self):
-        return f"Punctuator: {self.punctuator.value or 'EOF'}"
+        return f"P{{{self.punctuator.value or 'EOF'}}}"
 
     def __init__(self, punctuator, position = None):
         self.punctuator = punctuator
@@ -23,6 +23,10 @@ class Punctuator(Token):
 
 @unique
 class Punc(Enum):
+    INDENT = "\t"
+    NEWLINE = "\n"
     LPAREN = "("
     RPAREN = ")"
+    COLON = ":"
+    SEMICOLON = ";"
     EOF = ""

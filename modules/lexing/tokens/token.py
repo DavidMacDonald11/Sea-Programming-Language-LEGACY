@@ -6,11 +6,16 @@ class Token(ABC):
     def data(self):
         pass
 
+    @classmethod
+    @property
+    def label(cls):
+        return cls.__name__[0]
+
     def __init__(self, position = None):
         self.position = position
 
     def __repr__(self):
-        return f"{type(self).__name__}: {self.data}"
+        return f"{type(self).label}{{{self.data}}}"
 
     @classmethod
     @abstractmethod

@@ -1,5 +1,15 @@
 from lexing import errors
-from .constant import Constant
+from .token import Token
+
+class Constant(Token):
+    @classmethod
+    @property
+    def label(cls):
+        return "C"
+
+    def __init__(self, value, position = None):
+        self.value = value
+        super().__init__(position)
 
 class NumericalConstant(Constant):
     @property
