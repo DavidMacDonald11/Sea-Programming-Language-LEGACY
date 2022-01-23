@@ -1,10 +1,5 @@
-from .token import Token
-from .. import errors
-
-class Constant(Token):
-    def __init__(self, value, position = None):
-        self.value = value
-        super().__init__(position)
+from lexing import errors
+from .constant import Constant
 
 class NumericalConstant(Constant):
     @property

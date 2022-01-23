@@ -8,8 +8,6 @@ def interface(streams, debug, mode):
 
         LexerError.lexer = lexer = Lexer(streams.in_stream)
         lexer.make_tokens()
-
-        streams.out_stream.write("Done.\n")
     except SeaError as error:
         streams.error_stream.write(error)
     finally:

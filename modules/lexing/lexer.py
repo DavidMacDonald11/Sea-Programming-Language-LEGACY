@@ -1,9 +1,7 @@
+from . import errors
 from .position.position import Position
 from .position.symbol_position import SymbolPosition
-from .tokens.constant import NumericalConstant
-from .tokens.punctuator import Operator
-from .tokens.punctuator import Punctuator
-from . import errors
+from .tokens.token_types import TOKEN_TYPES
 
 class Lexer:
     def __init__(self, in_stream):
@@ -55,7 +53,7 @@ class Lexer:
 
         position = self.new_position()
 
-        for token_type in (Punctuator, NumericalConstant, Operator):
+        for token_type in TOKEN_TYPES:
             if self.symbol in token_type.symbols():
                 token = token_type.construct(self)
                 token.position = position
