@@ -1,4 +1,4 @@
-from position.position import Position
+from lexing.position.position import Position
 
 class SeaError(Exception):
     def __init__(self, position = None, message = ""):

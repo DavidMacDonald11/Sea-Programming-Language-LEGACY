@@ -1,8 +1,8 @@
-from position.position import Position
-from position.symbol_position import SymbolPosition
-from tokens.constant import NumericalConstant
-from tokens.punctuator import Operator
-from tokens.punctuator import Punctuator, Punc
+from .position.position import Position
+from .position.symbol_position import SymbolPosition
+from .tokens.constant import NumericalConstant
+from .tokens.punctuator import Operator
+from .tokens.punctuator import Punctuator
 from . import errors
 
 class Lexer:

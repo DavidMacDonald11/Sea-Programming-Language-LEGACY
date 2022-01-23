@@ -1,5 +1,5 @@
-from streams.holder import StreamHolder
-from streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
+from .streams.holder import StreamHolder
+from .streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 from . import general
 
 def interface(debug):

@@ -1,6 +1,6 @@
 from enum import Enum, unique
-from lexing import errors
 from .token import Token
+from .. import errors
 
 class Punctuator(Token):
     @property
