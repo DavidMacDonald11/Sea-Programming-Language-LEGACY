@@ -28,6 +28,13 @@ def interface(debug):
 
             streams.in_stream.buffer += "\n"
 
+            if buffer.rstrip()[-1] == ":":
+                buffer = ""
+
+                while buffer != "\n":
+                    buffer = input("...   ") + "\n"
+                    streams.in_stream.buffer += buffer
+
             general.interface(streams, debug, "i")
     except (KeyboardInterrupt, EOFError):
         print()
