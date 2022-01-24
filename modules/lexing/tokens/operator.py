@@ -59,3 +59,6 @@ class Op(Enum):
     GT = ">"
     LTE = "<="
     GTE = ">="
+
+    ACCESS = "."
+    POINTER_ACCESS = "->"

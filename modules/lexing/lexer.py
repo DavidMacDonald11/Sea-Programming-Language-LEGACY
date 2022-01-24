@@ -2,7 +2,7 @@ from . import errors
 from .position.position import Position
 from .position.symbol_position import SymbolPosition
 from .tokens.punctuator import Punctuator, Punc
-from .tokens.operator import Operator
+from .tokens.operator import Operator, Op
 from .tokens.constant import NumericalConstant
 from .tokens.keyword import Keyword
 
@@ -86,9 +86,13 @@ class Lexer:
 
         position = self.new_position()
 
-        for token_type in (Punctuator, Operator, NumericalConstant, Keyword):
+        for token_type in (Punctuator, NumericalConstant, Operator, Keyword):
             if self.symbol in token_type.symbols():
                 token = token_type.construct(self)
+
+                if token.matches(NumericalConstant, ("float", ".")):
+                    token = Operator(Op.ACCESS)
+
                 token.position = position
 
                 return token

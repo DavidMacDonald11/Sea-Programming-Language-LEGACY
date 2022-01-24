@@ -46,6 +46,8 @@ class Punc(Enum):
     NEWLINE = "\n"
     LPAREN = "("
     RPAREN = ")"
+    LBRACK = "["
+    RBRACK = "]"
     COLON = ":"
     SEMICOLON = ";"
     EOF = ""
