@@ -42,3 +42,13 @@ class PostfixDecrementOperatorNode(PostfixExpressionNode):
         pass
 
 # TODO Implement initializer list
+
+POSTFIX_MAKES = {
+    "postfix_expression": PostfixExpressionNode,
+    "index_operator": IndexOperatorNode,
+    "call_operator": CallOperatorNode,
+    "access_operator": AccessOperatorNode,
+    "pointer_access_operator": PointerAccessOperatorNode,
+    "postfix_increment_operator": PostfixIncrementOperatorNode,
+    "postfix_decrement_operator": PostfixDecrementOperatorNode
+}

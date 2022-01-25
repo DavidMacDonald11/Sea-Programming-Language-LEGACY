@@ -49,4 +49,10 @@ class ParentheticalExpressionNode(PrimaryExpressionNode):
 
         return node
 
-# TODO Implement string-literal
+PRIMARY_MAKES = {
+    "primary_expression": PrimaryExpressionNode,
+    "identifier": IdentifierNode,
+    "constant": ConstantNode,
+    "string_literal": StringLiteralNode,
+    "parenthetical_expression": ParentheticalExpressionNode
+}
