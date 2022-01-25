@@ -20,3 +20,6 @@ class StringLiteral(Constant):
     @classmethod
     def symbols(cls):
         return "'\""
+
+    def matches(self, what, *datas):
+        return False if what is Constant else super().matches(what, *datas)

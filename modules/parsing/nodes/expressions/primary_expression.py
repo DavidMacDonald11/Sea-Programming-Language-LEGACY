@@ -2,6 +2,7 @@ from parsing import errors
 from lexing.tokens.punctuator import Punc
 from lexing.tokens.constant import Constant
 from lexing.tokens.identifier import Identifier
+from lexing.tokens.string_literal import StringLiteral
 from ..node import Node
 
 class PrimaryExpressionNode(Node):
@@ -9,6 +10,7 @@ class PrimaryExpressionNode(Node):
     def construct(cls, parser):
         node = parser.make.identifier()
         node = node or parser.make.constant()
+        node = node or parser.make.string_literal()
 
         return node or parser.make.parenthetical_expression()
 
@@ -27,6 +29,11 @@ class ConstantNode(PrimaryExpressionNode):
     @classmethod
     def construct(cls, parser):
         return cls(parser.take()) if parser.token.matches(Constant) else None
+
+class StringLiteralNode(PrimaryExpressionNode):
+    @classmethod
+    def construct(cls, parser):
+        return cls(parser.take()) if parser.token.matches(StringLiteral) else None
 
 class ParentheticalExpressionNode(PrimaryExpressionNode):
     @classmethod

@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from .expressions.primary_expression import PrimaryExpressionNode
 from .expressions.primary_expression import IdentifierNode
 from .expressions.primary_expression import ConstantNode
+from .expressions.primary_expression import StringLiteralNode
 from .expressions.primary_expression import ParentheticalExpressionNode
 from .expressions.postfix_expression import IndexOperatorNode
 from .expressions.postfix_expression import CallOperatorNode
@@ -27,6 +28,7 @@ def make(node):
 MAKES = SimpleNamespace(
     identifier = make(IdentifierNode),
     constant = make(ConstantNode),
+    string_literal = make(StringLiteralNode),
     parenthetical_expression = make(ParentheticalExpressionNode),
     primary_expression = make(PrimaryExpressionNode),
     index_operator = make(IndexOperatorNode),
