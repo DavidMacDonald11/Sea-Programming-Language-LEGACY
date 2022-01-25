@@ -23,7 +23,7 @@ class Lexer:
         self.skip()
         self.position.end.advance()
 
-    def take(self, symbols = None, max_len = None):
+    def take(self, symbols = None, max_len = None, until = ""):
         if symbols is None:
             symbol = self.symbol
             self.advance()
@@ -32,8 +32,11 @@ class Lexer:
 
         token_string = ""
 
-        while self.symbol in symbols:
+        while symbols is True or self.symbol in symbols:
             token_string += self.take()
+
+            if until != "" and token_string[-len(until)] == until:
+                break
 
             if max_len is not None and len(token_string) == max_len:
                 break
@@ -49,6 +52,8 @@ class Lexer:
     def make_tokens(self):
         while self.symbol != "":
             self.tokens += [self.take_token()]
+
+        self.tokens += [Punctuator(Punc.EOF)]
 
     def check_spaces(self):
         is_space = self.symbol == " "

@@ -50,4 +50,7 @@ class Punc(Enum):
     RBRACK = "]"
     COLON = ":"
     SEMICOLON = ";"
+    COMMA = ","
+    SINGLE_QUOTE = "'"
+    DOUBLE_QUOTE = '"'
     EOF = ""
