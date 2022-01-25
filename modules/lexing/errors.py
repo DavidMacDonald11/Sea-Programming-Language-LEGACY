@@ -32,3 +32,7 @@ class IndentError(LexerError):
 class FloatError(LexerError):
     def get_message(self):
         return "A float cannot contain more than one decimal point."
+
+class UnterminatedStringError(LexerError):
+    def get_message(self):
+        return "Strings must be closed with the character used to open them."

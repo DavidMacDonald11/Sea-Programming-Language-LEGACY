@@ -2,6 +2,10 @@ from lexing import errors
 from .token import Token
 
 class Constant(Token):
+    @property
+    def data(self):
+        return self.value
+
     @classmethod
     @property
     def label(cls):
@@ -14,7 +18,7 @@ class Constant(Token):
 class NumericalConstant(Constant):
     @property
     def data(self):
-        data_type = "int" if self.is_int else "float"
+        data_type = "i" if self.is_int else "f"
         return (data_type, self.value)
 
     def __init__(self, is_int, value, position = None):

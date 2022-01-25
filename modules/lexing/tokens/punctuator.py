@@ -51,6 +51,4 @@ class Punc(Enum):
     COLON = ":"
     SEMICOLON = ";"
     COMMA = ","
-    SINGLE_QUOTE = "'"
-    DOUBLE_QUOTE = '"'
     EOF = ""

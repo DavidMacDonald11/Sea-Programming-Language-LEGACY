@@ -5,6 +5,9 @@ from .tokens.punctuator import Punctuator, Punc
 from .tokens.operator import Operator, Op
 from .tokens.constant import NumericalConstant
 from .tokens.keyword import Keyword
+from .tokens.string_literal import StringLiteral
+
+TOKENS = (Punctuator, NumericalConstant, Operator, Keyword, StringLiteral)
 
 class Lexer:
     def __init__(self, in_stream):
@@ -23,7 +26,7 @@ class Lexer:
         self.skip()
         self.position.end.advance()
 
-    def take(self, symbols = None, max_len = None, until = ""):
+    def take(self, symbols = None, max_len = None, until = None):
         if symbols is None:
             symbol = self.symbol
             self.advance()
@@ -35,7 +38,10 @@ class Lexer:
         while symbols is True or self.symbol in symbols:
             token_string += self.take()
 
-            if until != "" and token_string[-len(until)] == until:
+            if self.symbol == "":
+                break
+
+            if until is not None and until(token_string):
                 break
 
             if max_len is not None and len(token_string) == max_len:
@@ -91,7 +97,7 @@ class Lexer:
 
         position = self.new_position()
 
-        for token_type in (Punctuator, NumericalConstant, Operator, Keyword):
+        for token_type in TOKENS:
             if self.symbol in token_type.symbols():
                 token = token_type.construct(self)
 
