@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
 class Node(ABC):
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.position = tokens[0].position.copy()
-        self.position.end = tokens[-1].position.end.copy()
+    def __init__(self, pos_carrier1, pos_carrier2):
+        self.position = pos_carrier1.position.copy()
+
+        if pos_carrier2 is not None:
+            self.position.end = pos_carrier2.position.end.copy()
 
     def __repr__(self):
         return f"{type(self).__name__}{self.tokens}"

@@ -23,6 +23,9 @@ class Operator(Punctuator):
     def symbols(cls):
         return {operator.value for operator in Op}
 
+    def matches(self, what, *datas):
+        return False if what is Punctuator else super().matches(what, *datas)
+
 @unique
 class Op(Enum):
     PLUS = "+"
