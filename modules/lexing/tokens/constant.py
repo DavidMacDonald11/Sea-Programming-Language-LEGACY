@@ -18,7 +18,7 @@ class Constant(Token):
 class NumericalConstant(Constant):
     @property
     def data(self):
-        data_type = "i" if self.is_int else "f"
+        data_type = "int" if self.is_int else "float"
         return (data_type, self.value)
 
     def __init__(self, is_int, value, position = None):
