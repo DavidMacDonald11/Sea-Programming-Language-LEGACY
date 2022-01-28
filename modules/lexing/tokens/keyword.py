@@ -5,9 +5,6 @@ class Keyword(Identifier):
     def keyword(self):
         return self.identifier
 
-    def is_type_keyword(self):
-        return self.keyword in TYPE_KEYWORD
-
     @classmethod
     def construct(cls, lexer):
         token_string = lexer.take(cls.symbols())
@@ -23,9 +20,8 @@ class Keyword(Identifier):
 
         return None
 
-    def matches(self, what, *datas):
-        return False if what is Identifier else super().matches(what, *datas)
-
+    def matches_type(self, what):
+        return False if what is Identifier else super().matches_type(what)
 
 TYPE_KEYWORDS = { "int", "bool", "str", "float" }
 
@@ -40,7 +36,11 @@ SYNTAX_KEYWORDS = {
     "do",
     "break",
     "continue",
-    "pass"
+    "pass",
+    "return",
+    "in",
+    "size",
+    "of"
 }
 
 KEYWORDS = TYPE_KEYWORDS | BOOL_KEYWORDS | SYNTAX_KEYWORDS

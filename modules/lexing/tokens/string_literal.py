@@ -21,5 +21,5 @@ class StringLiteral(Constant):
     def symbols(cls):
         return "'\""
 
-    def matches(self, what, *datas):
-        return False if what is Constant else super().matches(what, *datas)
+    def matches_type(self, what):
+        return False if what is Constant else super().matches_type(what)

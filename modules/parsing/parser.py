@@ -8,7 +8,7 @@ class Parser:
 
     @property
     def token(self):
-        return self.tokens[min(self.i, len(self.tokens) - 1)]
+        return self.tokens[self.i]
 
     @property
     def make(self):
@@ -22,20 +22,15 @@ class Parser:
 
         set_parser(self)
 
-    def advance(self, amount = 1):
-        if amount < 1:
-            return
+    def advance(self):
+        if self.i < len(self.tokens) - 1:
+            self.i += 1
 
-        self.i += amount
+    def take(self):
+        token = self.token
+        self.advance()
 
-    def take(self, amount = 1):
-        if amount < 1:
-            return None
-
-        i = self.i
-        self.advance(amount)
-
-        return self.tokens[i:self.i] or [self.tokens[-1]]
+        return token
 
     def untake(self, amount = 1):
         if amount < 1:
@@ -43,29 +38,17 @@ class Parser:
 
         self.i = max(self.i - amount, 0)
 
-    def expecting(self, *datas, check_type = False):
-        for data in datas:
-            if check_type:
-                condition = isinstance(self.token, data)
-            else:
-                data_tuple = data if isinstance(data, (tuple, list)) else (data,)
-                condition = self.token.data in data_tuple
+    def expecting(self, *datas, what = None):
+        if not self.token.matches(what or type(self.token), *datas):
+            raise errors.ExpectedTokenError(what, *datas)
 
-            if not condition:
-                raise errors.ExpectedTokenError(data)
+        return self.take()
 
-            self.advance()
-
-        self.untake(len(datas))
-        return self.take(len(datas))
-
-    def wanting(self, *datas):
+    def wanting(self, *datas, what = None):
         try:
-            i = self.i
-            return self.expecting(*datas)
+            return self.expecting(*datas, what = what)
         except errors.ExpectedTokenError:
-            self.i = i
             return None
 
     def make_nodes(self):
-        self.ast = self.make.primary_expression()
+        self.ast = self.make.cast_expression()

@@ -19,12 +19,14 @@ class IncorrectBlockError(ParserError):
         return f"Found {self.depth} indents, but expected {self.expected}."
 
 class ExpectedTokenError(ParserError):
-    def __init__(self, expected, message = ""):
-        self.expected = expected
+    def __init__(self, what, *datas, message = ""):
+        self.what = what
+        self.datas = datas
         super().__init__(None, message)
 
     def get_message(self):
-        return f"Expected {self.expected}."
+        what = "a token" if self.what is None else f"a {self.what}"
+        return f"Expected {what} with value in {self.datas}."
 
 class PrimaryExpressionError(ParserError):
     def get_message(self):

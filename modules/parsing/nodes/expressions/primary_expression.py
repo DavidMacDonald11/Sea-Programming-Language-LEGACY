@@ -6,10 +6,6 @@ from lexing.tokens.string_literal import StringLiteral
 from ..node import Node
 
 class PrimaryExpressionNode(Node):
-    def __init__(self, tokens):
-        self.tokens = tokens
-        super().__init__(tokens[0], tokens[-1])
-
     @classmethod
     def construct(cls, parser):
         node = parser.make.identifier()
@@ -27,31 +23,31 @@ class PrimaryExpressionNode(Node):
 class IdentifierNode(PrimaryExpressionNode):
     @classmethod
     def construct(cls, parser):
-        return cls(parser.take()) if parser.token.matches(Identifier) else None
+        return cls(parser.take()) if parser.token.matches_type(Identifier) else None
 
 class ConstantNode(PrimaryExpressionNode):
     @classmethod
     def construct(cls, parser):
-        return cls(parser.take()) if parser.token.matches(Constant) else None
+        return cls(parser.take()) if parser.token.matches_type(Constant) else None
 
 class StringLiteralNode(PrimaryExpressionNode):
     @classmethod
     def construct(cls, parser):
-        return cls(parser.take()) if parser.token.matches(StringLiteral) else None
+        return cls(parser.take()) if parser.token.matches_type(StringLiteral) else None
 
 class ParentheticalExpressionNode(PrimaryExpressionNode):
     @classmethod
     def construct(cls, parser):
         try:
-            parser.expecting(Punc.LPAREN)
+            left = parser.expecting(Punc.LPAREN)
         except errors.ExpectedTokenError as e:
             raise errors.PrimaryExpressionError(e.position, e.message) from e
 
         # TODO Replace with expression
-        node = parser.make.primary_expression()
-        parser.expecting(Punc.RPAREN)
+        expression = parser.make.primary_expression()
+        right = parser.expecting(Punc.RPAREN)
 
-        return node
+        return ParentheticalExpressionNode(left, expression, right)
 
 PRIMARY_MAKES = {
     "primary_expression": PrimaryExpressionNode,

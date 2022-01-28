@@ -1,8 +1,9 @@
 from functools import wraps
 from types import SimpleNamespace
 from .expressions.primary_expression import PRIMARY_MAKES
-from .expressions.postfix_expression import POSTFIX_MAKES
-from .expressions.unary_expression import UNARY_MAKES
+from .expressions.postfix_expression import PostfixExpressionNode
+from .expressions.unary_expression import UnaryExpressionNode
+from .expressions.cast_expression import CastExpressionNode
 
 PARSER = []
 
@@ -22,6 +23,9 @@ def make(makes):
 
 MAKES = SimpleNamespace(
     **make(PRIMARY_MAKES),
-    **make(POSTFIX_MAKES),
-    **make(UNARY_MAKES)
+    **make({
+        "postfix_expression": PostfixExpressionNode,
+        "unary_expression": UnaryExpressionNode,
+        "cast_expression": CastExpressionNode
+    })
 )

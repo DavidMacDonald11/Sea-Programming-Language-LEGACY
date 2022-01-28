@@ -27,10 +27,11 @@ class Token(ABC):
     def symbols(cls):
         pass
 
+    def matches_type(self, what):
+        return isinstance(self, what)
+
+    def matches_data(self, *datas):
+        return len(datas) == 0 or self.data in datas
+
     def matches(self, what, *datas):
-        is_what = isinstance(self, what)
-
-        if len(datas) == 0:
-            return is_what
-
-        return is_what and self.data in datas
+        return self.matches_type(what) and self.matches_data(*datas)
