@@ -3,6 +3,15 @@ from lexing.tokens.punctuator import Punc
 from ..node import Node
 
 class PostfixExpressionNode(Node):
+    @property
+    def expression(self):
+        return self.components[0]
+
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
+        return f"{self.node_name}{expression}"
+
     @classmethod
     def construct(cls, parser):
         def recursive_construct(expression = None, finished = False):
@@ -13,7 +22,7 @@ class PostfixExpressionNode(Node):
                 return expression
 
             if parser.token.matches_data(Punc.LBRACK):
-                node = PostfixExpressionNode(
+                node = PostfixIndexExpressionNode(
                     expression,
                     parser.take(),
                     parser.make.expression(),
@@ -23,7 +32,7 @@ class PostfixExpressionNode(Node):
                 return recursive_construct(node)
 
             if parser.token.matches_data(Punc.LPAREN):
-                node = PostfixExpressionNode(
+                node = PostfixCallExpressionNode(
                     expression,
                     parser.take(),
                     # TODO make argument expression list
@@ -33,7 +42,7 @@ class PostfixExpressionNode(Node):
                 return recursive_construct(node)
 
             if parser.token.matches_data(Op.ACCESS, Op.POINTER_ACCESS):
-                node = PostfixExpressionNode(
+                node = PostfixAccessExpressionNode(
                     expression,
                     parser.take(),
                     parser.make.identifier()
@@ -42,7 +51,7 @@ class PostfixExpressionNode(Node):
                 return recursive_construct(node)
 
             if parser.token.matches_data(Op.INCREMENT, Op.DECREMENT):
-                node = PostfixExpressionNode(expression, parser.take())
+                node = PostfixDeviationExpressionNode(expression, parser.take())
                 return recursive_construct(node)
 
             return recursive_construct(expression, True)
@@ -54,3 +63,57 @@ class PostfixExpressionNode(Node):
 
     def transpile(self):
         pass
+
+class PostfixIndexExpressionNode(PostfixExpressionNode):
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        lbrace = f"{spacing}{down}{self.components[1]}"
+        expression = f"{spacing}{down}{self.expression.tree_repr(depth + 1)}"
+        rbrace = f"{spacing}{bottom}{self.components[-1]}"
+
+        return f"{self.node_name}{lbrace}{expression}{rbrace}"
+
+    @classmethod
+    def construct(cls, parser):
+        raise NotImplementedError()
+
+class PostfixCallExpressionNode(PostfixExpressionNode):
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        identifier = f"{spacing}{down}{self.expression.tree_repr(depth + 1)}"
+        lparen = f"{spacing}{down}{self.components[1]}"
+        rparen = f"{spacing}{bottom}{self.components[-1]}"
+
+        return f"{self.node_name}{identifier}{lparen}{rparen}"
+
+    @classmethod
+    def construct(cls, parser):
+        raise NotImplementedError()
+
+class PostfixDeviationExpressionNode(PostfixExpressionNode):
+    @property
+    def operator(self):
+        return self.components[1]
+
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        beginning = super().tree_repr(depth).replace("└", "├", 1)
+        operator = f"{spacing}{bottom}{self.operator}"
+
+        return f"{beginning}{operator}"
+
+    @classmethod
+    def construct(cls, parser):
+        raise NotImplementedError()
+
+class PostfixAccessExpressionNode(PostfixDeviationExpressionNode):
+    @property
+    def identifier(self):
+        return self.components[-1]
+
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        beginning = super().tree_repr(depth)[::-1].replace("└", "├", 1)[::-1]
+        identifier = f"{spacing}{bottom}{self.identifier.tree_repr(depth + 1)}"
+
+        return f"{beginning}{identifier}"

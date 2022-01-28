@@ -14,6 +14,21 @@ UNARY_OPERATORS = (
 # TODO Implment align of?
 
 class UnaryExpressionNode(Node):
+    @property
+    def operator(self):
+        return self.components[0]
+
+    @property
+    def expression(self):
+        return self.components[-1]
+
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        operator = f"{spacing}{down}{self.operator if self.operator != 'size' else 'size of'}"
+        expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
+
+        return f"{self.node_name}{operator}{expression}"
+
     @classmethod
     def construct(cls, parser):
         if parser.token.matches_data(Op.INCREMENT, Op.DECREMENT):

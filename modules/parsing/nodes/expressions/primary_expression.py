@@ -21,21 +21,51 @@ class PrimaryExpressionNode(Node):
         pass
 
 class IdentifierNode(PrimaryExpressionNode):
+    @property
+    def identifier(self):
+        return self.components[0]
+
+    def tree_repr(self, depth = 1):
+        return f"{self.node_name}({self.identifier})"
+
     @classmethod
     def construct(cls, parser):
         return cls(parser.take()) if parser.token.matches_type(Identifier) else None
 
 class ConstantNode(PrimaryExpressionNode):
+    @property
+    def constant(self):
+        return self.components[0]
+
+    def tree_repr(self, depth):
+        return f"{self.node_name}({self.constant})"
+
     @classmethod
     def construct(cls, parser):
         return cls(parser.take()) if parser.token.matches_type(Constant) else None
 
 class StringLiteralNode(PrimaryExpressionNode):
+    @property
+    def string_literal(self):
+        return self.components[0]
+
+    def tree_repr(self, depth):
+        return f"{self.node_name}({self.string_literal})"
+
     @classmethod
     def construct(cls, parser):
         return cls(parser.take()) if parser.token.matches_type(StringLiteral) else None
 
 class ParentheticalExpressionNode(PrimaryExpressionNode):
+    @property
+    def expression(self):
+        return self.components[1]
+
+    def tree_repr(self, depth):
+        spacing, down, bottom = self.tree_parts(depth)
+        expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
+        return f"{self.node_name}{expression}"
+
     @classmethod
     def construct(cls, parser):
         try:
@@ -48,10 +78,7 @@ class ParentheticalExpressionNode(PrimaryExpressionNode):
 
         return ParentheticalExpressionNode(left, expression, right)
 
-# TODO delete expression declaration
-
 PRIMARY_MAKES = {
-    "expression": PrimaryExpressionNode,
     "primary_expression": PrimaryExpressionNode,
     "identifier": IdentifierNode,
     "constant": ConstantNode,

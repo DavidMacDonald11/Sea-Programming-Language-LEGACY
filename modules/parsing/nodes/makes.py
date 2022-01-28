@@ -26,6 +26,9 @@ MAKES = SimpleNamespace(
     **make({
         "postfix_expression": PostfixExpressionNode,
         "unary_expression": UnaryExpressionNode,
-        "cast_expression": CastExpressionNode
+        "cast_expression": CastExpressionNode,
+        "expression": CastExpressionNode
     })
 )
+
+# TODO replace expression
