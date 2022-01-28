@@ -4,6 +4,7 @@ from .expressions.primary_expression import PRIMARY_MAKES
 from .expressions.postfix_expression import PostfixExpressionNode
 from .expressions.unary_expression import UnaryExpressionNode
 from .expressions.cast_expression import CastExpressionNode
+from .expressions.multiplicative_expression import MultiplicativeExpressionNode
 
 PARSER = []
 
@@ -27,7 +28,8 @@ MAKES = SimpleNamespace(
         "postfix_expression": PostfixExpressionNode,
         "unary_expression": UnaryExpressionNode,
         "cast_expression": CastExpressionNode,
-        "expression": CastExpressionNode
+        "multiplicative_expression": MultiplicativeExpressionNode,
+        "expression": MultiplicativeExpressionNode
     })
 )
 

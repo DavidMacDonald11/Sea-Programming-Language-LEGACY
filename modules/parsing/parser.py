@@ -51,4 +51,4 @@ class Parser:
             return None
 
     def make_nodes(self):
-        self.ast = self.make.cast_expression()
+        self.ast = self.make.expression()

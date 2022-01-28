@@ -18,13 +18,15 @@ class CastExpressionNode(Node):
 
         return f"{self.node_name}{cast_type}{expression}"
 
+    # TODO ensure expression is the correct type of node to make
+
     @classmethod
     def construct(cls, parser):
         if parser.token.matches_data(*TYPE_KEYWORDS):
             return CastExpressionNode(
                 parser.take(),
                 parser.expecting(Punc.LPAREN),
-                parser.make.cast_expression(),
+                parser.make.expression(),
                 parser.expecting(Punc.RPAREN)
             )
 
