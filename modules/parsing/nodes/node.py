@@ -35,9 +35,14 @@ class Node(ABC):
         result = [""] * len(lines)
 
         for j, line in enumerate(lines):
+            table_i = -1
+
             for i, symbol in enumerate(line):
-                # TODO fix for i's >= 63
-                result[j] += table[j][i // 7 - 1] if i % 8 == 7 else symbol
+                if i % 8 == 7:
+                    table_i += 1
+                    result[j] += table[j][table_i]
+                else:
+                    result[j] += symbol
 
         return "\n".join(result)
 
