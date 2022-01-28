@@ -43,13 +43,15 @@ class ParentheticalExpressionNode(PrimaryExpressionNode):
         except errors.ExpectedTokenError as e:
             raise errors.PrimaryExpressionError(e.position, e.message) from e
 
-        # TODO Replace with expression
-        expression = parser.make.primary_expression()
+        expression = parser.make.expression()
         right = parser.expecting(Punc.RPAREN)
 
         return ParentheticalExpressionNode(left, expression, right)
 
+# TODO delete expression declaration
+
 PRIMARY_MAKES = {
+    "expression": PrimaryExpressionNode,
     "primary_expression": PrimaryExpressionNode,
     "identifier": IdentifierNode,
     "constant": ConstantNode,
