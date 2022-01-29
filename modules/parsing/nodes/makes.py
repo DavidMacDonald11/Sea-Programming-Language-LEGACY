@@ -8,6 +8,10 @@ from .expressions.unary_expression import UnaryExpressionNode
 from .expressions.cast_expression import CastExpressionNode
 from .expressions.multiplicative_expression import MultiplicativeExpressionNode
 from .expressions.additive_expression import AdditiveExpressionNode
+from .expressions.shift_expression import ShiftExpressionNode
+from .expressions.bitwise_and_expression import BitwiseAndExpressionNode
+from .expressions.bitwise_xor_expression import BitwiseXorExpressionNode
+from .expressions.bitwise_or_expression import BitwiseOrExpressionNode
 
 PARSER = []
 
@@ -35,8 +39,12 @@ MAKES = SimpleNamespace(
         "cast_expression": CastExpressionNode,
         "multiplicative_expression": MultiplicativeExpressionNode,
         "additive_expression": AdditiveExpressionNode,
-        "expression": AdditiveExpressionNode,
-        "assignment_expression": AdditiveExpressionNode
+        "shift_expression": ShiftExpressionNode,
+        "bitwise_and_expression": BitwiseAndExpressionNode,
+        "bitwise_xor_expression": BitwiseXorExpressionNode,
+        "bitwise_or_expression": BitwiseOrExpressionNode,
+        "expression": BitwiseOrExpressionNode,
+        "assignment_expression": BitwiseOrExpressionNode
     })
 )
 
