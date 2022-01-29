@@ -6,10 +6,6 @@ from ..node import Node
 
 class PostfixExpressionNode(Node):
     @property
-    def node_level(self):
-        return 1
-
-    @property
     def expression(self):
         return self.components[0]
 
