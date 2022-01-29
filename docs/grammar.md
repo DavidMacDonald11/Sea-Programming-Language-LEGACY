@@ -32,6 +32,11 @@ Specifically, I utilized [Microsoft's C Language Syntax Summary](https://docs.mi
     postfix-expression </i><b>--</b><i>
 </i></pre>
 
+<pre><i>argument-expression-list:
+    assignment-expression
+    argument-expression-list </i><b>,</b><i> assignment-expression
+</i></pre>
+
 <pre><i>prefix-deviation-expression:
     postfix-expression
     </i><b>++</b><i> prefix-deviation-expression
