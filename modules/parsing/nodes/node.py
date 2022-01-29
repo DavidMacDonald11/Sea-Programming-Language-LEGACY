@@ -7,6 +7,10 @@ class Node(ABC):
     def node_name(self):
         return type(self).__name__[:-4]
 
+    @property
+    def node_level(self):
+        return 1000
+
     def __init__(self, *components):
         self.components = components
         self.position = components[0].position.copy()

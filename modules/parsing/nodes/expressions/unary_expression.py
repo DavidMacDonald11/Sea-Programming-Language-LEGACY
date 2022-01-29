@@ -10,7 +10,6 @@ UNARY_OPERATORS = (
     Op.MULTIPLY
 )
 
-# TODO add not keyword with correct priority
 # TODO Implment align of?
 
 class UnaryExpressionNode(Node):
@@ -31,9 +30,6 @@ class UnaryExpressionNode(Node):
 
     @classmethod
     def construct(cls, parser):
-        if parser.token.matches_data(Op.INCREMENT, Op.DECREMENT):
-            return UnaryExpressionNode(parser.take(), parser.make.unary_expression())
-
         if parser.token.matches_data(*UNARY_OPERATORS):
             return UnaryExpressionNode(parser.take(), parser.make.cast_expression())
 

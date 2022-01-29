@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from .expressions.primary_expression import PRIMARY_MAKES
 from .expressions.postfix_expression import PostfixExpressionNode
 from .expressions.argument_expression_list import ArgumentExpressionListNode
+from .expressions.prefix_deviation_expression import PrefixDeviationExpressionNode
 from .expressions.exponential_expression import ExponentialExpressionNode
 from .expressions.unary_expression import UnaryExpressionNode
 from .expressions.cast_expression import CastExpressionNode
@@ -17,6 +18,8 @@ from .expressions.logical_not_expression import LogicalNotExpressionNode
 from .expressions.logical_and_expression import LogicalAndExpressionNode
 from .expressions.logical_or_expression import LogicalOrExpressionNode
 from .expressions.conditional_expression import ConditionalExpressionNode
+from .expressions.assignment_expression import AssignmentExpressionNode
+from .expressions.expression import ExpressionNode
 
 PARSER = []
 
@@ -39,6 +42,7 @@ MAKES = SimpleNamespace(
     **make({
         "postfix_expression": PostfixExpressionNode,
         "argument_expression_list": ArgumentExpressionListNode,
+        "prefix_deviation_expression": PrefixDeviationExpressionNode,
         "exponential_expression": ExponentialExpressionNode,
         "unary_expression": UnaryExpressionNode,
         "cast_expression": CastExpressionNode,
@@ -53,10 +57,8 @@ MAKES = SimpleNamespace(
         "logical_and_expression": LogicalAndExpressionNode,
         "logical_or_expression": LogicalOrExpressionNode,
         "conditional_expression": ConditionalExpressionNode,
-        "expression": ConditionalExpressionNode,
-        "assignment_expression": ConditionalExpressionNode
+        "constant_expression": ConditionalExpressionNode,
+        "assignment_expression": AssignmentExpressionNode,
+        "expression": ExpressionNode
     })
 )
-
-# TODO replace expression
-# TODO replace assignment expression

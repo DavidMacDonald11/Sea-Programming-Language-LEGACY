@@ -6,6 +6,10 @@ from lexing.tokens.string_literal import StringLiteral
 from ..node import Node
 
 class PrimaryExpressionNode(Node):
+    @property
+    def node_level(self):
+        return 0
+
     @classmethod
     def construct(cls, parser):
         node = parser.make.identifier()

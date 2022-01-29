@@ -4,7 +4,7 @@ from .binary_expression import BinaryExpressionNode
 class ExponentialExpressionNode(BinaryExpressionNode):
     @classmethod
     def construct_info(cls, parser):
-        return (parser.make.postfix_expression,
+        return (parser.make.prefix_deviation_expression,
                 (Op.POWER,),
                 parser.make.cast_expression)
 
