@@ -19,6 +19,7 @@ class Parser:
         self.depth = 0
         self.i = 0
         self.ast = None
+        self.cache = None
 
         set_parser(self)
 

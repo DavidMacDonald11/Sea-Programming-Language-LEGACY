@@ -1,4 +1,3 @@
-from lexing.tokens.operator import Op
 from .binary_expression import BinaryExpressionNode
 
 class LogicalAndExpressionNode(BinaryExpressionNode):

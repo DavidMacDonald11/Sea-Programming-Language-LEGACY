@@ -1,4 +1,3 @@
-from types import SimpleNamespace
 from lexing.tokens.operator import Op
 from ..node import Node
 

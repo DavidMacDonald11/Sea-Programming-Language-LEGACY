@@ -62,7 +62,7 @@ class ParentheticalExpressionNode(PrimaryExpressionNode):
         return self.components[1]
 
     def tree_repr(self, depth):
-        spacing, down, bottom = self.tree_parts(depth)
+        spacing, _, bottom = self.tree_parts(depth)
         expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
         return f"{self.node_name}{expression}"
 

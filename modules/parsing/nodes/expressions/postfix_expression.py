@@ -10,7 +10,7 @@ class PostfixExpressionNode(Node):
         return self.components[0]
 
     def tree_repr(self, depth):
-        spacing, down, bottom = self.tree_parts(depth)
+        spacing, _, bottom = self.tree_parts(depth)
         expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
         return f"{self.node_name}{expression}"
 
@@ -23,46 +23,15 @@ class PostfixExpressionNode(Node):
             if finished:
                 return expression
 
-            if parser.token.matches_data(Punc.LBRACK):
-                node = PostfixIndexExpressionNode(
-                    expression,
-                    parser.take(),
-                    parser.make.expression(),
-                    parser.expecting(Punc.RBRACK)
-                )
+            parser.cache = expression
 
-                return recursive_construct(node)
+            node = PostfixIndexExpressionNode.construct(parser)
+            node = node or PostfixCallExpressionNode.construct(parser)
+            node = node or PostfixAccessExpressionNode.construct(parser)
+            node = node or PostfixDeviationExpressionNode.construct(parser)
 
-            if parser.token.matches_data(Punc.LPAREN):
-                lparen = parser.take()
-                arguments = None
-
-                if not parser.token.matches_data(Punc.RPAREN):
-                    arguments = parser.make.argument_expression_list()
-
-                node = PostfixCallExpressionNode(
-                    expression,
-                    lparen,
-                    arguments,
-                    parser.expecting(Punc.RPAREN)
-                )
-
-                return recursive_construct(node)
-
-            if parser.token.matches_data(Op.ACCESS, Op.POINTER_ACCESS):
-                node = PostfixAccessExpressionNode(
-                    expression,
-                    parser.take(),
-                    parser.make.identifier()
-                )
-
-                return recursive_construct(node)
-
-            if parser.token.matches_data(Op.INCREMENT, Op.DECREMENT):
-                node = PostfixDeviationExpressionNode(expression, parser.take())
-                return recursive_construct(node)
-
-            return recursive_construct(expression, True)
+            condition = node is None
+            return recursive_construct(expression if condition else node, condition)
 
         return recursive_construct()
 
@@ -83,7 +52,15 @@ class PostfixIndexExpressionNode(PostfixExpressionNode):
 
     @classmethod
     def construct(cls, parser):
-        raise NotImplementedError()
+        if not parser.token.matches_data(Punc.LBRACK):
+            return None
+
+        return PostfixIndexExpressionNode(
+            parser.cache,
+            parser.take(),
+            parser.make.expression(),
+            parser.expecting(Punc.RBRACK)
+        )
 
 class PostfixCallExpressionNode(PostfixExpressionNode):
     @property
@@ -104,7 +81,21 @@ class PostfixCallExpressionNode(PostfixExpressionNode):
 
     @classmethod
     def construct(cls, parser):
-        raise NotImplementedError()
+        if not parser.token.matches_data(Punc.LPAREN):
+            return None
+
+        lparen = parser.take()
+        arguments = None
+
+        if not parser.token.matches_data(Punc.RPAREN):
+            arguments = parser.make.argument_expression_list()
+
+        return PostfixCallExpressionNode(
+            parser.cache,
+            lparen,
+            arguments,
+            parser.expecting(Punc.RPAREN)
+        )
 
 class PostfixDeviationExpressionNode(PostfixExpressionNode):
     @property
@@ -112,7 +103,7 @@ class PostfixDeviationExpressionNode(PostfixExpressionNode):
         return self.components[1]
 
     def tree_repr(self, depth):
-        spacing, down, bottom = self.tree_parts(depth)
+        spacing, _, bottom = self.tree_parts(depth)
         beginning = super().tree_repr(depth).replace("└", "├", 1)
         operator = f"{spacing}{bottom}{self.operator}"
 
@@ -120,7 +111,10 @@ class PostfixDeviationExpressionNode(PostfixExpressionNode):
 
     @classmethod
     def construct(cls, parser):
-        raise NotImplementedError()
+        if not parser.token.matches_data(Op.INCREMENT, Op.DECREMENT):
+            return None
+
+        return PostfixDeviationExpressionNode(parser.cache, parser.take())
 
 class PostfixAccessExpressionNode(PostfixDeviationExpressionNode):
     @property
@@ -128,8 +122,19 @@ class PostfixAccessExpressionNode(PostfixDeviationExpressionNode):
         return self.components[-1]
 
     def tree_repr(self, depth):
-        spacing, down, bottom = self.tree_parts(depth)
+        spacing, _, bottom = self.tree_parts(depth)
         beginning = super().tree_repr(depth)[::-1].replace("└", "├", 1)[::-1]
         identifier = f"{spacing}{bottom}{self.identifier.tree_repr(depth + 1)}"
 
         return f"{beginning}{identifier}"
+
+    @classmethod
+    def construct(cls, parser):
+        if not parser.token.matches_data(Op.ACCESS, Op.POINTER_ACCESS):
+            return None
+
+        return PostfixAccessExpressionNode(
+            parser.cache,
+            parser.take(),
+            parser.make.identifier()
+        )

@@ -1,6 +1,5 @@
 import re
 from abc import ABC, abstractmethod
-from functools import wraps
 
 class Node(ABC):
     @property
@@ -46,8 +45,9 @@ class Node(ABC):
 
         return "\n".join(result)
 
+    @abstractmethod
     def tree_repr(self, depth):
-        return f"Implement tree_repr() for {self.node_name} class."
+        pass
 
     def tree_parts(self, depth):
         return "\n" + "       |" * depth, "\b├── ", "\b└── "
