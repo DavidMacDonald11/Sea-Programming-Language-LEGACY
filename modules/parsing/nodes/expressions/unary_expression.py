@@ -10,7 +10,7 @@ UNARY_OPERATORS = (
     Op.MULTIPLY
 )
 
-# TODO Implment align of?
+# TODO Implement align of?
 
 class UnaryExpressionNode(Node):
     @property
@@ -23,10 +23,11 @@ class UnaryExpressionNode(Node):
 
     def tree_repr(self, depth):
         spacing, down, bottom = self.tree_parts(depth)
-        operator = f"{spacing}{down}{self.operator if self.operator != 'size' else 'size of'}"
+        operator = f"{spacing}{down}{self.operator}"
+        operator2 = "" if len(self.components) < 3 else f"{spacing}{down}{self.components[1]}"
         expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
 
-        return f"{self.node_name}{operator}{expression}"
+        return f"{self.node_name}{operator}{operator2}{expression}"
 
     @classmethod
     def construct(cls, parser):

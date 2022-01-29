@@ -2,6 +2,8 @@ from lexing.tokens.operator import Op
 from lexing.tokens.punctuator import Punc
 from ..node import Node
 
+# TODO add initializer lists?
+
 class PostfixExpressionNode(Node):
     @property
     def node_level(self):
