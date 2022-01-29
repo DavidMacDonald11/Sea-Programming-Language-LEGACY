@@ -12,6 +12,10 @@ from .expressions.shift_expression import ShiftExpressionNode
 from .expressions.bitwise_and_expression import BitwiseAndExpressionNode
 from .expressions.bitwise_xor_expression import BitwiseXorExpressionNode
 from .expressions.bitwise_or_expression import BitwiseOrExpressionNode
+from .expressions.comparison_expression import ComparisonExpressionNode
+from .expressions.logical_not_expression import LogicalNotExpressionNode
+from .expressions.logical_and_expression import LogicalAndExpressionNode
+from .expressions.logical_or_expression import LogicalOrExpressionNode
 
 PARSER = []
 
@@ -43,8 +47,12 @@ MAKES = SimpleNamespace(
         "bitwise_and_expression": BitwiseAndExpressionNode,
         "bitwise_xor_expression": BitwiseXorExpressionNode,
         "bitwise_or_expression": BitwiseOrExpressionNode,
-        "expression": BitwiseOrExpressionNode,
-        "assignment_expression": BitwiseOrExpressionNode
+        "comparison_expression": ComparisonExpressionNode,
+        "logical_not_expression": LogicalNotExpressionNode,
+        "logical_and_expression": LogicalAndExpressionNode,
+        "logical_or_expression": LogicalOrExpressionNode,
+        "expression": LogicalOrExpressionNode,
+        "assignment_expression": LogicalOrExpressionNode
     })
 )
 
