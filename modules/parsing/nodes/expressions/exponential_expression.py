@@ -1,44 +1,12 @@
 from lexing.tokens.operator import Op
-from ..node import Node
+from .binary_expression import BinaryExpressionNode
 
-class ExponentialExpressionNode(Node):
-    @property
-    def left(self):
-        return self.components[0]
-
-    @property
-    def right(self):
-        return self.components[2]
-
-    def tree_repr(self, depth):
-        spacing, down, bottom = self.tree_parts(depth)
-        left = f"{spacing}{down}{self.left.tree_repr(depth + 1)}"
-        operator = f"{spacing}{down}{self.components[1]}"
-        right = f"{spacing}{bottom}{self.right.tree_repr(depth + 1)}"
-
-        return f"{self.node_name}{left}{operator}{right}"
-
+class ExponentialExpressionNode(BinaryExpressionNode):
     @classmethod
-    def construct(cls, parser):
-        def recursive_construct(expression = None, finished = False):
-            if expression is None:
-                return recursive_construct(parser.make.postfix_expression())
-
-            if finished:
-                return expression
-
-            if not parser.token.matches_data(Op.POWER):
-                return recursive_construct(expression, True)
-
-            node = ExponentialExpressionNode(
-                expression,
-                parser.take(),
-                parser.make.cast_expression()
-            )
-
-            return recursive_construct(node)
-
-        return recursive_construct()
+    def construct_info(cls, parser):
+        return (parser.make.postfix_expression,
+                (Op.POWER,),
+                parser.make.cast_expression)
 
     def interpret(self):
         pass
