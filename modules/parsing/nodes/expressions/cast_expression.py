@@ -14,9 +14,11 @@ class CastExpressionNode(Node):
     def tree_repr(self, depth):
         spacing, down, bottom = self.tree_parts(depth)
         cast_type = f"{spacing}{down}{self.cast_type}"
-        expression = f"{spacing}{bottom}{self.expression.tree_repr(depth + 1)}"
+        lparen = f"{spacing}{down}{self.components[1]}"
+        expression = f"{spacing}{down}{self.expression.tree_repr(depth + 1)}"
+        rparen = f"{spacing}{bottom}{self.components[-1]}"
 
-        return f"{self.node_name}{cast_type}{expression}"
+        return f"{self.node_name}{cast_type}{lparen}{expression}{rparen}"
 
     # TODO ensure expression is the correct type of node to make
 

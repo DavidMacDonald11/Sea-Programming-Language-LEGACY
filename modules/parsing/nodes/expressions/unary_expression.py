@@ -44,7 +44,7 @@ class UnaryExpressionNode(Node):
                 parser.make.unary_expression()
                 )
 
-        return parser.make.postfix_expression()
+        return parser.make.exponential_expression()
 
     def interpret(self):
         pass

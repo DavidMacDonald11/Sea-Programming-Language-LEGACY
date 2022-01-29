@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from .expressions.primary_expression import PRIMARY_MAKES
 from .expressions.postfix_expression import PostfixExpressionNode
 from .expressions.argument_expression_list import ArgumentExpressionListNode
+from .expressions.exponential_expression import ExponentialExpressionNode
 from .expressions.unary_expression import UnaryExpressionNode
 from .expressions.cast_expression import CastExpressionNode
 from .expressions.multiplicative_expression import MultiplicativeExpressionNode
@@ -28,6 +29,7 @@ MAKES = SimpleNamespace(
     **make({
         "postfix_expression": PostfixExpressionNode,
         "argument_expression_list": ArgumentExpressionListNode,
+        "exponential_expression": ExponentialExpressionNode,
         "unary_expression": UnaryExpressionNode,
         "cast_expression": CastExpressionNode,
         "multiplicative_expression": MultiplicativeExpressionNode,
