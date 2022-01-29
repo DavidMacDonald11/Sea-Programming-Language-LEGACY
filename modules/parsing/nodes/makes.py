@@ -2,6 +2,7 @@ from functools import wraps
 from types import SimpleNamespace
 from .expressions.primary_expression import PRIMARY_MAKES
 from .expressions.postfix_expression import PostfixExpressionNode
+from .expressions.argument_expression_list import ArgumentExpressionListNode
 from .expressions.unary_expression import UnaryExpressionNode
 from .expressions.cast_expression import CastExpressionNode
 from .expressions.multiplicative_expression import MultiplicativeExpressionNode
@@ -26,11 +27,14 @@ MAKES = SimpleNamespace(
     **make(PRIMARY_MAKES),
     **make({
         "postfix_expression": PostfixExpressionNode,
+        "argument_expression_list": ArgumentExpressionListNode,
         "unary_expression": UnaryExpressionNode,
         "cast_expression": CastExpressionNode,
         "multiplicative_expression": MultiplicativeExpressionNode,
-        "expression": MultiplicativeExpressionNode
+        "expression": MultiplicativeExpressionNode,
+        "assignment_expression": MultiplicativeExpressionNode
     })
 )
 
 # TODO replace expression
+# TODO replace assignment expression

@@ -32,10 +32,16 @@ class PostfixExpressionNode(Node):
                 return recursive_construct(node)
 
             if parser.token.matches_data(Punc.LPAREN):
+                lparen = parser.take()
+                arguments = None
+
+                if not parser.token.matches_data(Punc.RPAREN):
+                    arguments = parser.make.argument_expression_list()
+
                 node = PostfixCallExpressionNode(
                     expression,
-                    parser.take(),
-                    # TODO make argument expression list
+                    lparen,
+                    arguments,
                     parser.expecting(Punc.RPAREN)
                 )
 
@@ -78,13 +84,21 @@ class PostfixIndexExpressionNode(PostfixExpressionNode):
         raise NotImplementedError()
 
 class PostfixCallExpressionNode(PostfixExpressionNode):
+    @property
+    def arguments(self):
+        return self.components[2]
+
     def tree_repr(self, depth):
         spacing, down, bottom = self.tree_parts(depth)
         identifier = f"{spacing}{down}{self.expression.tree_repr(depth + 1)}"
         lparen = f"{spacing}{down}{self.components[1]}"
         rparen = f"{spacing}{bottom}{self.components[-1]}"
+        arguments = ""
 
-        return f"{self.node_name}{identifier}{lparen}{rparen}"
+        if self.arguments is not None:
+            arguments = f"{spacing}{down}{self.arguments.tree_repr(depth + 1)}"
+
+        return f"{self.node_name}{identifier}{lparen}{arguments}{rparen}"
 
     @classmethod
     def construct(cls, parser):
