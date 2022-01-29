@@ -16,6 +16,7 @@ from .expressions.comparison_expression import ComparisonExpressionNode
 from .expressions.logical_not_expression import LogicalNotExpressionNode
 from .expressions.logical_and_expression import LogicalAndExpressionNode
 from .expressions.logical_or_expression import LogicalOrExpressionNode
+from .expressions.conditional_expression import ConditionalExpressionNode
 
 PARSER = []
 
@@ -51,8 +52,9 @@ MAKES = SimpleNamespace(
         "logical_not_expression": LogicalNotExpressionNode,
         "logical_and_expression": LogicalAndExpressionNode,
         "logical_or_expression": LogicalOrExpressionNode,
-        "expression": LogicalOrExpressionNode,
-        "assignment_expression": LogicalOrExpressionNode
+        "conditional_expression": ConditionalExpressionNode,
+        "expression": ConditionalExpressionNode,
+        "assignment_expression": ConditionalExpressionNode
     })
 )
 
