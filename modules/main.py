@@ -1,5 +1,5 @@
 import sys
-from interfaces import terminal
+from interfaces import terminal, file
 
 def main():
     mode, debug, *file_data = sys.argv[1:]
@@ -8,7 +8,7 @@ def main():
     if mode == "None":
         terminal.interface(debug)
     else:
-        pass
+        file.interface(mode, debug, *file_data)
 
 if __name__ == "__main__":
     main()
