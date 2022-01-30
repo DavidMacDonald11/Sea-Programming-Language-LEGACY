@@ -31,11 +31,15 @@ init: activate .git
 
 .PHONY: run
 run: $(VENV) activate
-	$(PYTHON) modules/main.py None True
+	./sea.bash
 
 .PHONY: lint
 lint: $(VENV) activate
 	$(PYTHON) -m pylint --rcfile=.pylintrc $(MODULES)
+
+.PHONY: full_lint
+full_lint: $(VENV) activate
+	$(PYTHON) -m pylint $(MODULES)
 
 .PHONY: deep
 deep:
@@ -46,3 +50,8 @@ clean:
 	-$(RM) -r $(CACHE)
 	cd bin; ./clean.bash
 	cd output; ./clean.bash
+
+.PHONY: update
+update:
+	git push
+	sea -u
