@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ~/.bashrc
+
 parse_path_var() {
     paths=("$(printenv PATH | tr ":" "\n")")
     sea_paths=()
@@ -130,6 +132,11 @@ usage() {
 
 update() {
     git pull origin main
+
+    if [[ "$?" == "1" ]]
+    then
+        sudo git pull origin main
+    fi
 }
 
 mode="None"
