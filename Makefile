@@ -50,8 +50,3 @@ clean:
 	-$(RM) -r $(CACHE)
 	cd bin; ./clean.bash
 	cd output; ./clean.bash
-
-.PHONY: update
-update:
-	git push
-	sea -u

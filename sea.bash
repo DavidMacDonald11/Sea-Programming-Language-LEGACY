@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ~/.bashrc
-
 parse_path_var() {
     paths=("$(printenv PATH | tr ":" "\n")")
     sea_paths=()
