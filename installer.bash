@@ -66,7 +66,7 @@ then
     eval cd "$location"
     git clone https://github.com/DavidMacDonald11/Sea-Programming-Language.git sea_lang
 
-    if [[ "$?" == "128" ]]
+    if [[ "$?" != "0" ]]
     then
         printf "The location requires sudo permission to write into: \n"
         sudo git clone https://github.com/DavidMacDonald11/Sea-Programming-Language.git sea_lang
@@ -77,7 +77,7 @@ then
     eval cd "$location"
     make venv
 
-    if [[ "$?" == "128" ]]
+    if [[ "$?" != "0" ]]
     then
         printf "The location requires sudo permission to write into: \n"
         sudo make venv

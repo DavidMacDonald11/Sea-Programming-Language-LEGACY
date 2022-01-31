@@ -154,12 +154,14 @@ do
 
     if [[ "${!i}" == "--install" || "${!i}" == "-i" ]]
     then
+        eval cd "$sea_lang"
         ./installer.bash
         exit $?
     fi
 
     if [[ "${!i}" == "--update" ||  "${!i}" == "-u" ]]
     then
+        eval cd "$sea_lang"
         update
         exit 0
     fi
