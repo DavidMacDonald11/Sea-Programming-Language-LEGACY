@@ -31,10 +31,16 @@ parse_path_var() {
 
     if [[ ! -d venv ]]
     then
-        if make venv
+        make venv
+        result="$?"
+
+        if [[ "$result" != "2" ]]
         then
             printf "Incorrect directory listed in PATH variable.\n"
             exit 3
+        elif [[ "$result" == "2" ]]
+        then
+            sudo make venv
         fi
     fi
 }
