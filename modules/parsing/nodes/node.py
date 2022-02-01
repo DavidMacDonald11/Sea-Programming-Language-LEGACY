@@ -26,9 +26,7 @@ class Node(ABC):
                 if symbol != "|":
                     continue
 
-                column = [table[k][j] for k in range(i)]
-
-                if "├" not in column or "└" in column:
+                if "├" not in str([table[k][j] for k in range(i)]).split("└")[-1]:
                     table[i][j] = " "
 
         result = [""] * len(lines)
