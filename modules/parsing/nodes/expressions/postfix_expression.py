@@ -44,11 +44,12 @@ class PostfixExpressionNode(Node):
 class PostfixIndexExpressionNode(PostfixExpressionNode):
     def tree_repr(self, depth):
         spacing, down, bottom = self.tree_parts(depth)
-        lbrace = f"{spacing}{down}{self.components[1]}"
         expression = f"{spacing}{down}{self.expression.tree_repr(depth + 1)}"
-        rbrace = f"{spacing}{bottom}{self.components[-1]}"
+        lbrace = f"{spacing}{down}{self.components[1]}"
+        arguments = f"{spacing}{down}{self.components[2]}"
+        rbrace = f"{spacing}{bottom}{self.components[3]}"
 
-        return f"{self.node_name}{lbrace}{expression}{rbrace}"
+        return f"{self.node_name}{expression}{lbrace}{arguments}{rbrace}"
 
     @classmethod
     def construct(cls, parser):
@@ -84,6 +85,7 @@ class PostfixCallExpressionNode(PostfixExpressionNode):
         if not parser.token.matches_data(Punc.LPAREN):
             return None
 
+        cache = parser.cache
         lparen = parser.take()
         arguments = None
 
@@ -91,7 +93,7 @@ class PostfixCallExpressionNode(PostfixExpressionNode):
             arguments = parser.make.argument_expression_list()
 
         return PostfixCallExpressionNode(
-            parser.cache,
+            cache,
             lparen,
             arguments,
             parser.expecting(Punc.RPAREN)
