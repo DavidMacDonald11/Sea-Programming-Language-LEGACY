@@ -1,10 +1,10 @@
+import re
+import curses
 from .streams.holder import StreamHolder
 from .streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 from . import general
 
 def interface(debug):
-    print("Sea Programming Language")
-
     streams = StreamHolder(
         TerminalInStream(),
         TerminalOutStream(),
@@ -12,34 +12,68 @@ def interface(debug):
         TerminalOutStream()
     )
 
-    try:
-        while True:
-            buffer = streams.in_stream.buffer = input("sea > ")
+    curses_input()
 
-            if buffer == "":
-                continue
+@curses.wrapper
+def curses_input(screen):
+    title = "Sea Programming Language"
+    prompt = "\nsea > "
 
-            if buffer == "exit":
-                raise Exit()
+    lines = title + prompt
+    in_lines = ["", ""]
+    working_in_line = ""
+    in_line = ""
+    position = 0
+    cursor = 0
 
-            if buffer in ("debug", "nodebug"):
-                debug = (buffer == "debug")
-                continue
+    screen.addstr(lines)
+    screen.refresh()
 
-            streams.in_stream.buffer += "\n"
+    while True:
+        y, x = screen.getyx()
+        char = screen.getkey()
 
-            if buffer.rstrip()[-1] == ":":
-                buffer = ""
+        if char == "KEY_DOWN":
+            position -= 1 if position > 0 else 0
+            in_line = in_lines[-position] if position > 0 else working_in_line
+        elif char == "KEY_LEFT":
+            result = 1 if cursor > 0 else 0
+            cursor -= result
+            screen.move(y, x - result)
+        elif char == "KEY_RIGHT":
+            result = 1 if cursor < len(in_line) else 0
+            cursor += result
+            screen.move(y, x + result)
+        elif char == "KEY_UP":
+            working_in_line = in_line if position == 0 else working_in_line
+            position += 1 if position < len(in_lines)  - 1 else 0
+            in_line = in_lines[-position]
+        elif ord(char) == 127:
+            if in_line != "":
+                in_line += "\b"
+                cursor -= 1
+                screen.move(y, x - 1)
+        elif char == "\n":
+            cursor = 0
+            screen.move(y + 1, len(prompt) - 1)
+            lines += in_line + prompt
+            in_lines.append(in_line)
+            position = 0
+            working_in_line = ""
+            in_line = ""
+        else:
+            cursor += 1
+            screen.move(y, x + 1)
+            in_line += char
 
-                while buffer != "\n":
-                    buffer = input("...   ") + "\n"
-                    streams.in_stream.buffer += buffer
+        in_line = re.sub(".\b", "", in_line)
 
-            general.interface(streams, debug, "i")
-    except (KeyboardInterrupt, EOFError):
-        print()
-    except Exit:
-        pass
+        y, x = screen.getyx()
+        screen.clear()
+        screen.addstr(lines + in_line)
+        screen.move(y, x)
+        screen.refresh()
+
 
 class Exit(Exception):
     pass
