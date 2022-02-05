@@ -1,11 +1,9 @@
 import re
-import curses
-from types import SimpleNamespace
 from .streams.holder import StreamHolder
 from .streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 from . import general
 
-def interface(debug):
+def interface(screen, debug):
     streams = StreamHolder(
         TerminalInStream(),
         TerminalOutStream(),
@@ -13,115 +11,126 @@ def interface(debug):
         TerminalOutStream()
     )
 
-    terminal = SimpleNamespace(
-        title = "Sea Programming Language",
-        prompt = "\nsea > ",
-        printed = "",
-        lines = [""],
-        line = "",
-        position = -1,
-        cursor = 0
-    )
-
-    curses.wrapper(handle_input, terminal)
-
-def handle_input(screen, t):
-    t.printed = t.title + t.prompt
-    screen.addstr(t.printed)
-    screen.refresh()
-
-    while True:
-        key = screen.getkey()
-        KEY_MAP.get(key, character)(screen, t, key)
-
-        cursor = screen.getyx()
-        screen.clear()
-        screen.addstr(t.printed + t.line)
-        screen.move(*cursor)
-        screen.refresh()
-
-def up(screen, t, _):
-    if abs(t.position) == len(t.lines):
-        return
-
-    if t.position == -1:
-        t.lines[-1] = t.line
-
-    t.position -= 1
-    t.line = t.lines[t.position]
-
-    y, _ = screen.getyx()
-    screen.move(y, len(t.prompt) - 1 + len(t.line))
-
-def down(screen, t, _):
-    if t.position == -1:
-        return
-
-    t.position += 1
-    t.line = t.lines[t.position]
-
-    y, _ = screen.getyx()
-    screen.move(y, len(t.prompt) - 1 + len(t.line))
-
-def left(screen, t, _):
-    if t.cursor == 0:
-        return
-
-    slide_cursor(screen, t, -1)
-
-def right(screen, t, _):
-    if t.cursor == len(t.line):
-        return
-
-    slide_cursor(screen, t, 1)
-
-def backspace(screen, t, _):
-    if t.cursor == 0:
-        return
-
-    slide_cursor(screen, t, -1)
-    t.line = t.line[:t.cursor] + t.line[t.cursor + 1:]
-
-def delete(screen, t, _):
-    if t.cursor == len(t.line):
-        return
-
-    t.line = t.line[:t.cursor] + t.line[t.cursor + 2:]
-
-def enter(screen, t, _):
-    t.cursor = 0
-    t.position = 0
-
-    y, _ = screen.getyx()
-    screen.move(y + 1, len(t.prompt) - 1)
-
-    t.printed += t.line + t.prompt
-    t.lines[-1] = t.line
-
-    t.lines.append("")
-    t.line = ""
-
-def character(screen, t, key):
-    slide_cursor(screen, t, 1)
-    t.line = t.line[:t.cursor - 1] + key + t.line[t.cursor - 1:]
-
-def slide_cursor(screen, t, amount):
-    t.cursor += amount
-
-    y, x = screen.getyx()
-    screen.move(y, x + amount)
-
-KEY_MAP = {
-    "KEY_UP": up,
-    "KEY_DOWN": down,
-    "KEY_LEFT": left,
-    "KEY_RIGHT": right,
-    "\x7f": backspace,
-    "KEY_DC": delete,
-    "\n": enter
-}
+    terminal = Terminal(screen)
+    terminal.input()
 
 class Exit(Exception):
     pass
 
+class Terminal:
+    def __init__(self, screen):
+        self.title = "Sea Programming Language"
+        self.prompt = "\nsea > "
+        self.printed = self.title + self.prompt
+        self.lines = [""]
+        self.line = ""
+        self.position = -1
+        self.cursor = 0
 
+        self.screen = screen
+        self.screen.addstr(self.printed)
+        self.screen.refresh()
+
+    def input(self):
+        while True:
+            key = self.get_key()
+
+            cursor = self.screen.getyx()
+            self.screen.clear()
+            self.screen.addstr(self.printed + self.line)
+            self.screen.move(*cursor)
+            self.screen.refresh()
+
+    def up(self):
+        if abs(self.position) == len(self.lines):
+            return
+
+        if self.position == -1:
+            self.lines[-1] = self.line
+
+        self.shift_line(-1)
+
+    def down(self):
+        if self.position == -1:
+            return
+
+        self.shift_line(1)
+
+    def shift_line(self, direction):
+        self.position += direction
+        self.line = self.lines[self.position]
+        self.cursor = len(self.line)
+
+        y, _ = self.screen.getyx()
+        self.screen.move(y, len(self.prompt) - 1 + self.cursor)
+
+    def left(self):
+        if self.cursor == 0:
+            return
+
+        self.slide_cursor(-1)
+
+    def right(self):
+        if self.cursor == len(self.line):
+            return
+
+        self.slide_cursor(1)
+
+    def delete(self):
+        if self.cursor == len(self.line):
+            return
+
+        self.line = self.line[:self.cursor] + self.line[self.cursor + 1:]
+
+    def backspace(self):
+        if self.cursor == 0:
+            return
+
+        self.slide_cursor(-1)
+        self.line = self.line[:self.cursor] + self.line[self.cursor + 1:]
+
+    def enter(self):
+        self.cursor = 0
+        self.position = 0
+
+        y, _ = self.screen.getyx()
+        self.screen.move(y + 1, len(self.prompt) - 1)
+
+        self.printed += self.line + self.prompt
+        self.lines[-1] = self.line
+
+        self.lines.append("")
+        self.line = ""
+
+    def character(self, key):
+        self.slide_cursor(1)
+        self.line = self.line[:self.cursor - 1] + key + self.line[self.cursor - 1:]
+
+    def slide_cursor(self, amount):
+        self.cursor += amount
+
+        y, x = self.screen.getyx()
+        self.screen.move(y, x + amount)
+
+    def get_key(self):
+        key = self.screen.getkey()
+
+        match key:
+            case "KEY_UP":
+                self.up()
+            case "KEY_DOWN":
+                self.down()
+            case "KEY_LEFT":
+                self.left()
+            case "KEY_RIGHT":
+                self.right()
+            case "KEY_DC":
+                self.delete()
+            case "\x7f":
+                self.backspace()
+            case "\n":
+                self.enter()
+            case _:
+                self.character(key)
+
+        return key

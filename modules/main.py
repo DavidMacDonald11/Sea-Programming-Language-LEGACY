@@ -1,4 +1,5 @@
 import sys
+import curses
 from interfaces import terminal, file
 
 def main():
@@ -6,7 +7,7 @@ def main():
     debug = (debug == "True")
 
     if mode == "None":
-        terminal.interface(debug)
+        curses.wrapper(terminal.interface, debug)
     else:
         file.interface(mode, debug, *file_data)
 
