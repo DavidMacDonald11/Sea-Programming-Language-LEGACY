@@ -1,5 +1,6 @@
 import re
 import curses
+from types import SimpleNamespace
 from .streams.holder import StreamHolder
 from .streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 from . import general
@@ -12,68 +13,115 @@ def interface(debug):
         TerminalOutStream()
     )
 
-    curses_input()
+    terminal = SimpleNamespace(
+        title = "Sea Programming Language",
+        prompt = "\nsea > ",
+        printed = "",
+        lines = [""],
+        line = "",
+        position = -1,
+        cursor = 0
+    )
 
-@curses.wrapper
-def curses_input(screen):
-    title = "Sea Programming Language"
-    prompt = "\nsea > "
+    curses.wrapper(handle_input, terminal)
 
-    lines = title + prompt
-    in_lines = ["", ""]
-    working_in_line = ""
-    in_line = ""
-    position = 0
-    cursor = 0
-
-    screen.addstr(lines)
+def handle_input(screen, t):
+    t.printed = t.title + t.prompt
+    screen.addstr(t.printed)
     screen.refresh()
 
     while True:
-        y, x = screen.getyx()
-        char = screen.getkey()
+        key = screen.getkey()
+        KEY_MAP.get(key, character)(screen, t, key)
 
-        if char == "KEY_DOWN":
-            position -= 1 if position > 0 else 0
-            in_line = in_lines[-position] if position > 0 else working_in_line
-        elif char == "KEY_LEFT":
-            result = 1 if cursor > 0 else 0
-            cursor -= result
-            screen.move(y, x - result)
-        elif char == "KEY_RIGHT":
-            result = 1 if cursor < len(in_line) else 0
-            cursor += result
-            screen.move(y, x + result)
-        elif char == "KEY_UP":
-            working_in_line = in_line if position == 0 else working_in_line
-            position += 1 if position < len(in_lines)  - 1 else 0
-            in_line = in_lines[-position]
-        elif ord(char) == 127:
-            if in_line != "":
-                in_line += "\b"
-                cursor -= 1
-                screen.move(y, x - 1)
-        elif char == "\n":
-            cursor = 0
-            screen.move(y + 1, len(prompt) - 1)
-            lines += in_line + prompt
-            in_lines.append(in_line)
-            position = 0
-            working_in_line = ""
-            in_line = ""
-        else:
-            cursor += 1
-            screen.move(y, x + 1)
-            in_line += char
-
-        in_line = re.sub(".\b", "", in_line)
-
-        y, x = screen.getyx()
+        cursor = screen.getyx()
         screen.clear()
-        screen.addstr(lines + in_line)
-        screen.move(y, x)
+        screen.addstr(t.printed + t.line)
+        screen.move(*cursor)
         screen.refresh()
 
+def up(screen, t, _):
+    if abs(t.position) == len(t.lines):
+        return
+
+    if t.position == -1:
+        t.lines[-1] = t.line
+
+    t.position -= 1
+    t.line = t.lines[t.position]
+
+    y, _ = screen.getyx()
+    screen.move(y, len(t.prompt) - 1 + len(t.line))
+
+def down(screen, t, _):
+    if t.position == -1:
+        return
+
+    t.position += 1
+    t.line = t.lines[t.position]
+
+    y, _ = screen.getyx()
+    screen.move(y, len(t.prompt) - 1 + len(t.line))
+
+def left(screen, t, _):
+    if t.cursor == 0:
+        return
+
+    slide_cursor(screen, t, -1)
+
+def right(screen, t, _):
+    if t.cursor == len(t.line):
+        return
+
+    slide_cursor(screen, t, 1)
+
+def backspace(screen, t, _):
+    if t.cursor == 0:
+        return
+
+    slide_cursor(screen, t, -1)
+    t.line = t.line[:t.cursor] + t.line[t.cursor + 1:]
+
+def delete(screen, t, _):
+    if t.cursor == len(t.line):
+        return
+
+    t.line = t.line[:t.cursor] + t.line[t.cursor + 2:]
+
+def enter(screen, t, _):
+    t.cursor = 0
+    t.position = 0
+
+    y, _ = screen.getyx()
+    screen.move(y + 1, len(t.prompt) - 1)
+
+    t.printed += t.line + t.prompt
+    t.lines[-1] = t.line
+
+    t.lines.append("")
+    t.line = ""
+
+def character(screen, t, key):
+    slide_cursor(screen, t, 1)
+    t.line = t.line[:t.cursor - 1] + key + t.line[t.cursor - 1:]
+
+def slide_cursor(screen, t, amount):
+    t.cursor += amount
+
+    y, x = screen.getyx()
+    screen.move(y, x + amount)
+
+KEY_MAP = {
+    "KEY_UP": up,
+    "KEY_DOWN": down,
+    "KEY_LEFT": left,
+    "KEY_RIGHT": right,
+    "\x7f": backspace,
+    "KEY_DC": delete,
+    "\n": enter
+}
 
 class Exit(Exception):
     pass
+
+
