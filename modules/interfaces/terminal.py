@@ -14,7 +14,9 @@ def interface(screen, debug):
     )
 
     try:
-        for line in terminal.input():
+        terminal_input = terminal.input()
+
+        for line in terminal_input:
             match line:
                 case "":
                     pass
@@ -30,21 +32,38 @@ def interface(screen, debug):
                     terminal.write(f"\nShow Debug: {debug}")
                 case _:
                     streams.in_stream.buffer = line + "\n"
+
+                    if line.rstrip()[-1] == ":":
+                        check_for_block(terminal, terminal_input, streams)
+
                     general.interface(streams, debug, "i")
 
-            terminal.new_prompt()
+            terminal.new_prompt(terminal.prompt)
             terminal.update_screen()
     except (KeyboardInterrupt, EOFError):
         pass
 
+def check_for_block(terminal, terminal_input, streams):
+    terminal.new_prompt(terminal.block_prompt)
+    terminal.update_screen()
+
+    for line in terminal_input:
+        if not line:
+            terminal.write("\n")
+            return
+
+        streams.in_stream.buffer += line + "\n"
+        terminal.new_prompt(terminal.block_prompt)
+        terminal.update_screen()
+
 # TODO allow window scrolling
 # TODO prevent x coordinate crash
-# TODO add multiline block input
 
 class Terminal:
     def __init__(self, screen):
         self.title = "Sea Programming Language"
         self.prompt = "\nsea > "
+        self.block_prompt = "\n...   "
         self.printed = self.title + self.prompt
         self.lines = [""]
         self.line = ""
@@ -85,10 +104,10 @@ class Terminal:
         self.screen.move(*cursor)
         self.screen.refresh()
 
-    def new_prompt(self):
+    def new_prompt(self, prompt):
         y = self.safe_move_vertical()
-        self.screen.move(y + 1, len(self.prompt) - 1)
-        self.printed += self.prompt
+        self.screen.move(y + 1, len(prompt) - 1)
+        self.printed += prompt
 
     def input(self):
         while True:
