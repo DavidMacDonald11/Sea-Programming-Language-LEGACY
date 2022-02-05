@@ -37,6 +37,10 @@ def interface(screen, debug):
     except (KeyboardInterrupt, EOFError):
         pass
 
+# TODO allow window scrolling
+# TODO prevent x coordinate crash
+# TODO add multiline block input
+
 class Terminal:
     def __init__(self, screen):
         self.title = "Sea Programming Language"
@@ -105,6 +109,10 @@ class Terminal:
                 self.up()
             case "KEY_DOWN":
                 self.down()
+            case "KEY_PPAGE":
+                self.page_up()
+            case "KEY_NPAGE":
+                self.page_down()
             case "KEY_LEFT":
                 self.left()
             case "KEY_RIGHT":
@@ -121,6 +129,9 @@ class Terminal:
         return key
 
     def up(self):
+        if len(self.lines) == 1 and self.lines[0] == "":
+            self.line, self.lines[0] = self.lines[0], self.line
+
         if abs(self.position) == len(self.lines):
             return
 
@@ -130,10 +141,24 @@ class Terminal:
         self.shift_line(-1)
 
     def down(self):
+        if len(self.lines) == 1 and self.lines[0] != "":
+            self.line, self.lines[0] = self.lines[0], self.line
+
         if self.position == -1:
             return
 
         self.shift_line(1)
+
+    def page_up(self):
+        if self.position == -1:
+            self.lines[-1] = self.line
+
+        self.position = -len(self.lines)
+        self.shift_line(0)
+
+    def page_down(self):
+        self.position = -1
+        self.shift_line(0)
 
     def shift_line(self, direction):
         self.position += direction
@@ -176,7 +201,7 @@ class Terminal:
 
     def enter(self):
         self.cursor = 0
-        self.position = 0
+        self.position = -1
 
         self.printed += self.line
         self.lines[-1] = self.line
