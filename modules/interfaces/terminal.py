@@ -1,21 +1,41 @@
-import re
+import curses
 from .streams.holder import StreamHolder
 from .streams.terminal import TerminalInStream, TerminalOutStream, TerminalErrorStream
 from . import general
 
 def interface(screen, debug):
+    terminal = Terminal(screen)
+
     streams = StreamHolder(
         TerminalInStream(),
-        TerminalOutStream(),
-        TerminalErrorStream(),
-        TerminalOutStream()
+        TerminalOutStream(terminal.write),
+        TerminalErrorStream(terminal.write),
+        TerminalOutStream(terminal.write)
     )
 
-    terminal = Terminal(screen)
-    terminal.input()
+    try:
+        for line in terminal.input():
+            match line:
+                case "":
+                    pass
+                case "exit":
+                    break
+                case "clear":
+                    terminal.clear()
+                    continue
+                case ("debug"|"nodebug"):
+                    debug = (line == "debug")
+                    terminal.write(f"\nShow Debug: {debug}")
+                case "debug?":
+                    terminal.write(f"\nShow Debug: {debug}")
+                case _:
+                    streams.in_stream.buffer = line + "\n"
+                    general.interface(streams, debug, "i")
 
-class Exit(Exception):
-    pass
+            terminal.new_prompt()
+            terminal.update_screen()
+    except (KeyboardInterrupt, EOFError):
+        pass
 
 class Terminal:
     def __init__(self, screen):
@@ -28,23 +48,59 @@ class Terminal:
         self.cursor = 0
 
         self.screen = screen
-        self.screen.addstr(self.printed)
+        self.clear()
+
+    def safe_move_vertical(self, amount = 1):
+        y, _ = self.screen.getyx()
+        max_y, max_x = self.screen.getmaxyx()
+
+        if y + amount == max_y:
+            curses.resize_term(y + amount + 1, max_x)
+            self.screen.refresh()
+
+        return y
+
+    def clear(self):
+        self.printed = self.title + self.prompt
+        self.screen.move(1, len(self.prompt) - 1)
+        self.update_screen()
+
+    def write(self, text = ""):
+        amount = text.count("\n")
+
+        y = self.safe_move_vertical(amount)
+        self.screen.move(y + amount, 0)
+
+        self.printed += text
+        self.update_screen()
+
+    def update_screen(self):
+        cursor = self.screen.getyx()
+        self.screen.clear()
+        self.screen.addstr(self.printed + self.line)
+        self.screen.move(*cursor)
         self.screen.refresh()
+
+    def new_prompt(self):
+        y = self.safe_move_vertical()
+        self.screen.move(y + 1, len(self.prompt) - 1)
+        self.printed += self.prompt
 
     def input(self):
         while True:
+            line = self.line
             key = self.get_key()
+            self.update_screen()
 
-            cursor = self.screen.getyx()
-            self.screen.clear()
-            self.screen.addstr(self.printed + self.line)
-            self.screen.move(*cursor)
-            self.screen.refresh()
+            if key == "\n":
+                yield line
 
     def get_key(self):
         key = self.screen.getkey()
 
         match key:
+            case "KEY_RESIZE":
+                pass
             case "KEY_UP":
                 self.up()
             case "KEY_DOWN":
@@ -122,14 +178,12 @@ class Terminal:
         self.cursor = 0
         self.position = 0
 
-        y, _ = self.screen.getyx()
-        self.screen.move(y + 1, len(self.prompt) - 1)
-
-        self.printed += self.line + self.prompt
+        self.printed += self.line
         self.lines[-1] = self.line
 
-        self.lines.append("")
-        self.line = ""
+        if self.line != "":
+            self.lines.append("")
+            self.line = ""
 
     def character(self, key):
         self.slide_cursor(1)
