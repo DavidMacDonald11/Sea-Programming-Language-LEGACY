@@ -41,6 +41,29 @@ class Terminal:
             self.screen.move(*cursor)
             self.screen.refresh()
 
+    def get_key(self):
+        key = self.screen.getkey()
+
+        match key:
+            case "KEY_UP":
+                self.up()
+            case "KEY_DOWN":
+                self.down()
+            case "KEY_LEFT":
+                self.left()
+            case "KEY_RIGHT":
+                self.right()
+            case "KEY_DC":
+                self.delete()
+            case "\x7f":
+                self.backspace()
+            case "\n":
+                self.enter()
+            case _:
+                self.character(key)
+
+        return key
+
     def up(self):
         if abs(self.position) == len(self.lines):
             return
@@ -76,6 +99,12 @@ class Terminal:
 
         self.slide_cursor(1)
 
+    def slide_cursor(self, amount):
+        self.cursor += amount
+
+        y, x = self.screen.getyx()
+        self.screen.move(y, x + amount)
+
     def delete(self):
         if self.cursor == len(self.line):
             return
@@ -105,32 +134,3 @@ class Terminal:
     def character(self, key):
         self.slide_cursor(1)
         self.line = self.line[:self.cursor - 1] + key + self.line[self.cursor - 1:]
-
-    def slide_cursor(self, amount):
-        self.cursor += amount
-
-        y, x = self.screen.getyx()
-        self.screen.move(y, x + amount)
-
-    def get_key(self):
-        key = self.screen.getkey()
-
-        match key:
-            case "KEY_UP":
-                self.up()
-            case "KEY_DOWN":
-                self.down()
-            case "KEY_LEFT":
-                self.left()
-            case "KEY_RIGHT":
-                self.right()
-            case "KEY_DC":
-                self.delete()
-            case "\x7f":
-                self.backspace()
-            case "\n":
-                self.enter()
-            case _:
-                self.character(key)
-
-        return key
