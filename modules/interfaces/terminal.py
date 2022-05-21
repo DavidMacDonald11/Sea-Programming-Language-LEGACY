@@ -69,6 +69,7 @@ class Terminal:
         self.line = ""
         self.position = -1
         self.cursor = 0
+        self.insert_mode = False
 
         self.screen = screen
         self.clear()
@@ -138,7 +139,13 @@ class Terminal:
                 self.right()
             case "KEY_DC":
                 self.delete()
-            case "\x7f":
+            case "KEY_IC":
+                self.insert()
+            case "KEY_HOME":
+                self.home()
+            case "KEY_END":
+                self.end()
+            case ("\x7f"|"KEY_BACKSPACE"):
                 self.backspace()
             case "\n":
                 self.enter()
@@ -211,6 +218,15 @@ class Terminal:
 
         self.line = self.line[:self.cursor] + self.line[self.cursor + 1:]
 
+    def insert(self):
+        self.insert_mode = not self.insert_mode
+
+    def home(self):
+        self.slide_cursor(-self.cursor)
+
+    def end(self):
+        self.slide_cursor(len(self.line) - self.cursor)
+
     def backspace(self):
         if self.cursor == 0:
             return
@@ -231,4 +247,6 @@ class Terminal:
 
     def character(self, key):
         self.slide_cursor(1)
-        self.line = self.line[:self.cursor - 1] + key + self.line[self.cursor - 1:]
+
+        shift = 1 if self.insert_mode and self.cursor != len(self.line) else 0
+        self.line = self.line[:self.cursor - 1] + key + self.line[self.cursor - shift:]
