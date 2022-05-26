@@ -58,11 +58,10 @@ def check_for_block(terminal, terminal_input, streams):
 
 class Cursor:
     def __init__(self, screen):
-        self.line_wrap = 0
-
         self.screen = screen
         self.inline = 0
         self.scroll = 0
+        self.line_wrap = 0
 
     def _move(self, y_delta, x_delta, condition, else_values, then = None):
         y, x = self.screen.getyx()
@@ -143,23 +142,25 @@ class Cursor:
             self.move_left()
             x_delta += 1
 
-    def adjust(self, len_prompt, line):
+    def adjust(self, prompt, line):
         self.inline = len(line)
         line_wrap, self.line_wrap = self.line_wrap, 0
-        self.move(x = len_prompt + self.inline, y_delta = -line_wrap)
+        self.move(x = len(prompt) + self.inline, y_delta = -line_wrap)
 
-# TODO allow window scrolling
+# TODO move cursor on window resize
 # TODO fix insert issues
+# TODO fix window scrolling with wrapped lines
 
 class Terminal:
     @property
-    def history(self):
-        return "".join(self.printed) + self.line + str(self.cursor.line_wrap)
+    def safe_printed(self):
+        max_y, _ = self.screen.getmaxyx()
+        return self.printed[-max_y:] + [self.line]
 
     def __init__(self, screen):
-        self.title ="Sea Programming Language"
-        self.line_prompt = "\nsea > "
-        self.block_prompt = "\n...   "
+        self.title ="Sea Programming Language\n"
+        self.line_prompt = "sea > "
+        self.block_prompt = "...   "
 
         self.printed = []
         self.lines = [""]
@@ -175,17 +176,22 @@ class Terminal:
     def switch_line(self, adjust):
         self.line_i += adjust
         self.line = self.lines[self.line_i]
-        self.cursor.adjust(len(self.line_prompt) - 1, self.line)
+        self.cursor.adjust(self.line_prompt, self.line)
 
     def clear(self):
         self.printed = [self.title, self.line_prompt]
-        self.cursor.move(y = 1, x = len(self.line_prompt) - 1)
+        self.cursor.move(y = 1, x = len(self.line_prompt))
         self.refresh()
 
     def refresh(self):
         cursor = self.screen.getyx()
         self.screen.clear()
-        self.screen.addstr(self.history)
+
+        try:
+            self.screen.addstr("".join(self.safe_printed))
+        except curses.error:
+            pass
+
         self.screen.move(*cursor)
         self.screen.refresh()
 
@@ -197,7 +203,7 @@ class Terminal:
         self.refresh()
 
     def prompt(self, prompt):
-        self.cursor.move(x = len(prompt) - 1, y_delta = 1)
+        self.cursor.move(x = len(prompt), y_delta = 1)
         self.printed += [prompt]
 
     def input(self):
@@ -245,7 +251,7 @@ class Terminal:
     def up_key(self):
         if len(self.lines) == 1 and self.lines[0] == "":
             self.line, self.lines[0] = self.lines[0], self.line
-            self.cursor.adjust(len(self.line_prompt) - 1, self.line)
+            self.cursor.adjust(self.line_prompt, self.line)
             return
 
         if abs(self.line_i) == len(self.lines):
@@ -259,7 +265,7 @@ class Terminal:
     def down_key(self):
         if len(self.lines) == 1 and self.lines[0] != "":
             self.line, self.lines[0] = self.lines[0], self.line
-            self.cursor.adjust(len(self.line_prompt) - 1, self.line)
+            self.cursor.adjust(self.line_prompt, self.line)
             return
 
         if self.line_i == -1:
@@ -322,7 +328,7 @@ class Terminal:
         self.cursor.inline = 0
         self.line_i = -1
 
-        self.printed += [self.line]
+        self.printed[-1] += self.line + "\n"
         self.lines[-1] = self.line
 
         if self.line != "":
