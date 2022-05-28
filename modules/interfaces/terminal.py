@@ -148,13 +148,24 @@ class Cursor:
         self.move(x = len(prompt) + self.inline, y_delta = -line_wrap)
 
 # TODO move cursor on window resize
-# TODO fix window scrolling with wrapped lines
 
 class Terminal:
     @property
     def safe_printed(self):
-        max_y, _ = self.screen.getmaxyx()
-        return self.printed[-max_y:] + [self.line]
+        max_y, max_x = self.screen.getmaxyx()
+        text = "".join(self.printed[-max_y:] + [self.line])
+
+        lines = []
+        line = ""
+
+        for c in text:
+            line += c
+
+            if c == "\n" or len(line) == max_x:
+                lines += [line]
+                line = ""
+
+        return (lines + [line])[-max_y:]
 
     def __init__(self, screen):
         self.title ="Sea Programming Language\n"
