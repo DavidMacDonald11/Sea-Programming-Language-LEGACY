@@ -44,8 +44,8 @@ def interface(screen, debug):
         pass
 
 def check_for_block(terminal, terminal_input, streams):
-    terminal.new_prompt(terminal.block_prompt)
-    terminal.update_screen()
+    terminal.prompt(terminal.block_prompt)
+    terminal.refresh()
 
     for line in terminal_input:
         if not line:
@@ -53,8 +53,8 @@ def check_for_block(terminal, terminal_input, streams):
             return
 
         streams.in_stream.buffer += line + "\n"
-        terminal.new_prompt(terminal.block_prompt)
-        terminal.update_screen()
+        terminal.prompt(terminal.block_prompt)
+        terminal.refresh()
 
 class Cursor:
     def __init__(self, screen):
@@ -78,6 +78,12 @@ class Cursor:
 
         if then is not None:
             then()
+
+    def clear(self, prompt_len):
+        self.move(y = 1, x = prompt_len)
+        self.inline = 0
+        self.scroll = 0
+        self.line_wrap = 0
 
     def move_up(self):
         condition = lambda y, x, max_y, max_x: y >= 0
@@ -165,10 +171,10 @@ class Terminal:
                 lines += [line]
                 line = ""
 
-        return (lines + [line])[-max_y:]
+        return (lines + [line])[1 - max_y:]
 
     def __init__(self, screen):
-        self.title ="Sea Programming Language\n"
+        self.title = "Sea Programming Language"
         self.line_prompt = "sea > "
         self.block_prompt = "...   "
 
@@ -177,6 +183,7 @@ class Terminal:
         self.line = ""
 
         self.line_i = -1
+        self.enter_count = 0
         self.insert_mode = False
 
         self.screen = screen
@@ -189,8 +196,9 @@ class Terminal:
         self.cursor.adjust(self.line_prompt, self.line)
 
     def clear(self):
-        self.printed = [self.title, self.line_prompt]
-        self.cursor.move(y = 1, x = len(self.line_prompt))
+        self.printed = [self.line_prompt]
+        self.enter_count = 0
+        self.cursor.clear(len(self.line_prompt))
         self.refresh()
 
     def refresh(self):
@@ -198,12 +206,26 @@ class Terminal:
         self.screen.clear()
 
         try:
+            self.screen.addstr(self.status_bar(cursor), curses.A_BOLD)
             self.screen.addstr("".join(self.safe_printed))
         except curses.error:
             pass
 
         self.screen.move(*cursor)
         self.screen.refresh()
+
+    def status_bar(self, cursor):
+        _, x = cursor
+        _, max_x = self.screen.getmaxyx()
+
+        y = self.enter_count + 1
+        x += max_x * self.cursor.line_wrap - len(self.line_prompt) + 1
+
+        status = self.title
+        status += "    INS: " + ("Y" if self.insert_mode else "N")
+        status += f"    Ln {y}, Col {x}"
+
+        return status[:max_x - 1] + "\n"
 
     def write(self, text = ""):
         lines = text.split("\n")
@@ -338,6 +360,7 @@ class Terminal:
     def enter_key(self):
         self.cursor.line_wrap = 0
         self.cursor.inline = 0
+        self.enter_count += 1
         self.line_i = -1
 
         self.printed[-1] += self.line + "\n"
