@@ -56,14 +56,14 @@ The terminal has unique key commands:
 * `PAGE UP/DOWN` - jumps to the top or bottom of the list of previous input
 * `LEFT/RIGHT ARROW` - moves the cursor within the current line for editing
 * `HOME` or `END` - jumps to the start or end of the current line
-* `INSERT` - toggles on and off insert mode. With insert mode, text is replaced as you type rather than inserted
+* `INSERT` - toggles on and off replace mode. With replace mode, text is replaced as you type rather than inserted
 * `BACKSPACE` - deletes the previous character
 * `DELETE` - deletes the next character
 * `ESCAPE` or `CTRL+C` - exits the terminal
 
 The terminal has a status bar:
-* `INS: (Y/N)` - displays whether or not insert mode is enabled
 * `Ln y, Col x` - y is the line count, x is the position of the cursor within the current line
+* `INSERT/REPLACE` - displays whether or not replace mode is enabled
 
 The terminal has unique commands:
 * `debug` - enables debugging
