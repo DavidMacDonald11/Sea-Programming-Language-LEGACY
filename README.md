@@ -49,12 +49,28 @@ If you want to see the generated tokens and AST, add the `--debug` (or `-d`) arg
 You determine which of the following modes to use with a `--mode=[MODE]` argument. Note that `-m=` is equivalent to `--mode=`. Only the first character after the `=` is checked and it is case insentive. Thus, `-m=Transpile`, `--mode=cKJFLK`, and `-m=i` are all valid.
 
 ## Interpreting Terminal Input
-Run `sea` and you'll enter the interpreter's terminal interface. This provides you with the `sea` interpreter to mess around with, similar to running `python`.
+Run `sea` and you'll enter the interpreter's terminal interface. This provides you with the `sea` interpreter to mess around with, similar to running the `python` command.
 
-The terminal interpreter has special commands:
-* `debug` - to enable debugging.
-* `nodebug` - to disable debugging.
-* `exit` - to exit. (Ctrl+C and Ctrl+D also work)
+The terminal has unique key commands:
+* `UP/DOWN ARROW` - cycles through previous input line by line
+* `PAGE UP/DOWN` - jumps to the top or bottom of the list of previous input
+* `LEFT/RIGHT ARROW` - moves the cursor within the current line for editing
+* `HOME` or `END` - jumps to the start or end of the current line
+* `INSERT` - toggles on and off insert mode. With insert mode, text is replaced as you type rather than inserted
+* `BACKSPACE` - deletes the previous character
+* `DELETE` - deletes the next character
+* `ESCAPE` or `CTRL+C` - exits the terminal
+
+The terminal has a status bar:
+* `INS: (Y/N)` - displays whether or not insert mode is enabled
+* `Ln y, Col x` - y is the line count, x is the position of the cursor within the current line
+
+The terminal has unique commands:
+* `debug` - enables debugging
+* `nodebug` - disables debugging
+* `debug?` - prints the status of debugging
+* `clear` - clears the terminal
+* `exit` - exits the terminal
 
 ## Interpreting Files
 Run `sea -m=i -s IN FILES` to interpret Sea files
