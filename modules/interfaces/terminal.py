@@ -148,7 +148,6 @@ class Cursor:
         self.move(x = len(prompt) + self.inline, y_delta = -line_wrap)
 
 # TODO move cursor on window resize
-# TODO fix insert issues
 # TODO fix window scrolling with wrapped lines
 
 class Terminal:
@@ -338,6 +337,7 @@ class Terminal:
     def generic_key(self, key):
         self.cursor.inline += 1
         self.cursor.move_right()
+        i = self.cursor.inline
 
-        move = 1 if self.insert_mode and self.cursor.inline != len(self.line) else 0
-        self.line = self.line[:self.cursor.inline - 1] + key + self.line[self.cursor.inline - move:]
+        shift = 0 if self.insert_mode else 1
+        self.line = self.line[:i - 1] + key + self.line[i - shift:]
