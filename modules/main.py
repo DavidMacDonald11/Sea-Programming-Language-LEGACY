@@ -1,3 +1,4 @@
+import os
 import sys
 import curses
 from interfaces import terminal, file
@@ -7,6 +8,7 @@ def main():
     debug = (debug == "True")
 
     if mode == "None":
+        os.environ.setdefault("ESCDELAY", "25")
         curses.wrapper(terminal.interface, debug)
     else:
         file.interface(mode, debug, *file_data)

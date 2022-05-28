@@ -229,8 +229,6 @@ class Terminal:
 
     def press_key(self, key):
         match key:
-            case "KEY_RESIZE":
-                pass
             case "KEY_UP":
                 self.up_key()
             case "KEY_DOWN":
@@ -255,6 +253,10 @@ class Terminal:
                 self.backspace_key()
             case "\n":
                 self.enter_key()
+            case "\x1B":
+                self.escape_key()
+            case "KEY_RESIZE":
+                self.resize()
             case _:
                 self.generic_key(key)
 
@@ -346,9 +348,15 @@ class Terminal:
             self.line = ""
 
     def generic_key(self, key):
-        self.cursor.inline += 1
+        self.cursor.inline += len(key)
         self.cursor.move_right()
         i = self.cursor.inline
 
         shift = 0 if self.insert_mode else 1
         self.line = self.line[:i - 1] + key + self.line[i - shift:]
+
+    def escape_key(self):
+        raise KeyboardInterrupt
+
+    def resize(self):
+        pass
