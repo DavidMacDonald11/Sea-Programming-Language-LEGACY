@@ -20,7 +20,7 @@ class Keyboard:
         self.line = self.lines[self.line_i]
         self.cursor.adjust(self.line)
 
-    def press(self, key, printed):
+    def press(self, key, printed, text):
         self.last_key = [key, ""]
 
         match key:
@@ -51,7 +51,7 @@ class Keyboard:
             case "\x1B":
                 self.escape_key()
             case "KEY_RESIZE":
-                self.resize()
+                self.resize(text)
             case _:
                 self.generic_key(key)
 
@@ -158,6 +158,6 @@ class Keyboard:
     def escape_key(self):
         raise KeyboardInterrupt
 
-    def resize(self):
-        # TODO move cursor on window resize
-        pass
+    def resize(self, text):
+        printed = text()
+        self.cursor.move(y = len(printed), x = len(printed[-1]))

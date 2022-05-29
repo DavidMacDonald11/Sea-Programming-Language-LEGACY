@@ -79,7 +79,7 @@ class Terminal:
             line = self.keyboard.line
             key = self.screen.getkey()
 
-            self.keyboard.press(key, self.printed)
+            self.keyboard.press(key, self.printed, self.text)
             self.refresh()
 
             if key == "\n":
