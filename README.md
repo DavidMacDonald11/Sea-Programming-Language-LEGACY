@@ -70,7 +70,6 @@ The terminal has a status bar:
 The terminal has unique commands:
 * `debug` - enables debugging
 * `nodebug` - disables debugging
-* `debug?` - prints the status of debugging
 * `clear` - clears the terminal
 * `exit` - exits the terminal
 
