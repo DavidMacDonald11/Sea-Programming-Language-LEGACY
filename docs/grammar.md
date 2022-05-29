@@ -140,6 +140,178 @@ Specifically, I utilized [Microsoft's C Language Syntax Summary](https://docs.mi
     expression </i><b>,</b><i> assignment-expression
 </i></pre>
 
-<pre><i>constant-expression
+<pre><i>constant-expression:
     conditional-expression
 </i></pre>
+
+## Declarations
+
+<pre><i>declaration:
+    declaration-specifiers <u>init-declarator-list</u>
+</i></pre>
+
+<pre><i>declaration-specifiers:
+    storage-class-specifier <u>declaration-specifiers</u>
+    type-specifier <u>declaration-specifiers</u>
+    type-qualifier <u>declaration-specifiers</u>
+    function-specifier <u>declaration-specifiers</u>
+    alignment-specifier <u>declaration-specifiers</u>
+</i></pre>
+
+<pre><i>init-declarator-list:
+    init-declarator
+    init-declarator-list </i><b>,</b><i> init-declarator
+</i></pre>
+
+<pre><i>init-declarator:
+    declarator
+    declarator </i><b>=</b><i> initializer
+</i></pre>
+
+<pre><i>storage-class-specifier: </i><b>
+    external
+    register
+    static
+    alias
+</b></pre>
+
+<pre><i>type-specifier: </i><b>
+    void
+    bool
+    char
+    short
+    int
+    long
+    float
+    double
+    signed
+    unsigned
+    complex</b><i>
+    struct-or-union-specifier
+    enum-specifier
+    alias-name
+</i></pre>
+
+<pre><i>struct-or-union-specifier:
+    struct-or-union identifier
+</i></pre>
+
+<pre><i>struct-or-union:</i><b>
+    struct
+    union
+</b></pre>
+
+<pre><i>struct-declaration-list:
+    struct-declaration
+    struct-delcaration-list struct-declaration
+</i></pre>
+
+<pre><i>struct-declaration:
+    specifier-qualifier-list <u>struct-declarator-list</u>
+</i></pre>
+
+<pre><i>specifier-qualifier-list:
+    type-specifier <u>specifier-qualifier-list</u>
+    type-qualifier <u>specifier-qualifier-list</u>
+</i></pre>
+
+<pre><i>struct-declarator-list:
+    struct-declarator
+    struct-declarator-list </i><b>,</b><i> struct-declarator
+</i></pre>
+
+<pre><i>struct-declarator:
+    declarator
+    <u>declarator</u></i><b> = </b><i>constant-expresison
+</i></pre>
+
+<pre><i>enum-specifier:
+    <b>enum</b> identifier
+</i></pre>
+
+<pre><i>enumerator-list:
+    enumerator
+    enumerator-list </i><b>,</b><i> enumerator
+</i></pre>
+
+<pre><i>enumerator:
+    enumeration-constant
+    enumeration-constant </i><b>=</b><i> constant-expression
+</i></pre>
+
+<pre><i>type-qualifier:</i><b>
+    const
+    restrict
+    volatile
+</b></pre>
+
+<pre><i>function-specifier:</i><b>
+    inline
+</b></pre>
+
+<pre><i>declarator:
+    <u>pointer</u> direct-declarator
+</i></pre>
+
+<pre><i>direct-declarator:
+    identifier
+    </i><b>(</b><i> declarator </i><b>)</b><i>
+    direct-declarator </i><b>[</b><i> <u>type-qualifier-list</u> <u>assignment-expression</u> </i><b>]</b><i>
+    direct-declarator </i><b>[ static</b><i> <u>type-qualifier-list</u> assignment-expression </i><b>]</b><i>
+    direct-declarator </i><b>[</b><i> type-qualifier-list </i><b>static</b><i> assignment-expression </i><b>]</b><i>
+    direct-declarator </i><b>[</b><i> <u>type-qualifier-list</u> </i><b>* ]</b><i>
+    direct-declarator </i><b>(</b><i> parameter-type-list </i><b>)</b><i>
+</i></pre>
+
+<pre><i>pointer:
+    </i><b>*</b><i> <u>type-qualifier-list</u>
+    </i><b>*</b><i> <u>type-qualifier-list</u> pointer
+</i></pre>
+
+<pre><i>type-qualifier-list:
+    type-qualifier
+    type-qualifier-list type-qualifier
+</i></pre>
+
+<pre><i>parameter-type-list:
+    parameter-list
+    parameter-list </i><b>, ...</b><i>
+</i></pre>
+
+<pre><i>parameter-list:
+    parameter-declaration
+    parameter-list </i><b>,</b><i> parameter-declaration
+</i></pre>
+
+<pre><i>parameter-declaration:
+    declaration-specifiers declarator
+    declaration-specifiers <u>abstract-declarator</u>
+</i></pre>
+
+<pre><i>type-name:
+    specifier-qualifier-list <u>abstract-declarator</u>
+</i></pre>
+
+<pre><i>abstract-declarator:
+    pointer
+    <u>pointer</u> direct-abstract-declarator
+</i></pre>
+
+<pre><i>direct-abstract-declarator:
+    </i><b>(</b><i> abstract-declarator </i><b>)</b><i>
+    direct-abstract-declarator </i><b>[</b><i> <u>type-qualifier list</u> <u>assignment-expression</u> </i><b>]</b><i>
+    direct-abstract-declarator </i><b>[ static</b><i> <u>type-qualifier-list</u> assignment-expression </i><b>]</b><i>
+    direct-abstract-declarator </i><b>[</b><i> type-qualifier-list </i><b>static</b><i> assignment-expression </i><b>]</b><i>
+    direct-abstract-declarator </i><b>[</b><i> <u>type-qualifier-list</u> </i><b>* ]</b><i>
+    <u>direct-abstract-declarator</u> </i><b>(</b><i> <u>parameter-type-list</u> </i><b>)</b><i>
+</i></pre>
+
+<pre><i>alias-name:
+    identifier
+</i></pre>
+
+<pre><i>initializer:
+    assignment-expression
+</i></pre>
+
+## Statements

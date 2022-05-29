@@ -13,3 +13,18 @@ generic-assoc-list
 generic-association
 
 typename initializer lists
+
+## Declarations
+static assert
+
+thread local
+
+atomic types
+
+struct-or-union identifier with block
+
+alignment specifier
+
+enum identifier with block
+
+initializer list
