@@ -5,6 +5,7 @@ from .keyboard import Keyboard
 class Terminal:
     def __init__(self, screen):
         self.printed = []
+        self.debug = False
 
         self.screen = screen
         self.cursor = Cursor(screen, 6)
@@ -40,6 +41,15 @@ class Terminal:
         status = "Sea Programming Language"
         status += f"    Ln {y}, Col {x}"
         status += "    " + ("REPLACE" if self.keyboard.replace else "INSERT")
+
+        if self.debug:
+            status += "    DEBUG"
+
+        key = self.keyboard.last_key
+        key = (key[0] if self.debug else key[1])
+        key = key.encode("unicode_escape").decode("utf-8")
+
+        status += "    " + key
 
         return status[:max_x - 1] + "\n"
 

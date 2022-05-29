@@ -64,6 +64,8 @@ The terminal has unique key commands:
 The terminal has a status bar:
 * `Ln y, Col x` - y is the line count, x is the position of the cursor within the current line
 * `INSERT/REPLACE` - displays whether or not replace mode is enabled
+* `DEBUG?` - shows when debug mode is enabled
+* `?` - in debug mode, the last character you typed; otherwise, the last character if unrecognized
 
 The terminal has unique commands:
 * `debug` - enables debugging

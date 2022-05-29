@@ -27,6 +27,7 @@ def interface(screen, debug):
                     continue
                 case ("debug"|"nodebug"):
                     debug = (line == "debug")
+                    terminal.debug = debug
                     terminal.write(f"\nShow Debug: {debug}")
                 case "debug?":
                     terminal.write(f"\nShow Debug: {debug}")

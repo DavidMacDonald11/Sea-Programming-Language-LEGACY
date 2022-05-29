@@ -10,6 +10,8 @@ class Keyboard:
         self.enters = 0
         self.replace = False
 
+        self.last_key = ["", ""]
+
     def clear(self):
         self.enters = 0
 
@@ -19,6 +21,8 @@ class Keyboard:
         self.cursor.adjust(self.line)
 
     def press(self, key, printed):
+        self.last_key = [key, ""]
+
         match key:
             case "KEY_UP":
                 self.up_key()
@@ -140,7 +144,11 @@ class Keyboard:
             self.line = ""
 
     def generic_key(self, key):
-        self.cursor.i += len(key)
+        if len(key) > 1:
+            self.last_key[1] = key
+            return
+
+        self.cursor.i += 1
         self.cursor.move_right()
         i = self.cursor.i
 
