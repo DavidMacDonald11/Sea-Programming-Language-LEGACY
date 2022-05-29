@@ -4,7 +4,7 @@ from . import general
 from .cursed.terminal import Terminal
 
 def interface(screen, debug):
-    terminal = Terminal(screen)
+    terminal = Terminal(screen, debug)
 
     streams = StreamHolder(
         TerminalInStream(),
