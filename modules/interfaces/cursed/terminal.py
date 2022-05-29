@@ -3,9 +3,9 @@ from .cursor import Cursor
 from .keyboard import Keyboard
 
 class Terminal:
-    def __init__(self, screen):
+    def __init__(self, screen, debug):
         self.printed = []
-        self.debug = False
+        self.debug = debug
 
         self.screen = screen
         self.cursor = Cursor(screen, 6)
@@ -71,8 +71,8 @@ class Terminal:
 
     def prompt(self, block = False):
         prompt = "sea > " if not block else "...   "
-        self.cursor.move(x = len(prompt), y_delta = 1)
         self.printed += [prompt]
+        self.keyboard.resize(self.text)
 
     def input(self):
         while True:
@@ -85,9 +85,9 @@ class Terminal:
             if key == "\n":
                 yield line
 
+    # TODO fix cursor issues with write
+
     def write(self, text = ""):
         lines = text.split("\n")
         self.printed += [line + "\n" for line in lines]
-
-        self.cursor.move(y_delta = len(lines))
         self.refresh()
