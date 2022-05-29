@@ -126,26 +126,58 @@ else
     exit 1
 fi
 
+printf "\nIf you use a ~/.bashrc, ~/.zshrc, or similar file, the installer can "
+printf "automatically write to it.\n"
+printf "Otherwise, you will have to edit a smilar file yourself to make the global command.\n"
 printf "\nThe installer will now edit '~/.bashrc' to add a global 'sea' command "
 printf "linked to the entered location.\n"
 printf "This will override any pre-existing 'sea' command.\n"
-printf "Enter 1 to proceed: "
+printf "Enter 1 to edit ~/.bashrc;\n"
+printf "Enter 2 to edit ~/.zshrc;\n"
+printf "Enter 3 to edit a different file;\n"
+printf "Enter 4 to skip: "
 read -r key_press
 
-if [[ "$key_press" != "1" ]]
+if [[ "$key_press" == "1" ]]
 then
-    printf "Aborting installation.\n"
-    exit 1
+    file="$HOME/.bashrc"
+fi
+
+if [[ "$key_press" == "2" ]]
+then
+    file="$HOME/.zshrc"
+fi
+
+if [[ "$key_press" == "3" ]]
+then
+    printf "\nWhich file would you like to add the command to?\n"
+    printf "File: "
+    read -r file
 fi
 
 location=$(printf "%s\n" "${location%/}")
-printf "Writing... "
 
-{ printf "\n# Auto-Generated Sea Language Command\n";
-printf "export PATH=\"\$PATH:%s\"\n" "$location";
-printf "alias sea='%s/sea.bash'" "$location"; }  >> ~/.bashrc
+case "$key_press" in
+    "1"|"2"|"3")
+        printf "Writing... "
 
-printf "Done\n"
+        { printf "\n# Auto-Generated Sea Language Command\n";
+        printf "export PATH=\"\$PATH:%s\"\n" "$location";
+        printf "alias sea='%s/sea.bash'\n" "$location"; } >> "$file"
+
+        printf "Done\n"
+        ;;
+    "4")
+        printf "You will need to place the following lines into a terminal config file: \n"
+        printf "\n# Auto-Generated Sea Language Command\n";
+        printf "export PATH=\"\$PATH:%s\"\n" "$location";
+        printf "alias sea='%s/sea.bash'\n" "$location";
+        ;;
+    *)
+        printf "Aborting installation.\n"
+        exit 1
+        ;;
+esac
 
 printf "\nYou may need to restart your terminal to cement these changes.\n"
 printf "\nIf the installer did not work, do not attempt to run it again. "
