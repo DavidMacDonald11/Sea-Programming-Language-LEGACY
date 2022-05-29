@@ -28,7 +28,7 @@ def interface(screen, debug):
                 case ("debug"|"nodebug"):
                     debug = (line == "debug")
                     terminal.debug = debug
-                    terminal.write(f"\nShow Debug: {debug}")
+                    terminal.write(f"Show Debug: {debug}")
                 case _:
                     streams.in_stream.buffer = line + "\n"
 

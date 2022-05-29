@@ -9,7 +9,7 @@ class Terminal:
 
         self.screen = screen
         self.cursor = Cursor(screen, 6)
-        self.keyboard = Keyboard(screen, self.cursor)
+        self.keyboard = Keyboard(self.cursor)
 
         self.clear()
 

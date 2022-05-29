@@ -1,7 +1,7 @@
 class Keyboard:
-    def __init__(self, screen, cursor):
-        self.screen = screen
+    def __init__(self, cursor):
         self.cursor = cursor
+        self.screen = cursor.screen
 
         self.lines = [""]
         self.line = ""

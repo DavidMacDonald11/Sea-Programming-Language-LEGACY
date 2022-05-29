@@ -22,5 +22,5 @@ def print_debug_info(debug, debug_stream, lexer, parser):
     if not debug:
         return
 
-    debug_stream.write(f"\nTokens:\n\t{None if lexer is None else lexer.tokens}")
+    debug_stream.write(f"Tokens:\n\t{None if lexer is None else lexer.tokens}")
     debug_stream.write(f"\nAST:\n\t{None if parser is None else parser.ast}\n")
